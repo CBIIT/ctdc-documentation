@@ -1,0 +1,65 @@
+:root {
+    --md-primary-fg-color:        #142D64;
+    --md-primary-fg-color--light: #8DCAFF;
+    --md-primary-fg-color--dark:  #8DCAFF;
+  }
+
+.md-footer-nav {
+    background-color: hsl(212, 25%, 87%) !important;
+}
+
+.md-footer-meta {
+  background-color: #142D64 !important;
+  border-top: 1px solid #142D64 !important;
+  padding: 0.05rem;
+}
+
+.md-typeset table:not([class]) th {
+    min-width: 11.5rem;
+    background-color: rgb(203, 226, 238) !important;
+    color: black;
+    font-size: medium;
+}
+
+.md-typeset table:not([class]) td {
+    vertical-align: middle;
+
+}
+
+.table {
+    font-size: medium;
+
+}
+
+.medium {
+  color: #00AB6C;
+}
+
+.highlight_text {
+  color: #9f0bde;
+  background-color: #ededed;
+  padding: .25em;
+}
+.highlight_facet {
+  color: #fca359;
+  background-color: #ededed;
+  padding: .25em;
+}
+.highlight_facetvalue {
+  color: #667a87;
+  background-color: #ededed;
+  padding: .25em;
+}
+.highlight_icon {
+  color: #1db634;
+  background-color: #ededed;
+  padding: .25em;
+}
+.highlight_button {
+  color: #60ADCF;
+  background-color: #ededed;
+  padding: .25em;
+}
+html .md-footer-social a[title="Twitter"] {
+  color: #e4eaed;
+}
