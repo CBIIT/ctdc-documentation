@@ -3,19 +3,27 @@ name: ctdc-sprint-command-center
 description: "Operational knowledge base for the CTDC Sprint Command Center Claude project. Contains SOPs, workflow templates, JQL recipes, stakeholder doc standards, domain context, and session recovery procedures for the Clinical and Translational Data Commons (CTDC) engineering team."
 ---
 
-# CTDC Sprint Command Center — Skill Knowledge Base
+# 🚀 CTDC Sprint Command Center — Skill Knowledge Base
 
-> **Project:** Clinical and Translational Data Commons (CTDC)  
-> **Ecosystem:** Cancer Research Data Commons (CRDC)  
-> **Team:** React web application engineers  
-> **Claude Project:** Sprint Command Center  
+> **Project:** Clinical and Translational Data Commons (CTDC)
+> **Ecosystem:** Cancer Research Data Commons (CRDC)
+> **Team:** React web application engineers
+> **Claude Project:** Sprint Command Center
 > **Last Updated:** 2026-03-23
 
 ---
 
-## 1. Session Recovery & Infrastructure
+## 📋 How This File Works
 
-### 🐳 Docker / MCP Recovery
+This SKILL.md contains **operational knowledge** — workflows, SOPs, templates, and domain context. It is loaded by Claude when relevant to a task.
+
+**Behavioral guardrails** (like Docker recovery and scope boundaries) are mirrored in the **Claude.ai Project Instructions** for the Sprint Command Center project. When updating one, update the other.
+
+---
+
+## 1. 🐳 Session Recovery & Infrastructure
+
+### Docker / MCP Recovery
 
 If any MCP tool (Jira/Atlassian, Asana, etc.) is unavailable or returns a connection error, **Docker is not running** on the user's machine. Do not attempt workarounds, do not ask for manual data. Surface the issue immediately:
 
@@ -23,13 +31,9 @@ If any MCP tool (Jira/Atlassian, Asana, etc.) is unavailable or returns a connec
 
 Wait for the user to confirm Docker is running before retrying any Jira operations.
 
-### 🔄 MCP Session Initialization
-
-After any session gap or cold start, **re-initialize the Atlassian MCP connection before the first tool call**. If tools fail on the first attempt, the fix is to refresh the project session and resend the message — do not retry in a loop or attempt workarounds.
-
 ---
 
-## 2. Domain Context
+## 2. 🧬 Domain Context
 
 ### About CTDC
 
@@ -47,18 +51,18 @@ The team works with multiomics data — this means datasets that combine multipl
 
 ---
 
-## 3. Scope Boundaries — Which Claude Project to Use
+## 3. 🗺️ Scope Boundaries — Which Claude Project to Use
 
 | Task | Go To |
 |------|-------|
-| Sprint planning, ticket management, daily standups | **Sprint Command Center** (this project) |
-| Portfolio-level planning, roadmaps, cross-project priorities | **Portfolio & Roadmap** project |
-| Browser testing, screenshots, UI automation | **QA & Testing** project |
-| Microsoft/Azure documentation lookup | Web search or dedicated project |
+| Sprint planning, ticket management, daily standups | 🚀 **Sprint Command Center** (this project) |
+| Portfolio-level planning, roadmaps, cross-project priorities | 📁 **Portfolio & Roadmap** project |
+| Browser testing, screenshots, UI automation | 🌐 **QA & Testing** project |
+| Microsoft/Azure documentation lookup | 🔍 Web search or dedicated project |
 
 ---
 
-## 4. JQL Recipes
+## 4. 🔍 JQL Recipes
 
 Frequently used JQL queries for the CTDC project.
 
@@ -72,21 +76,9 @@ project = CTDC AND sprint in openSprints() ORDER BY priority DESC
 project = CTDC AND sprint in openSprints() AND status = "Blocked" ORDER BY updated ASC
 ```
 
-### Epic and All Child Issues — Standard Query
+### Epic and All Child Issues
 ```
 project = CTDC AND ("Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX) ORDER BY issuetype DESC, status ASC
-```
-
-### ⚠️ Epic Coverage — Wide Net (use when standard query misses tickets)
-
-The `"Epic Link"` field only returns **formally linked** tickets. Tickets that reference an epic in their description but lack the field association will be invisible to the standard query. Use a key-range or date-based fallback:
-
-```
--- Key range (when you know the approximate ticket range)
-issue >= CTDC-XXXX AND issue <= CTDC-YYYY AND project = CTDC
-
--- Date-based (when you know when the work was created)
-created >= "YYYY-MM-DD" AND project = CTDC ORDER BY created ASC
 ```
 
 ### Recently Updated (last 24 hours — daily standup prep)
@@ -111,7 +103,7 @@ project = CTDC AND sprint in openSprints() AND status in ("In Review", "QA", "Te
 
 ---
 
-## 5. Stakeholder Document Standards
+## 5. 📄 Stakeholder Document Standards
 
 ### Epic Summary Document (for leadership/stakeholders)
 
@@ -134,7 +126,7 @@ When asked to produce an epic summary `.docx` for leadership, follow this struct
 
 4. **Work Breakdown** (table)
    - Columns: Ticket Key | Summary | Type | Status | Assignee | Story Points
-   - Group by: Epics → Tasks → Bugs
+   - Group by: Stories → Tasks → Bugs → Sub-tasks
 
 5. **Progress Summary**
    - % complete (done tickets / total tickets)
@@ -161,7 +153,7 @@ When asked to produce an epic summary `.docx` for leadership, follow this struct
 
 ---
 
-## 6. Sprint Reporting Templates
+## 6. ☀️ Sprint Reporting Templates
 
 ### Daily Standup Prep Checklist
 Run these checks before each standup:
@@ -197,7 +189,7 @@ Run these checks before each standup:
 
 ---
 
-## 7. Ticket Writing Standards
+## 7. 🎫 Ticket Writing Standards
 
 ### Story Format
 ```
@@ -224,9 +216,9 @@ So that [benefit/outcome].
 **Severity:** [Critical / High / Medium / Low]
 
 **Steps to Reproduce:**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Expected Behavior:**
 [What should happen]
@@ -240,21 +232,22 @@ So that [benefit/outcome].
 
 ---
 
-## 8. Key Contacts & Roles
+## 8. 👥 Key Contacts & Roles
 
 > Update this section as team membership changes.
 
 | Role | Notes |
 |------|-------|
-| Senior Technical PM | Owns this Claude project; manages CTDC and ICDC |
-| Engineering Team | React developers building CRDC data commons UIs |
-| Stakeholders | NCI leadership, data submitters, research community |
+| 🧑‍💼 Senior Technical PM | Owns this Claude project; manages CTDC and ICDC |
+| 👩‍💻 Engineering Team | React developers building CRDC data commons UIs |
+| 🏛️ Stakeholders | NCI leadership, data submitters, research community |
 
 ---
 
-## 9. Maintenance Notes
+## 9. 🔧 Maintenance Notes
 
 - This file lives at `CBIIT/ctdc-documentation/claude/SKILL.md`
+- The companion **Project Instructions** live in the Claude.ai Sprint Command Center project settings — keep both in sync when making changes
 - Update JQL recipes when Jira workflow statuses change
 - Update domain context when new repos or major architectural changes occur
 - Review stakeholder doc standards before each major release cycle
