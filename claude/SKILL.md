@@ -23,6 +23,10 @@ If any MCP tool (Jira/Atlassian, Asana, etc.) is unavailable or returns a connec
 
 Wait for the user to confirm Docker is running before retrying any Jira operations.
 
+### 🔄 MCP Session Initialization
+
+After any session gap or cold start, **re-initialize the Atlassian MCP connection before the first tool call**. If tools fail on the first attempt, the fix is to refresh the project session and resend the message — do not retry in a loop or attempt workarounds.
+
 ---
 
 ## 2. Domain Context
@@ -68,9 +72,21 @@ project = CTDC AND sprint in openSprints() ORDER BY priority DESC
 project = CTDC AND sprint in openSprints() AND status = "Blocked" ORDER BY updated ASC
 ```
 
-### Epic and All Child Issues
+### Epic and All Child Issues — Standard Query
 ```
 project = CTDC AND ("Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX) ORDER BY issuetype DESC, status ASC
+```
+
+### ⚠️ Epic Coverage — Wide Net (use when standard query misses tickets)
+
+The `"Epic Link"` field only returns **formally linked** tickets. Tickets that reference an epic in their description but lack the field association will be invisible to the standard query. Use a key-range or date-based fallback:
+
+```
+-- Key range (when you know the approximate ticket range)
+issue >= CTDC-XXXX AND issue <= CTDC-YYYY AND project = CTDC
+
+-- Date-based (when you know when the work was created)
+created >= "YYYY-MM-DD" AND project = CTDC ORDER BY created ASC
 ```
 
 ### Recently Updated (last 24 hours — daily standup prep)
@@ -118,7 +134,7 @@ When asked to produce an epic summary `.docx` for leadership, follow this struct
 
 4. **Work Breakdown** (table)
    - Columns: Ticket Key | Summary | Type | Status | Assignee | Story Points
-   - Group by: Stories → Tasks → Bugs → Sub-tasks
+   - Group by: Epics → Tasks → Bugs
 
 5. **Progress Summary**
    - % complete (done tickets / total tickets)
