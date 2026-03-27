@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-03-23
+> **Last Updated:** 2026-03-27
 
 ---
 
@@ -78,7 +78,7 @@ project = CTDC AND sprint in openSprints() AND status = "Blocked" ORDER BY updat
 
 ### Epic and All Child Issues
 ```
-project = CTDC AND ("Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX) ORDER BY issuetype DESC, status ASC
+project = CTDC AND (\"Epic Link\" = CTDC-XXXX OR parent = CTDC-XXXX) ORDER BY issuetype DESC, status ASC
 ```
 
 ### Recently Updated (last 24 hours — daily standup prep)
@@ -252,3 +252,75 @@ So that [benefit/outcome].
 - Update domain context when new repos or major architectural changes occur
 - Review stakeholder doc standards before each major release cycle
 - New SOPs or workflow patterns discovered in Claude conversations should be added here via PR
+
+---
+
+## 10. 🗃️ Jira Custom Field Reference
+
+> **Critical.** The NCI tracker (`tracker.nci.nih.gov`) has non-standard field configurations. Standard Jira field IDs and the `jira_link_to_epic` tool do NOT work reliably. Always use the confirmed field IDs below.
+>
+> These fields are confirmed on **Task** issue type in both **CTDC** and **ICDC** projects — they are consistent across both.
+
+### ✅ Confirmed Writable Fields (via `jira_update_issue`)
+
+| Field Name | Custom Field ID | Value Format | Notes |
+|---|---|---|---|
+| **Epic Link** | `customfield_12350` | `"CTDC-XXXX"` (plain string) | Set via `fields` parameter. Confirmed working on Task type. |
+| **Developer** | `customfield_23650` | `[{"name": "username"}]` (array of objects) | Multi-value user picker. Set via `fields` parameter. |
+
+### ❌ Fields That Do NOT Work via API on This Instance
+
+| Field | Why It Fails |
+|---|---|
+| `customfield_10014` | Not on edit screen for CTDC Tasks — "cannot be set" error |
+| `customfield_10100` | Not on edit screen for CTDC Tasks — "cannot be set" error |
+| `customfield_18250` | "Developer Legacy" — single user picker, not rendered on Task screens |
+| `customfield_10657` | Visible in UI but blocked on REST API edit screen for Tasks |
+| `jira_link_to_epic` tool | Calls succeed but epic link does not appear in the UI |
+
+### 📝 Usage Examples
+
+**Set Epic Link:**
+```json
+jira_update_issue(
+  issue_key = "CTDC-2010",
+  fields = {"customfield_12350": "CTDC-2008"}
+)
+```
+
+**Set Developer:**
+```json
+jira_update_issue(
+  issue_key = "CTDC-2010",
+  fields = {"customfield_23650": [{"name": "millerer"}]}
+)
+```
+
+**Set Both at Once:**
+```json
+jira_update_issue(
+  issue_key = "CTDC-2010",
+  fields = {
+    "customfield_12350": "CTDC-2008",
+    "customfield_23650": [{"name": "millerer"}]
+  }
+)
+```
+
+### 🔍 How to Discover New Fields
+
+When a field is set manually in the Jira UI and the API equivalent is unknown:
+1. Pull the ticket with `fields = "*all"` before and after the manual edit
+2. Diff the `customfield_XXXXX` values — the one that changed from `null` to a value is the writable field
+3. Note the value format (string vs. object vs. array) and replicate it exactly
+
+### 👥 Known Username → Account Key Mapping (CTDC Team)
+
+| Name | Username | Account Key |
+|---|---|---|
+| Yizhen Chen | `cheny39` | `cheny39` |
+| Eric Miller | `millerer` | `JIRAUSER60101` |
+| Nahom Tesfatsion | `tesfatsionnh` | `JIRAUSER56020` |
+| Adam Davenport | `davenportaw` | *(not yet confirmed)* |
+| Gina Kuffel (TPM) | `kuffelgr` | `JIRAUSER57501` |
+| Charles Ngu | `charles.ngu@nih.gov` | *(email format — use email)* |
