@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-03-27
+> **Last Updated:** 2026-04-02
 
 ---
 
@@ -105,51 +105,105 @@ project = CTDC AND sprint in openSprints() AND status in ("In Review", "QA", "Te
 
 ## 5. 📄 Stakeholder Document Standards
 
-### Epic Summary Document (for leadership/stakeholders)
+### Overview
 
-When asked to produce an epic summary `.docx` for leadership, follow this structure:
+Leadership and stakeholder summary documents are **never** Jira links — they are polished `.docx` files stored in the `epic-summaries/` folder at the root of this repository. Each epic gets its own subfolder with versioned files.
 
-1. **Cover / Title Block**
-   - Epic title and Jira key
-   - Date prepared
-   - Prepared by (TPM name)
-   - Status badge (In Progress / Complete / At Risk)
+**Repository path:** `CBIIT/ctdc-documentation/epic-summaries/`
+**Full SOP:** See `epic-summaries/README.md`
 
-2. **Executive Summary** (3–5 sentences)
+---
+
+### 5a. Authorship & Affiliation
+
+**Critical:** The preparer is affiliated with **Frederick National Laboratory for Cancer Research (FNL)**, not NCI or CBIIT. NCI/CBIIT is the federal sponsor. Always reflect this distinction.
+
+| Field | Value |
+|---|---|
+| **Prepared By** | Gina Kuffel, Senior Technical Project Manager |
+| **Organization** | Frederick National Laboratory for Cancer Research (FNL) |
+| **Supporting** | NCI / Center for Biomedical Informatics and Technology (CBIIT) |
+| **Program** | Cancer Research Data Commons (CRDC) |
+
+---
+
+### 5b. Brand & Formatting Standards
+
+| Property | Value |
+|---|---|
+| **Page size** | US Letter (8.5" × 11") — NEVER A4 |
+| **Font** | Arial throughout |
+| **NIH Blue** | `#20558A` — section headers, cover accent bar, table header backgrounds |
+| **NIH Red** | `#BE0000` — risk/blocker callouts, "At Risk" status badges, critical notes |
+| **Light Blue** | `#EAF1F8` — alternating table rows, subtle backgrounds |
+| **White** | `#FFFFFF` — header text on dark backgrounds |
+| **Jira links** | Footnotes only — never inline URLs (keeps docs readable in print) |
+| **Jargon** | Minimize; always add plain-English parentheticals when technical terms are unavoidable |
+
+---
+
+### 5c. Document Structure
+
+Every epic summary `.docx` follows this section order:
+
+1. **Cover Page**
+   - Document title (epic name + "— Epic Summary")
+   - Jira key, version, date, status badge
+   - Prepared by / organization block (FNL as preparer, NCI/CBIIT as sponsor)
+
+2. **Executive Summary** (3–5 sentences, plain English)
    - What problem does this epic solve?
    - Why does it matter to researchers/users?
    - What is the expected outcome?
 
 3. **Scope & Objectives**
-   - Bulleted list of in-scope deliverables
-   - Out-of-scope callouts if relevant
+   - In-scope deliverables (bullets)
+   - Out-of-scope callouts
 
 4. **Work Breakdown** (table)
    - Columns: Ticket Key | Summary | Type | Status | Assignee | Story Points
-   - Group by: Stories → Tasks → Bugs → Sub-tasks
+   - Grouped: Stories → Tasks → Bugs → Sub-tasks
 
 5. **Progress Summary**
-   - % complete (done tickets / total tickets)
-   - Story points burned vs. total
-   - Sprint association
+   - % complete, story points burned/total, sprint association
 
-6. **Risks & Blockers**
-   - Any tickets currently blocked
-   - Dependencies on other teams or systems
+6. **Risks & Blockers** (table)
+   - Columns: Ticket | Issue | Impact | Mitigation
+   - If none: state explicitly
 
 7. **Diagrams & Visuals**
-   - Include any architecture diagrams, data flow diagrams, or mockups attached to tickets
-   - If no attachments exist, note: *"No diagrams attached to this epic at time of publication."*
+   - Architecture diagrams, data flow diagrams, mockups from Jira attachments
+   - If none: *"No diagrams attached to this epic at time of publication."*
 
-8. **Next Steps / Open Questions**
+8. **Next Steps & Open Questions**
 
-### Formatting Rules for Stakeholder Docs
-- Use **US Letter** page size (never A4)
-- Font: Arial throughout
-- Brand color for headers: NCI Blue `#20558A`
-- Keep technical jargon minimal — if it must be used, add a plain-English parenthetical
-- Tables preferred over bullet walls for multi-ticket data
-- Include Jira links as footnotes, not inline URLs (keeps docs readable in print)
+9. **Document History** (version table at end)
+   - Columns: Version | Date | Author | Summary of Changes
+
+---
+
+### 5d. Versioning Rules
+
+Files are stored as: `CTDC-XXXX-summary-v{MAJOR}.{MINOR}.docx`
+
+| Version Bump | When to Use |
+|---|---|
+| `v1.0` | First published version |
+| `vX.(Y+1)` | Minor update — ticket status changes, assignee corrections, wording fixes |
+| `v(X+1).0` | Major revision — scope change, re-planning, new phases added |
+
+> **Never overwrite an existing file.** Always create a new versioned file and commit with a descriptive message.
+
+---
+
+### 5e. How Claude Generates Epic Summary Docs
+
+1. Pull epic + all child tickets from Jira via `jira_search` (use JQL: `"Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX`)
+2. Populate all template sections from ticket data
+3. Generate `.docx` using `docx` npm package (US Letter, Arial, NIH Blue/Red branding)
+4. Validate the file
+5. Commit to `epic-summaries/CTDC-XXXX-short-name/CTDC-XXXX-summary-v1.0.docx`
+6. Update `epic-summaries/README.md` Registered Epics table
 
 ---
 
@@ -252,6 +306,7 @@ So that [benefit/outcome].
 - Update domain context when new repos or major architectural changes occur
 - Review stakeholder doc standards before each major release cycle
 - New SOPs or workflow patterns discovered in Claude conversations should be added here via PR
+- When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 
 ---
 
