@@ -3,11 +3,13 @@
 **Document Type:** Leadership Overview
 **Prepared by:** Gina Kuffel, Senior TPM, BACS/FNL
 **Date:** April 3, 2026
-**Version:** v1.1
+**Version:** v1.2
 **Project:** Clinical and Translational Data Commons (CTDC)
 **Ecosystem:** Cancer Research Data Commons (CRDC) | NCI/CBIIT
 
-> **Revision Note (v1.1):** This document has been updated based on a direct source code review of the CTDC authentication service (`crdc-ctdc-authn`), file delivery service (`crdc-ctdc-files`), and backend (`crdc-ctdc-backend`). Several details in v1.0 were carried over from ICDC documentation and did not accurately reflect CTDC's implementation. Key corrections are noted inline.
+> **Revision Note (v1.2):** This update resolves two open items from v1.1: (1) Google IDP status confirmed — Google login is **not used** in CTDC in any environment; (2) backend ACL review completed — source code inspection of `bento-backend-core` confirms that `crdc-ctdc-backend` does **not** perform independent ACL resolution. See Section 6 for the full architecture boundary explanation.
+
+> **Revision Note (v1.1):** This document was updated based on a direct source code review of the CTDC authentication service (`crdc-ctdc-authn`), file delivery service (`crdc-ctdc-files`), and backend (`crdc-ctdc-backend`). Several details in v1.0 were carried over from ICDC documentation and did not accurately reflect CTDC's implementation. Key corrections are noted inline.
 
 ---
 
@@ -50,7 +52,7 @@ The session remains active for **30 minutes** of inactivity by default. After th
 
 > ⚠️ **Known constraint:** Users whose NIH-linked account does not carry an `@nih.gov` or `@login.gov` email address will be unable to log in. This is a known limitation of the current identity integration.
 
-> ⚠️ **Open question for leadership:** The authentication service codebase also includes support for a Google identity provider. It should be confirmed with the engineering team whether Google login is active in any CTDC environment (dev, QA, staging, or production).
+> ✅ **Confirmed (v1.2):** Google is **not** an active identity provider in CTDC. Although the authentication service codebase contains references to a Google IDP, this has been confirmed as not enabled in any CTDC environment — development, QA, staging, or production.
 
 ---
 
@@ -93,7 +95,38 @@ This means that if DCF is unavailable, file downloads will fail — even for use
 
 ---
 
-## 6. Access Control Summary
+## 6. Architecture Boundary: What Each Service Is Responsible For
+
+> ✅ **New in v1.2 — Based on source code review of `bento-backend-core`.**
+
+A common question for this architecture is: *which service actually enforces who can see what data?* The answer involves a clear division of responsibility across three services. Understanding this boundary is important for security reviews, compliance assessments, and incident response.
+
+### The Three Services and Their Roles
+
+| Service | Repository | Role in Access Control |
+|---|---|---|
+| **Authentication Service** | `crdc-ctdc-authn` | The authority on user identity and permissions. Manages OAuth2 login, stores user sessions and ACLs in MySQL, and answers "is this user authenticated?" queries from other services. |
+| **File Delivery Service** | `crdc-ctdc-files` | Enforces per-file access control. Checks the user's ACL against the file's access tier (open vs. controlled) before requesting a signed URL from DCF. |
+| **Backend (GraphQL API)** | `crdc-ctdc-backend` | Provides data query access to the application's private GraphQL endpoint. Does **not** perform its own ACL resolution — delegates authentication entirely to the authentication service. |
+
+### How the Backend Handles Authentication
+
+The backend's access control is implemented in a component called `AuthenticationInterceptor` (part of the shared Bento platform core, `bento-backend-core`). This interceptor runs before every request to the private GraphQL API endpoint (`/v1/graphql/`).
+
+Here is what it does — in plain English:
+
+1. It checks whether authentication is enabled in the application configuration
+2. It takes the browser cookies from the incoming request and forwards them to the authentication service's `/authenticated` endpoint
+3. If the authentication service responds with HTTP 200 and confirms `status: true`, the request is allowed through to the GraphQL API
+4. If the authentication service responds with anything else — wrong credentials, expired session, service unavailable — the backend returns a 401 Unauthorized error and stops the request
+
+**What this means:** The backend acts as a gatekeeper, but it asks the authentication service to make the actual decision. The backend itself holds no user permission data and performs no ACL comparison. All of that logic lives in `crdc-ctdc-authn`.
+
+This is a deliberate architectural pattern in the Bento framework: centralize identity and session management in the auth service, and have other services defer to it rather than each maintaining their own access logic.
+
+---
+
+## 7. Access Control Summary
 
 CTDC enforces two levels of access control on file downloads:
 
@@ -106,7 +139,7 @@ Access permissions are stored in the user's session at login time and retrieved 
 
 ---
 
-## 7. Audit and Compliance
+## 8. Audit and Compliance
 
 > ⚠️ **Action required:** As noted in Section 5, the download event logging function is currently commented out in the CTDC file service. Until this is confirmed active or re-enabled, the audit trail described below may not be operational. This is a compliance risk that should be addressed.
 
@@ -121,29 +154,29 @@ When active, the intended audit record for each download captures:
 
 ---
 
-## 8. Key Notes for Leadership
+## 9. Key Notes for Leadership
 
 - **DCF is involved in every file download, not just login.** The CTDC file service retrieves the user's stored DCF token and calls DCF IndexD on every download request to obtain a signed URL. DCF availability is a dependency for file download functionality.
 - **Files are delivered directly from AWS cloud storage to the user's browser.** The CTDC application server brokers the signed URL but does not stream file bytes.
 - **There is no file size restriction on direct downloads in CTDC.** All registered file types — including large genomic and radiology files — are served through the same download pathway.
-- **Users authenticate via NIH eRA Commons or Login.gov.** Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration.
+- **Users authenticate via NIH eRA Commons or Login.gov only.** Google is not an active identity provider in CTDC. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration.
+- **The backend does not perform its own ACL checks.** It delegates authentication decisions to the authentication service (`crdc-ctdc-authn`) via a cookie-forwarding pattern. All session and permission data lives in the auth service.
 - **Audit logging for file downloads should be verified.** The audit event call is currently commented out in source code. This is a compliance gap that requires engineering follow-up.
-- **The Google identity provider is present in the authentication service codebase.** Whether it is active in production should be confirmed.
 
 ---
 
-## 9. Open Items Requiring Engineering Confirmation
+## 10. Open Items Requiring Engineering Confirmation
 
-| # | Question | Why It Matters |
-|---|---|---|
-| 1 | Is the `storeDownloadEvent` audit log call intentionally disabled, or is this a bug? | Compliance risk — no download audit trail if disabled |
-| 2 | Is the Google IDP active in any CTDC environment (dev, QA, stage, prod)? | User identity classification and access scope |
-| 3 | What is the production session timeout value? | User experience and security policy alignment |
-| 4 | Has the backend (`crdc-ctdc-backend`) ACL resolution logic been reviewed for completeness? | Needed to confirm full access control picture |
+| # | Question | Why It Matters | Status |
+|---|---|---|---|
+| 1 | Is the `storeDownloadEvent` audit log call intentionally disabled, or is this a bug? | Compliance risk — no download audit trail if disabled | ⚠️ Open |
+| 2 | ~~Is the Google IDP active in any CTDC environment (dev, QA, stage, prod)?~~ | ~~User identity classification and access scope~~ | ✅ Resolved — Google IDP is not active in any environment |
+| 3 | What is the production session timeout value? | User experience and security policy alignment | ⚠️ Open |
+| 4 | ~~Has the backend (`crdc-ctdc-backend`) ACL resolution logic been reviewed for completeness?~~ | ~~Needed to confirm full access control picture~~ | ✅ Resolved — Backend delegates auth to `crdc-ctdc-authn` via `AuthenticationInterceptor`; performs no independent ACL resolution. See Section 6. |
 
 ---
 
-## 10. Relationship to ICDC
+## 11. Relationship to ICDC
 
 CTDC and ICDC share the same underlying file delivery service (`bento-files`) and authentication service (`bento-auth`) as part of the shared Bento platform infrastructure. However, the two projects differ in important ways:
 
@@ -153,9 +186,20 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 | **File access control** | Open and controlled access tiers | Open access only |
 | **DCF involvement** | Login + every file download (via IndexD) | IndexD for file lookup (GUIDs); no Fence auth |
 | **File size restriction** | None | None |
+| **Active identity providers** | NIH eRA Commons, Login.gov | N/A |
+
+---
+
+## 12. Document History
+
+| Version | Date | Author | Summary of Changes |
+|---|---|---|---|
+| v1.0 | March 2026 | Gina Kuffel, FNL | Initial publication |
+| v1.1 | April 3, 2026 | Gina Kuffel, FNL | Revised based on source code review of `crdc-ctdc-authn`, `crdc-ctdc-files`, `crdc-ctdc-backend`; corrected file size restriction and DCF involvement details carried over from ICDC docs |
+| v1.2 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #2 and #4: confirmed Google IDP not active; completed backend ACL review — backend delegates to auth service via `AuthenticationInterceptor`, no independent ACL resolution. Added Section 6 (Architecture Boundary). |
 
 ---
 
 *CTDC is a project of the National Cancer Institute's Cancer Research Data Commons (CRDC) | Managed by BACS/FNL under NCI/CBIIT*
 *Prepared by Gina Kuffel, Senior TPM, BACS/FNL — April 2026*
-*v1.1 — Revised based on source code review of crdc-ctdc-authn, crdc-ctdc-files, crdc-ctdc-backend*
+*v1.2 — Google IDP confirmed inactive; backend ACL architecture boundary documented*
