@@ -25,7 +25,7 @@ epic-summaries/
 {JIRA-KEY}-{short-kebab-case-name}
 ```
 Examples:
-- `CTDC-1764-file-service-dynamic-megazip`
+- `CTDC-1764-ras-object-file-download`
 - `CTDC-2008-security-remediation`
 - `CTDC-2007-software-release-deployments`
 
@@ -82,4 +82,4 @@ All documents in this folder follow these standards:
 
 | Epic Key | Name | Folder | Latest Version |
 |---|---|---|---|
-| *(none yet — first doc pending)* | | | |
+| CTDC-1764 | Bento Core: RAS-Enabled Object File Download | `CTDC-1764-ras-object-file-download/` | v1.0 (April 2, 2026) |
