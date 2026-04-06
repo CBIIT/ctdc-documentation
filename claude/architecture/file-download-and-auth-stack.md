@@ -2,10 +2,12 @@
 
 **Document Type:** Leadership Overview
 **Prepared by:** Gina Kuffel, Senior TPM, BACS/FNL
-**Date:** April 3, 2026
-**Version:** v1.4
+**Date:** April 6, 2026
+**Version:** v1.5
 **Project:** Clinical and Translational Data Commons (CTDC)
 **Ecosystem:** Cancer Research Data Commons (CRDC) | NCI/CBIIT
+
+> **Revision Note (v1.5):** Corrected Login.gov framing throughout — Login.gov is not a separate login entry point or parallel IDP. Source code review of `crdc-ctdc-authn` confirms there is one login pathway (NIH/eRA Commons). After authentication, the backend classifies a user's session as `nih` or `login.gov` by inspecting the email domain returned from NIH. Login.gov is a federated identity option within NIH's login infrastructure; CTDC never communicates with Login.gov directly. Updated Sections 3, 8a, 9, 11, and document history.
 
 > **Revision Note (v1.4):** Corrected terminology throughout — Fence and IndexD are NCI CRDC infrastructure services (part of the same Cancer Research Data Commons platform as CTDC), not external NIH services. All references updated accordingly.
 
@@ -44,19 +46,21 @@ CTDC stores scientific research files spanning multiple data types — including
 
 ## 3. Identity and Authentication: NIH Login via eRA Commons
 
-CTDC uses NCI CRDC's centralized OAuth2 login infrastructure for user authentication. Users log in using their **NIH eRA Commons credentials** or **Login.gov** account — these are the two supported identity providers (IDPs) in the current implementation. Authentication is brokered by **CRDC Fence**, the NCI CRDC identity and authorization service.
+CTDC uses NCI CRDC's centralized OAuth2 login infrastructure for user authentication. There is **one login entry point**: NIH eRA Commons, brokered by **CRDC Fence**. After authentication, the backend classifies the user's session as either `nih` or `login.gov` based on the email domain returned by NIH — but this classification happens invisibly, after the fact. The user always authenticates through the same NIH login page.
+
+> **What this means in practice:** Login.gov is a federated identity option within NIH's login infrastructure — it is not a separate login button, a parallel authentication pathway, or a service that CTDC communicates with directly. NIH may route certain users through Login.gov on its end; CTDC is unaware of this routing and only sees the resulting email address.
 
 ### What Happens at Login
 
 When a user clicks "Login" in CTDC, the application redirects them to NIH's login page (brokered by CRDC Fence). After the user authenticates, CRDC Fence issues an access token. CTDC uses this token to:
 
 1. Retrieve the user's profile information (name, email)
-2. Classify the user's identity provider based on their email domain (`@nih.gov` → NIH; `@login.gov` → Login.gov)
+2. Classify the user's identity provider based on their email domain: `@nih.gov` → classified as `nih`; `@login.gov` → classified as `login.gov`. This classification is stored in the user's session and used in audit records — it does not change the login flow.
 3. Store the user's session — including their access token and data access permissions — in a secure MySQL database
 
 The session timeout defaults to **30 minutes** of inactivity. After that, the user is required to log in again. See Section 8 for details on session timeout configuration.
 
-> ⚠️ **Known constraint:** Users whose NIH-linked account does not carry an `@nih.gov` or `@login.gov` email address will be unable to log in. This is a known limitation of the current identity integration.
+> ⚠️ **Known constraint:** Users whose NIH-linked account does not carry an `@nih.gov` or `@login.gov` email address will be unable to log in. The authentication service throws an error for any email that does not match either domain. This is a known limitation of the current identity integration.
 
 > ✅ **Confirmed (v1.2):** Google is **not** an active identity provider in CTDC. Although the authentication service codebase contains references to a Google IDP, this has been confirmed as not enabled in any CTDC environment — development, QA, staging, or production.
 
@@ -95,7 +99,7 @@ This means that if CRDC services are unavailable, file downloads will fail — e
 | **3** | The service checks the user's Access Control List (ACL) against the file's ACL. If the file is tagged as "open," any authenticated user may proceed. If the file requires specific data access approval, the user's permission list is checked — only an "Approved" status grants access. |
 | **4** | With access confirmed, the file service calls the CRDC IndexD endpoint, passing the file's GUID and the user's Bearer token. CRDC IndexD validates the token and returns a signed URL to the file in AWS cloud storage. |
 | **5** | The signed URL is returned to the user's browser. The file transfers directly from AWS cloud storage to the user's machine. The CTDC application server is not involved in the actual file transfer. |
-| **6** | A download event record — capturing user identity, IDP, file name, format, and size — is intended to be written to the audit log at this point. **This step is currently disabled in the deployed code.** See Section 8 for details. |
+| **6** | A download event record — capturing user identity, IDP classification, file name, format, and size — is intended to be written to the audit log at this point. **This step is currently disabled in the deployed code.** See Section 8 for details. |
 
 ---
 
@@ -157,7 +161,7 @@ The `storeDownloadEvent` function (in `neo4j/neo4j-operations.js`) captures the 
 |---|---|
 | **User ID** | Internal user identifier from the session |
 | **Email Address** | User's email address from the session |
-| **Identity Provider** | NIH (eRA Commons) or Login.gov — how the user authenticated |
+| **Identity Provider** | The session's IDP classification: `nih` or `login.gov` — determined at login time by email domain inspection. Both values flow through the NIH/eRA Commons authentication pathway; this field reflects the email domain, not a separate login system. |
 | **File ID** | The file's GUID (globally unique identifier, as registered in CRDC IndexD) |
 | **File Name** | Human-readable file name |
 | **File Format** | File type (e.g., BAM, FASTQ, VCF, PDF) |
@@ -190,7 +194,7 @@ The timeout is configured as follows:
 - **CRDC infrastructure is involved in every file download, not just login.** The CTDC file service retrieves the user's stored CRDC token and calls CRDC IndexD on every download request to obtain a signed URL. CRDC service availability is a dependency for file download functionality.
 - **Files are delivered directly from AWS cloud storage to the user's browser.** The CTDC application server brokers the signed URL but does not stream file bytes.
 - **There is no file size restriction on direct downloads in CTDC.** All registered file types — including large genomic and radiology files — are served through the same download pathway.
-- **Users authenticate via NIH eRA Commons or Login.gov only, brokered by CRDC Fence.** Google is not an active identity provider in CTDC. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration.
+- **There is one login entry point: NIH eRA Commons, brokered by CRDC Fence.** Login.gov is not a separate login option in the CTDC application — it is a federated identity mechanism within NIH's login infrastructure. After a user authenticates through NIH, the backend classifies the session as `nih` or `login.gov` based on email domain. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration. Google is not an active identity provider in any environment.
 - **The backend does not perform its own ACL checks.** It delegates authentication decisions to the authentication service (`crdc-ctdc-authn`) via a cookie-forwarding pattern. All session and permission data lives in the auth service.
 - **Audit logging infrastructure exists but is currently disabled.** The `storeDownloadEvent` function is fully implemented and writes to Neo4j. It has been commented out at the call site and requires a deliberate engineering action to re-enable. This is a compliance gap.
 - **Session timeout defaults to 30 minutes.** This can be overridden per environment via deployment configuration. The production value should be confirmed.
@@ -214,11 +218,11 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 
 | | CTDC | ICDC |
 |---|---|---|
-| **Login required** | Yes — NIH eRA Commons or Login.gov via CRDC Fence | No — all downloadable files are open access |
+| **Login required** | Yes — NIH eRA Commons via CRDC Fence (Login.gov is a federated option within NIH, not a separate entry point) | No — all downloadable files are open access |
 | **File access control** | Open and controlled access tiers | Open access only |
 | **CRDC service involvement** | CRDC Fence (login) + CRDC IndexD (every download) | CRDC IndexD for file lookup (GUIDs) only; no Fence auth |
 | **File size restriction** | None | None |
-| **Active identity providers** | NIH eRA Commons, Login.gov | N/A |
+| **Active identity providers** | NIH eRA Commons (sole login entry point); session classified as `nih` or `login.gov` by email domain post-authentication | N/A |
 
 ---
 
@@ -231,9 +235,10 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 | v1.2 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #2 and #4: confirmed Google IDP not active; completed backend ACL review — backend delegates to auth service via `AuthenticationInterceptor`. Added Section 6 (Architecture Boundary). |
 | v1.3 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #1 and #3: audit logging fully characterized — `storeDownloadEvent` is implemented but commented out at call site in `routes/files.js`; session timeout default confirmed as 30 minutes from `config.js`, production value pending deployment config review. Updated Sections 5, 8, 9, 10. |
 | v1.4 | April 6, 2026 | Gina Kuffel, FNL | Corrected terminology throughout: Fence and IndexD are NCI CRDC infrastructure services, not external NIH services. Updated all references in Sections 1–5, 8–9, 11, and document history. |
+| v1.5 | April 6, 2026 | Gina Kuffel, FNL | Corrected Login.gov framing: Login.gov is not a separate login entry point. Source code review of `crdc-ctdc-authn` (`idps/index.js`, `services/nih-auth.js`) confirms one login pathway (NIH/eRA Commons); LOGIN_GOV traffic routes through `nihClient.login()`. Session classification as `nih` or `login.gov` is based on post-authentication email domain inspection. Updated Sections 3, 8a, 9, 11. |
 
 ---
 
 *CTDC is a project of the National Cancer Institute's Cancer Research Data Commons (CRDC) | Managed by BACS/FNL under NCI/CBIIT*
 *Prepared by Gina Kuffel, Senior TPM, BACS/FNL — April 2026*
-*v1.4 — DCF terminology corrected to NCI CRDC infrastructure; two engineering actions remain outstanding*
+*v1.5 — Login.gov framing corrected; two engineering actions remain outstanding*
