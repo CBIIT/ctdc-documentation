@@ -4,6 +4,14 @@ This folder contains **leadership and stakeholder summary documents** for signif
 
 ---
 
+## 📋 Epic Summaries Index
+
+| Epic Key | Epic Name | Date Added |
+|---|---|---|
+| [CTDC-1764](CTDC-1764-ras-object-file-download/) | Bento Core: RAS-Enabled Object File Download | April 6, 2026 |
+
+---
+
 ## 📐 The Two-Artifact Pattern
 
 Every epic summary consists of **two complementary files** that serve different audiences:
@@ -106,7 +114,7 @@ All documents in this folder follow these standards:
 4. Validate the `.docx`
 5. Commit `.docx` to the appropriate `CTDC-XXXX-short-name/` subfolder
 6. Upload `.docx` to SharePoint → **CTDC Epic Summaries** folder
-7. Update this README's Registered Epics table
+7. Update this README's index table and Registered Epics table
 
 ---
 
