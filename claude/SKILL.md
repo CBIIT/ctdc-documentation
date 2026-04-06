@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-04-02
+> **Last Updated:** 2026-04-06
 
 ---
 
@@ -207,6 +207,47 @@ Files are stored as: `CTDC-XXXX-summary-v{MAJOR}.{MINOR}.docx`
 
 ---
 
+### 5f. 🏛️ Architecture Leadership Documents (`.docx`)
+
+A second category of leadership document exists alongside epic summaries: **architecture leadership overviews**. These are distilled, non-technical `.docx` files that translate technical architecture documents into stakeholder-readable summaries.
+
+**The pattern:**
+- The **source of truth** is a `.md` architecture reference file in `claude/architecture/` in this repo (e.g., `claude/architecture/file-download-and-auth-stack.md`)
+- The **leadership deliverable** is a `.docx` distilled from it, stored in the **CTDC Architecture** folder in SharePoint
+- The two are maintained in parallel — the `.md` evolves with engineering details; the `.docx` is updated when the leadership-facing content materially changes
+- The `.docx` version is **independent** from the `.md` version — start at `v1.0` for the first published `.docx` regardless of what version the source `.md` is at
+
+**Document structure for architecture leadership overviews** (7 sections, in this order):
+
+1. **Purpose** — what this document covers and who it's for
+2. **Background** — what types of data/files exist and how they're accessed (use a table)
+3. **Integration Points** — what NCI/CRDC services are involved and why (explain in plain English; no service internals)
+4. **How It Works** — numbered plain-English step-by-step flow of the end-to-end process
+5. **Access Model** — table summarizing authentication and access control rules
+6. **Audit & Compliance** — what gets recorded per download/event, and any known gaps
+7. **Key Notes for Leadership** — bullet summary of the most important facts for a program officer or CIO
+
+**Naming convention:** `[PROJECT]_[Topic]_LeadershipOverview_v{MAJOR}_{MINOR}.docx`
+- Example: `CTDC_FileDownload_LeadershipOverview_v1_0.docx`
+
+**Versioning:**
+
+| Version Bump | When to Use |
+|---|---|
+| `v1.0` | First published `.docx` for this topic |
+| `vX.(Y+1)` | Minor update — wording, corrections, clarifications |
+| `v(X+1).0` | Major revision — significant new content, structural change, or underlying architecture changed |
+
+> **Never overwrite an existing file.** Always create a new versioned file.
+
+**Storage:** SharePoint → **CTDC Architecture** folder
+
+**Source `.md` location:** `CBIIT/ctdc-documentation/claude/architecture/`
+
+**When to update the `.docx`:** When the source `.md` changes in a way that affects leadership-relevant content (e.g., a compliance gap is resolved, an access model changes, a new integration point is added). Purely technical corrections to the `.md` that don't change the leadership narrative do not require a new `.docx`.
+
+---
+
 ## 6. ☀️ Sprint Reporting Templates
 
 ### Daily Standup Prep Checklist
@@ -307,6 +348,7 @@ So that [benefit/outcome].
 - Review stakeholder doc standards before each major release cycle
 - New SOPs or workflow patterns discovered in Claude conversations should be added here via PR
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
+- When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 
 ---
 
