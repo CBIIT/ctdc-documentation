@@ -3,23 +3,27 @@
 **Document Type:** Leadership Overview
 **Prepared by:** Gina Kuffel, Senior TPM, BACS/FNL
 **Date:** April 3, 2026
-**Version:** v1.3
+**Version:** v1.4
 **Project:** Clinical and Translational Data Commons (CTDC)
 **Ecosystem:** Cancer Research Data Commons (CRDC) | NCI/CBIIT
+
+> **Revision Note (v1.4):** Corrected terminology throughout — Fence and IndexD are NCI CRDC infrastructure services (part of the same Cancer Research Data Commons platform as CTDC), not external NIH services. All references updated accordingly.
 
 > **Revision Note (v1.3):** This update resolves the two remaining open items from v1.2: (1) audit logging status fully characterized from source code — `storeDownloadEvent` is implemented but deliberately disabled at the call site; (2) session timeout default confirmed as 30 minutes from source, with a note that the production value may be overridden by deployment configuration.
 
 > **Revision Note (v1.2):** Resolved Google IDP status (not active in any environment) and completed backend ACL review — `crdc-ctdc-backend` delegates authentication to `crdc-ctdc-authn` via `AuthenticationInterceptor`. Added Section 6 (Architecture Boundary).
 
-> **Revision Note (v1.1):** Revised based on source code review of `crdc-ctdc-authn`, `crdc-ctdc-files`, and `crdc-ctdc-backend`. Corrected file size restriction and DCF involvement details carried over from ICDC documentation.
+> **Revision Note (v1.1):** Revised based on source code review of `crdc-ctdc-authn`, `crdc-ctdc-files`, and `crdc-ctdc-backend`. Corrected file size restriction and CRDC service involvement details carried over from ICDC documentation.
 
 ---
 
 ## 1. Purpose
 
-This document provides a concise, non-technical overview of how the Clinical and Translational Data Commons (CTDC) enables authorized users to download research files directly from the application. It describes the flow from the moment a user requests a file through to receipt of that file, and explains where CTDC connects to NIH's identity and authorization infrastructure — specifically the Data Commons Framework (DCF) services.
+This document provides a concise, non-technical overview of how the Clinical and Translational Data Commons (CTDC) enables authorized users to download research files directly from the application. It describes the flow from the moment a user requests a file through to receipt of that file, and explains where CTDC connects to NCI's CRDC identity and authorization infrastructure — specifically the CRDC Fence and CRDC IndexD services.
 
 This document is intended for leadership and program stakeholders. A companion technical architecture document covering the full engineering implementation is maintained separately in the CTDC engineering knowledge base.
+
+> **Terminology note:** Fence and IndexD are NCI CRDC infrastructure services — they are part of the same Cancer Research Data Commons platform that CTDC belongs to, maintained by NCI/CBIIT. They are not external third-party services.
 
 ---
 
@@ -29,10 +33,10 @@ CTDC stores scientific research files spanning multiple data types — including
 
 | File Category | Examples | Access Method |
 |---|---|---|
-| **Genomic Data Files** | BAM, FASTQ | Direct download via the CTDC file service using a DCF-issued signed URL |
-| **Radiology Images** | DICOM | Direct download via the CTDC file service using a DCF-issued signed URL |
-| **Variant Files** | VCF | Direct download via the CTDC file service using a DCF-issued signed URL |
-| **Document Files** | PDF, study protocols, data supplements | Direct download via the CTDC file service using a DCF-issued signed URL |
+| **Genomic Data Files** | BAM, FASTQ | Direct download via the CTDC file service using a CRDC-issued signed URL |
+| **Radiology Images** | DICOM | Direct download via the CTDC file service using a CRDC-issued signed URL |
+| **Variant Files** | VCF | Direct download via the CTDC file service using a CRDC-issued signed URL |
+| **Document Files** | PDF, study protocols, data supplements | Direct download via the CTDC file service using a CRDC-issued signed URL |
 
 > ⚠️ **Correction from v1.0:** The previous version of this document stated that direct download was limited to files under 12 MB and that large scientific files required a separate "My Files" manifest workflow. This was carried over from ICDC documentation and does not reflect CTDC's implementation. CTDC's file service applies no file size restriction — all registered file types are handled through the same download pathway.
 
@@ -40,11 +44,11 @@ CTDC stores scientific research files spanning multiple data types — including
 
 ## 3. Identity and Authentication: NIH Login via eRA Commons
 
-CTDC uses NIH's centralized OAuth2 login infrastructure for user authentication. Users log in using their **NIH eRA Commons credentials** or **Login.gov** account — these are the two supported identity providers (IDPs) in the current implementation.
+CTDC uses NCI CRDC's centralized OAuth2 login infrastructure for user authentication. Users log in using their **NIH eRA Commons credentials** or **Login.gov** account — these are the two supported identity providers (IDPs) in the current implementation. Authentication is brokered by **CRDC Fence**, the NCI CRDC identity and authorization service.
 
 ### What Happens at Login
 
-When a user clicks "Login" in CTDC, the application redirects them to NIH's login page. After the user authenticates, NIH issues an access token. CTDC uses this token to:
+When a user clicks "Login" in CTDC, the application redirects them to NIH's login page (brokered by CRDC Fence). After the user authenticates, CRDC Fence issues an access token. CTDC uses this token to:
 
 1. Retrieve the user's profile information (name, email)
 2. Classify the user's identity provider based on their email domain (`@nih.gov` → NIH; `@login.gov` → Login.gov)
@@ -58,27 +62,27 @@ The session timeout defaults to **30 minutes** of inactivity. After that, the us
 
 ---
 
-## 4. How DCF Is Involved: More Than Just Login
+## 4. How CRDC Services Are Involved: More Than Just Login
 
-> ⚠️ **Correction from v1.0:** The previous version stated that DCF Fence was only involved at login time and played no role in individual file download requests. This was incorrect. DCF is actively involved in **every file download**, as described below.
+> ⚠️ **Correction from v1.0:** The previous version stated that CRDC Fence was only involved at login time and played no role in individual file download requests. This was incorrect. CRDC infrastructure is actively involved in **every file download**, as described below.
 
-The Data Commons Framework (DCF) is NIH's infrastructure for managing access to controlled research data across data commons applications. CTDC uses two DCF components:
+NCI's Cancer Research Data Commons (CRDC) provides centralized infrastructure for managing access to controlled research data across data commons applications. CTDC uses two CRDC services:
 
-- **DCF Fence** — handles OAuth2 login and issues access tokens
-- **DCF IndexD** — a file registry service that maps a file's unique identifier (GUID) to its actual location in cloud storage, and issues time-limited signed URLs
+- **CRDC Fence** — handles OAuth2 login and issues access tokens
+- **CRDC IndexD** — a file registry service that maps a file's unique identifier (GUID) to its actual location in cloud storage, and issues time-limited signed URLs
 
-Think of DCF IndexD as a library catalog: it knows where every file lives, and when a user is authorized to access one, it hands them a temporary key to retrieve it directly.
+Think of CRDC IndexD as a library catalog: it knows where every file lives, and when a user is authorized to access one, it hands them a temporary key to retrieve it directly.
 
-### DCF's Role in Every File Download
+### CRDC's Role in Every File Download
 
 When a user clicks the download icon on a file in CTDC, the file delivery service:
 
-1. Retrieves the user's DCF access token from their stored session in MySQL
-2. Uses that token to call the DCF IndexD endpoint with the file's GUID
-3. DCF validates the token and returns a **signed URL** — a secure, time-limited link directly to the file in cloud storage
+1. Retrieves the user's CRDC access token from their stored session in MySQL
+2. Uses that token to call the CRDC IndexD endpoint with the file's GUID
+3. CRDC IndexD validates the token and returns a **signed URL** — a secure, time-limited link directly to the file in cloud storage
 4. CTDC passes that signed URL back to the user's browser, which initiates the download directly from cloud storage
 
-This means that if DCF is unavailable, file downloads will fail — even for users who are already logged in.
+This means that if CRDC services are unavailable, file downloads will fail — even for users who are already logged in.
 
 ---
 
@@ -87,9 +91,9 @@ This means that if DCF is unavailable, file downloads will fail — even for use
 | Step | What Happens |
 |---|---|
 | **1** | The user clicks the download icon next to a file in CTDC. The browser sends a request to the CTDC file delivery service, including the user's session cookie. |
-| **2** | The file delivery service extracts the session ID from the cookie and queries the MySQL session database to retrieve the user's stored DCF access token. If no valid session or token is found, the request is rejected. |
+| **2** | The file delivery service extracts the session ID from the cookie and queries the MySQL session database to retrieve the user's stored CRDC access token. If no valid session or token is found, the request is rejected. |
 | **3** | The service checks the user's Access Control List (ACL) against the file's ACL. If the file is tagged as "open," any authenticated user may proceed. If the file requires specific data access approval, the user's permission list is checked — only an "Approved" status grants access. |
-| **4** | With access confirmed, the file service calls the DCF IndexD endpoint, passing the file's GUID and the user's Bearer token. DCF validates the token and returns a signed URL to the file in AWS cloud storage. |
+| **4** | With access confirmed, the file service calls the CRDC IndexD endpoint, passing the file's GUID and the user's Bearer token. CRDC IndexD validates the token and returns a signed URL to the file in AWS cloud storage. |
 | **5** | The signed URL is returned to the user's browser. The file transfers directly from AWS cloud storage to the user's machine. The CTDC application server is not involved in the actual file transfer. |
 | **6** | A download event record — capturing user identity, IDP, file name, format, and size — is intended to be written to the audit log at this point. **This step is currently disabled in the deployed code.** See Section 8 for details. |
 
@@ -105,8 +109,8 @@ A common question for this architecture is: *which service actually enforces who
 
 | Service | Repository | Role in Access Control |
 |---|---|---|
-| **Authentication Service** | `crdc-ctdc-authn` | The authority on user identity and permissions. Manages OAuth2 login, stores user sessions and ACLs in MySQL, and answers "is this user authenticated?" queries from other services. |
-| **File Delivery Service** | `crdc-ctdc-files` | Enforces per-file access control. Checks the user's ACL against the file's access tier (open vs. controlled) before requesting a signed URL from DCF. |
+| **Authentication Service** | `crdc-ctdc-authn` | The authority on user identity and permissions. Manages OAuth2 login via CRDC Fence, stores user sessions and ACLs in MySQL, and answers "is this user authenticated?" queries from other services. |
+| **File Delivery Service** | `crdc-ctdc-files` | Enforces per-file access control. Checks the user's ACL against the file's access tier (open vs. controlled) before requesting a signed URL from CRDC IndexD. |
 | **Backend (GraphQL API)** | `crdc-ctdc-backend` | Provides data query access to the application's private GraphQL endpoint. Does **not** perform its own ACL resolution — delegates authentication entirely to the authentication service. |
 
 ### How the Backend Handles Authentication
@@ -154,7 +158,7 @@ The `storeDownloadEvent` function (in `neo4j/neo4j-operations.js`) captures the 
 | **User ID** | Internal user identifier from the session |
 | **Email Address** | User's email address from the session |
 | **Identity Provider** | NIH (eRA Commons) or Login.gov — how the user authenticated |
-| **File ID** | The file's GUID (globally unique identifier) |
+| **File ID** | The file's GUID (globally unique identifier, as registered in CRDC IndexD) |
 | **File Name** | Human-readable file name |
 | **File Format** | File type (e.g., BAM, FASTQ, VCF, PDF) |
 | **File Size** | Size of the downloaded file |
@@ -183,10 +187,10 @@ The timeout is configured as follows:
 
 ## 9. Key Notes for Leadership
 
-- **DCF is involved in every file download, not just login.** The CTDC file service retrieves the user's stored DCF token and calls DCF IndexD on every download request to obtain a signed URL. DCF availability is a dependency for file download functionality.
+- **CRDC infrastructure is involved in every file download, not just login.** The CTDC file service retrieves the user's stored CRDC token and calls CRDC IndexD on every download request to obtain a signed URL. CRDC service availability is a dependency for file download functionality.
 - **Files are delivered directly from AWS cloud storage to the user's browser.** The CTDC application server brokers the signed URL but does not stream file bytes.
 - **There is no file size restriction on direct downloads in CTDC.** All registered file types — including large genomic and radiology files — are served through the same download pathway.
-- **Users authenticate via NIH eRA Commons or Login.gov only.** Google is not an active identity provider in CTDC. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration.
+- **Users authenticate via NIH eRA Commons or Login.gov only, brokered by CRDC Fence.** Google is not an active identity provider in CTDC. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration.
 - **The backend does not perform its own ACL checks.** It delegates authentication decisions to the authentication service (`crdc-ctdc-authn`) via a cookie-forwarding pattern. All session and permission data lives in the auth service.
 - **Audit logging infrastructure exists but is currently disabled.** The `storeDownloadEvent` function is fully implemented and writes to Neo4j. It has been commented out at the call site and requires a deliberate engineering action to re-enable. This is a compliance gap.
 - **Session timeout defaults to 30 minutes.** This can be overridden per environment via deployment configuration. The production value should be confirmed.
@@ -210,9 +214,9 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 
 | | CTDC | ICDC |
 |---|---|---|
-| **Login required** | Yes — NIH eRA Commons or Login.gov | No — all downloadable files are open access |
+| **Login required** | Yes — NIH eRA Commons or Login.gov via CRDC Fence | No — all downloadable files are open access |
 | **File access control** | Open and controlled access tiers | Open access only |
-| **DCF involvement** | Login + every file download (via IndexD) | IndexD for file lookup (GUIDs); no Fence auth |
+| **CRDC service involvement** | CRDC Fence (login) + CRDC IndexD (every download) | CRDC IndexD for file lookup (GUIDs) only; no Fence auth |
 | **File size restriction** | None | None |
 | **Active identity providers** | NIH eRA Commons, Login.gov | N/A |
 
@@ -223,12 +227,13 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 | Version | Date | Author | Summary of Changes |
 |---|---|---|---|
 | v1.0 | March 2026 | Gina Kuffel, FNL | Initial publication |
-| v1.1 | April 3, 2026 | Gina Kuffel, FNL | Revised based on source code review of `crdc-ctdc-authn`, `crdc-ctdc-files`, `crdc-ctdc-backend`; corrected file size restriction and DCF involvement details carried over from ICDC docs |
+| v1.1 | April 3, 2026 | Gina Kuffel, FNL | Revised based on source code review of `crdc-ctdc-authn`, `crdc-ctdc-files`, `crdc-ctdc-backend`; corrected file size restriction and CRDC service involvement details carried over from ICDC docs |
 | v1.2 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #2 and #4: confirmed Google IDP not active; completed backend ACL review — backend delegates to auth service via `AuthenticationInterceptor`. Added Section 6 (Architecture Boundary). |
 | v1.3 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #1 and #3: audit logging fully characterized — `storeDownloadEvent` is implemented but commented out at call site in `routes/files.js`; session timeout default confirmed as 30 minutes from `config.js`, production value pending deployment config review. Updated Sections 5, 8, 9, 10. |
+| v1.4 | April 6, 2026 | Gina Kuffel, FNL | Corrected terminology throughout: Fence and IndexD are NCI CRDC infrastructure services, not external NIH services. Updated all references in Sections 1–5, 8–9, 11, and document history. |
 
 ---
 
 *CTDC is a project of the National Cancer Institute's Cancer Research Data Commons (CRDC) | Managed by BACS/FNL under NCI/CBIIT*
 *Prepared by Gina Kuffel, Senior TPM, BACS/FNL — April 2026*
-*v1.3 — All original open items resolved from source code review; two engineering actions remain outstanding*
+*v1.4 — DCF terminology corrected to NCI CRDC infrastructure; two engineering actions remain outstanding*
