@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-04-24
+> **Last Updated:** 2026-04-27
 
 ---
 
@@ -41,7 +41,7 @@ The **Clinical and Translational Data Commons (CTDC)** is part of the NCI's Canc
 
 - **Frontend:** React web application (Bento Framework)
 - **GitHub org:** CBIIT
-- **Key repos:** `crdc-ctdc-ui`, `ctdc-model`, `ctdc-deployments`, `bento-ctdc-static-content`
+- **Key repos:** `crdc-ctdc-ui`, `crdc-ctdc-backend`, `ctdc-model`, `ctdc-deployments`, `bento-ctdc-static-content`
 - **Sister project:** Integrated Canine Data Commons (ICDC) — same ecosystem, separate Jira project
 - **Jira project key:** `CTDC`
 - **Jira board ID:** `641`
@@ -734,3 +734,86 @@ Format: *10 min silent brainstorm* → group similar cards → discuss → dot-v
 
 See you [day] at [time]! :raised_hands: Drop questions, heckles, or demo tips in the thread.
 ```
+
+---
+
+## 15. 🛠️ CTDC Backend Repo Reference
+
+> **Critical for backend tickets.** When writing backend stories or investigating backend behavior, use this section to ground file paths in reality. Do not guess.
+
+### 15a. Repo Identity
+
+| Property | Value |
+|---|---|
+| **Repo URL** | `https://github.com/CBIIT/crdc-ctdc-backend` |
+| **Default branch** | `master` (NOT `main` — different from the frontend) |
+| **Build system** | Maven (`pom.xml`, `mvnw`) |
+| **Language / framework** | Java 11+ / Spring Boot |
+| **Containerization** | Dockerfile at repo root |
+
+### 15b. Architecture — Submodule Pattern
+
+The backend is split between **shared core code** (a git submodule) and **CTDC-specific code**:
+
+| Java Package | Source | Purpose |
+|---|---|---|
+| `gov.nih.nci.bento` | Git submodule → `CBIIT/bento-backend-core` | Shared Bento Framework backend code (do not edit here) |
+| `gov.nih.nci.bento_ri` | Local — in this repo | CTDC-specific extensions, resolvers, and overrides |
+
+**When a ticket says "edit the DataFetcher,"** the engineer should be looking at `bento_ri`, not `bento`. Changes to `bento` flow upstream through the submodule — that's a separate, broader change.
+
+### 15c. Key File Locations (verified)
+
+| What | Path |
+|---|---|
+| **GraphQL schemas** | `src/main/resources/graphql/` |
+| ↳ Main CTDC private (authenticated) schema | `src/main/resources/graphql/crdc-ctdc-private-es.graphql` |
+| ↳ CTDC public schema | `src/main/resources/graphql/crdc-ctdc-public-es.graphql` |
+| ↳ CTDC full ES schema | `src/main/resources/graphql/crdc-ctdc-es-full.graphql` |
+| ↳ Bento-extended shared schemas | `src/main/resources/graphql/bento-extended*.graphql` |
+| **OpenSearch index mappings** | `src/main/resources/yaml/` |
+| ↳ CTDC-specific index definitions | `src/main/resources/yaml/es_indices_ctdc.yml` |
+| ↳ Bento shared index definitions | `src/main/resources/yaml/es_indices_bento.yml` |
+| ↳ Facet search config | `src/main/resources/yaml/facet_search_es.yml` |
+| ↳ Global search config | `src/main/resources/yaml/global_search_es.yml` |
+| ↳ Single search config | `src/main/resources/yaml/single_search_es.yml` |
+| ↳ Query specifications | `src/main/resources/yaml/queries-specification.yml` |
+| **Java DataFetchers (CTDC-specific)** | `src/main/java/gov/nih/nci/bento_ri/model/` |
+| ↳ Authenticated/private resolver — main one to edit for dashboard work | `PrivateESDataFetcher.java` |
+| ↳ Public resolver | `PublicESDataFetcher.java` |
+| **Spring Boot config** | `src/main/resources/application.properties` |
+
+### 15d. Stack — Real vs README
+
+The repo `README.md` describes the system using **Neo4j + GraphQL plugin** terminology. **That is outdated.** The active CTDC stack is:
+
+| Component | Reality | README Says |
+|---|---|---|
+| Graph database | **Memgraph** (migrated from Neo4j) | Neo4j |
+| Search/aggregation | **OpenSearch** | (not mentioned) |
+| GraphQL plugin | Custom Java DataFetchers | "Neo4j GraphQL plugin" |
+
+Treat the README as historical context only. When writing tickets that reference the data path, reference Memgraph and OpenSearch, not Neo4j and the GraphQL plugin. The OpenSearch index YAMLs in `src/main/resources/yaml/` are the authoritative source for what fields are indexed and queryable.
+
+### 15e. Comparison with ICDC Backend
+
+When mirroring an ICDC feature into CTDC, the equivalent files are:
+
+| CTDC | ICDC Reference |
+|---|---|
+| `CBIIT/crdc-ctdc-backend` | `CBIIT/bento-icdc-backend` |
+| `src/main/resources/graphql/crdc-ctdc-private-es.graphql` | `src/main/resources/graphql/icdc.graphql` |
+| `src/main/resources/yaml/es_indices_ctdc.yml` | `src/main/resources/yaml/es_indices_icdc.yml` |
+| `gov.nih.nci.bento_ri.model.PrivateESDataFetcher` | (same package path in ICDC repo) |
+
+This mapping is helpful when writing tickets that say "implement the ICDC pattern in CTDC" — point the engineer at both files in their respective repos for direct diffing.
+
+### 15f. Search Tip — Don't Use Default GitHub Search Alone
+
+GitHub's code search across `org:CBIIT` does not always surface this repo for terms like `searchParticipants` or `numberOfFiles` (verified 2026-04-27 — zero hits). When investigating CTDC backend behavior, **scope your search to this repo explicitly**:
+
+```
+repo:CBIIT/crdc-ctdc-backend <term>
+```
+
+Or use the GitHub UI directly on the repo. Org-scoped searches can quietly miss this repo because of indexing quirks with the submodule structure.
