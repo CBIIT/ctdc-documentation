@@ -520,6 +520,17 @@ When a field is set manually in the Jira UI and the API equivalent is unknown:
 2. Diff the `customfield_XXXXX` values — the one that changed from `null` to a value is the writable field
 3. Note the value format (string vs. object vs. array) and replicate it exactly
 
+### 🔗 Issue Link Type Names
+
+When linking issues with `jira_create_issue_link`, this tracker uses the following confirmed link type names. Some commonly-tried names do NOT exist here.
+
+| Link Type | Status | Notes |
+|---|---|---|
+| `Blocks` | ✅ Works | Use this to express "ticket A blocks ticket B" — pass A as `inward_issue_key`, B as `outward_issue_key` |
+| `is blocked by` | ❌ Fails | "No issue link type with name 'is blocked by' found" — use `Blocks` with the issue order reversed instead |
+
+**Rule of thumb:** When a link operation needs to express a blocking relationship, always use `Blocks` and reason about which issue is the inward (the blocker) vs the outward (the blocked). Don't try to use the inverse phrasing — it fails on this instance.
+
 ---
 
 ## 11. 🎨 Sprint Review & Release Demo Deck Standards
@@ -817,3 +828,91 @@ repo:CBIIT/crdc-ctdc-backend <term>
 ```
 
 Or use the GitHub UI directly on the repo. Org-scoped searches can quietly miss this repo because of indexing quirks with the submodule structure.
+
+---
+
+## 16. 🧬 CTDC Data Model Reference
+
+> **Critical for backend tickets that touch the graph.** Backend tickets often hinge on whether a relationship exists between two node types. Verify against this section before writing dependency blocks like "data model PR required" — that prerequisite is sometimes already satisfied.
+
+### 16a. Repo Identity
+
+| Property | Value |
+|---|---|
+| **Repo URL** | `https://github.com/CBIIT/ctdc-model` |
+| **Default branch** | `prod` (NOT `main` or `master` — different from both frontend and backend) |
+| **Current version** | `v1.22.2` (verified 2026-04-27 — check `Version:` line at top of model file for latest) |
+
+### 16b. Key File Locations
+
+| What | Path |
+|---|---|
+| **Node + relationship definitions** | `model-desc/ctdc_model_file.yaml` |
+| **Property definitions (CDE references, value sets, types)** | `model-desc/ctdc_model_properties_file.yaml` |
+| **Visual model diagram (SVG)** | `model-desc/ctdc-model.svg` |
+| **Loader configurations** | `model-desc/load/` |
+
+When a ticket needs to know whether a relationship exists, the answer lives in `ctdc_model_file.yaml` under the `Relationships:` block. Read that file directly — never guess.
+
+### 16c. The `associated_with` Relationship Pattern
+
+**This is the single most important graph-modeling fact about CTDC.** CTDC consolidates many file relationships under a single relationship name (`associated_with`), distinguished only by source/destination node type. ICDC takes the opposite approach — every relationship has its own name (`of_case`, `of_study`, `of_sample`, `from_diagnosis`, etc.).
+
+**CTDC's `associated_with` relationship has these `Src`/`Dst` pairs** (verified in v1.22.2):
+
+| Source | Destination | Meaning |
+|---|---|---|
+| `file` | `specimen` | File attached to a specimen |
+| `file` | `diagnosis` | File attached to a diagnosis |
+| `file` | `participant` | File attached to a participant |
+| `file` | `study` | **File attached directly to a study** (study-level files) |
+| `associated_link` | `study` | External link about a study |
+| `image_collection` | `study` | Image collection about a study |
+| `file` | `assay` | File attached to an assay |
+| `assay` | `specimen` | Assay run on a specimen |
+
+**Implication for Cypher queries:** scope by destination label, not by relationship name. Example for "files attached directly to a study":
+
+```cypher
+MATCH (f:file)-[:associated_with]->(s:study)
+RETURN f
+```
+
+**The same query in ICDC** would use a different relationship name (`of_study`):
+
+```cypher
+MATCH (f:file)-[:of_study]->(s:study)
+RETURN f
+```
+
+When mirroring an ICDC backend pattern in CTDC, **always translate the relationship name** — do not copy ICDC's `of_*` patterns verbatim.
+
+### 16d. Verification Workflow for "Does this relationship exist?"
+
+When a backend ticket needs to know whether a given relationship exists between two node types:
+
+1. Open `ctdc_model_file.yaml` on the `prod` branch
+2. Find the `Relationships:` block (toward the bottom of the file)
+3. Search for the `Src:` / `Dst:` pair you care about
+4. If it exists, **no model PR is needed** — proceed with the backend Task
+5. If it doesn't exist, the relationship must be added first via a model PR (coordinate with Patrick / data engineering)
+
+**Example from the CTDC-2034 work:** The frontend Study Files tab needs the backend to return files attached directly to a study. Question: does `file → study` exist as a direct relationship? Searched `ctdc_model_file.yaml`, found `Src: file, Dst: study` under `associated_with`. Answer: yes. No model PR needed. Removed the upstream-data-model dependency from the Task.
+
+### 16e. Comparison with ICDC Data Model
+
+| Property | CTDC | ICDC |
+|---|---|---|
+| **Repo** | `CBIIT/ctdc-model` | `CBIIT/icdc-model` |
+| **Default branch** | `prod` | (verify before assuming) |
+| **File relationship convention** | Single `associated_with` relationship, distinguished by `Src`/`Dst` node types | Per-destination naming (`of_case`, `of_study`, `of_sample`, `from_diagnosis`, etc.) |
+| **Cypher idiom for study files** | `MATCH (f:file)-[:associated_with]->(s:study)` | `MATCH (f:file)-[:of_study]->(s:study)` (or anonymous `-->`) |
+
+**The takeaway:** never copy ICDC Cypher into CTDC verbatim. The semantic intent is portable; the relationship labels are not.
+
+### 16f. Other Useful Knowledge for Backend Work
+
+- **`participant`** is CTDC's equivalent of ICDC's **`case`**. When ICDC documentation refers to "case files" or "case-attached files," the CTDC translation is "participant-attached files" (going through `file -[:associated_with]-> participant`).
+- **`specimen`** is CTDC's equivalent of ICDC's **`sample`**.
+- **CTDC file UUID field** is `data_file_uuid`. **ICDC file UUID field** is `file_uuid`. These are not interchangeable — adjust query results and frontend keys accordingly.
+- **CTDC study identifier field** is `study_accession`. **ICDC study identifier field** is `clinical_study_designation`. Translate when porting queries.
