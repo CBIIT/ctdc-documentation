@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-04-27
+> **Last Updated:** 2026-04-29
 
 ---
 
@@ -369,7 +369,7 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 ## 7. 🎫 Ticket Writing Standards
 
-### Story Format
+### 7a. Story Format
 ```
 As a [type of user],
 I want to [action/feature],
@@ -388,7 +388,73 @@ So that [benefit/outcome].
 - Design: [link if applicable]
 ```
 
-### Bug Format
+---
+
+### 7b. 🏛️ Application Page Epic Format (Gold Standard)
+
+> **Use this format for every epic that scopes a CTDC application page or major feature surface.** It is the structure used for the canonical Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), and Study Details (CTDC-1650) epics. New page or surface epics — and any normalization passes on existing ones — should match this template exactly.
+
+#### Why this format
+
+These are **ongoing, evergreen epics** that remain Open across the life of the project. They serve as containers for all enhancements, bug fixes, and data-integration updates to a given page or surface. The structure makes them readable to engineers, PMs, and federal stakeholders without a Jira learning curve, and the section emojis act as visual anchors when scanning a long description.
+
+#### Section order (15 sections, exactly this sequence)
+
+Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header — that absence is itself a signal.
+
+1. `### 🎯 **Epic Summary**` — One paragraph: what the epic delivers, the live URL, who consumes it, and the explicit statement that it is an ongoing epic tracking initial implementation, enhancements, bug fixes, and data-integration updates across the life of the CTDC project.
+2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific page/surface does, what data it surfaces, and where the data comes from (Memgraph + OpenSearch). Reference predecessor epics (e.g., closed initial-launch epics) here when applicable.
+3. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the page must achieve.
+4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. In Scope items must be verifiable against the live page (use Playwright to ground claims). Out of Scope items should explicitly point to the epic that covers the excluded work (e.g., *"Cart manifest creation and download (see CTDC-1074)"*).
+5. `### 👥 **Stakeholders**` — Bullet list of the standard stakeholder set: Product Owner, Senior TPM (FNL/BACS), NCI/CBIIT Federal Program Leadership, UX/UI Designer, Frontend Engineering Team (ESI), Backend/API Engineering Team (ESI), Data Engineering Team, Data Stewards, QA/Testers. Adjust only if a role is genuinely irrelevant.
+6. `### 📖 **Key Definitions / Concepts**` — Glossary of terms specific to the page or surface. Always include **Memgraph** with the parenthetical *"replaces the historical Neo4j references"* and **OpenSearch** when either is involved.
+7. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered list) and **Performance & Quality** (numbered list). Functional criteria must be verifiable on Dev/QA/Stage/Prod. Performance & Quality must include WCAG 2.1 AA, design system conformance, performance baselines under realistic data volumes, and automated test coverage.
+8. `### 🔗 **Dependencies**` — Bullet list of upstream systems, services, and sibling epics this page relies on. Always name Memgraph + OpenSearch when the page reads CTDC graph data, and the relevant GraphQL resolver families.
+9. `### 💭 **Assumptions**` — Bullet list of working assumptions (data model evolves backward-compatibly, content ownership, throughput envelope, etc.).
+10. `### 🚧 **Constraints**` — Bullet list of non-negotiables: security/privacy/Section 508, controlled-access protections, performance under growth, external link freshness if applicable.
+11. `### ⚠️ **Risks & Mitigations**` — Bullet list. Each item is **Risk:** statement, then **Mitigation:** statement. Cover at least: data drift, performance regression, scope creep from data-model changes, and surface-specific risks (link rot, session-state regression, etc.).
+12. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the page back to CTDC's FAIR mission and the researcher's actual experience. This is the section that survives in stakeholder summaries.
+13. `### 🧩 **Components / Features Breakdown**` — Four sub-blocks, each with a bold sub-heading and bullet list: **UI Components**, **Backend / Data**, **Integration**, **Testing**.
+14. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment, accessibility conformance review cadence, and any cross-epic integration documentation requirements.
+15. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) the cross-reference list to all related application page epics, (c) any predecessor closed epic, and (d) any stack-wide reference (e.g., the file download epic CTDC-1764).
+
+#### Standing emoji set (use these, not substitutes)
+
+| Section | Emoji | Section | Emoji |
+|---|---|---|---|
+| Epic Summary | 🎯 | Dependencies | 🔗 |
+| Context & Background | 🧬 | Assumptions | 💭 |
+| Goal / Objectives | 🏁 | Constraints | 🚧 |
+| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
+| Stakeholders | 👥 | User Impact | 🌟 |
+| Key Definitions | 📖 | Components Breakdown | 🧩 |
+| Acceptance Criteria | ✅ | Documentation & Compliance | 📋 |
+| | | Notes | 📝 |
+
+#### Required content rules
+
+- **Memgraph, never Neo4j.** Always reference Memgraph as the graph database, with the parenthetical noting it replaces the historical Neo4j references. The public `crdc-ctdc-starter-kit` README is outdated and must not be mirrored.
+- **OpenSearch named explicitly** when the page surfaces aggregations, counts, or facet-driven queries.
+- **Live URL named in Epic Summary.** Use the production URL (e.g., `https://clinical.datacommons.cancer.gov/#/studies`).
+- **Live UI verified before drafting.** Use Playwright (per project instructions) to snapshot the live page and ground In Scope claims in what actually renders. Do not infer scope from imagination.
+- **Cross-epic references threaded.** Out of Scope items, Dependencies, and Notes must point to the epics that cover adjacent work — at minimum the related application page epics (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages) and the file download stack (CTDC-1764) when relevant.
+- **FAIR mission stated.** Both Context & Background and User Impact tie back to making data Findable, Accessible, Interoperable, and Reusable.
+- **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
+
+#### Writing-and-publishing workflow
+
+1. **Verify the page in the live UI** with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
+2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules.
+3. **Push via `jira_update_issue`** with `fields` containing `summary`, `priority`, and `description`. The Jira MCP performs Markdown-to-wiki conversion automatically — do not pre-convert.
+4. **Preserve the existing label** (e.g., `Task-1.3.8.X`) — do not include `labels` in the update payload unless deliberately changing them.
+5. **Set `priority` to `Major`** for application page epics unless directed otherwise.
+6. **Leave `status: Open`** and `assignee: Unassigned` unless directed otherwise — these are evergreen epics, not work items.
+7. **Confirm the rendered description in Jira** after the update lands. Note any wiki-conversion quirks (e.g., bold-italic markers on `**Risk:**` may render unevenly — this is consistent with the gold-standard CTDC-1803 and is acceptable).
+8. **Update the related-epics cross-reference list** in the Notes section of every other normalized epic when a new page epic is added.
+
+---
+
+### 7c. Bug Format
 ```
 **Environment:** [dev / qa / staging / prod]
 **Severity:** [Critical / High / Medium / Low]
@@ -452,6 +518,7 @@ So that [benefit/outcome].
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
+- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
 
 ---
 
