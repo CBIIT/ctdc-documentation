@@ -396,7 +396,7 @@ CTDC epics fall into seven groupings, each with its own template tuned to that g
 
 **The seven groupings:**
 
-1. **Application Pages** (7b-1) — User-facing pages and surfaces in the CTDC web application (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages).
+1. **Application Pages** (7b-1) — User-facing pages and surfaces in the CTDC web application (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details).
 2. **Microservices** (7b-2) — Backend services with their own API contract, deployment, and lifecycle (e.g., the file service, the authn service, the backend GraphQL service).
 3. **Features** (7b-3) — Cross-cutting capabilities that span multiple pages or services (e.g., file download flows, manifest export, search).
 4. **Products** (7b-4) — Standalone deliverables consumed by external systems or end users (e.g., the megazip artifact, the CTDC application as a whole).
@@ -448,26 +448,41 @@ These rules apply to **every** epic template, regardless of grouping. Each per-g
 **Verification & ground truth**
 - **For Application Pages and Features:** verify the live UI with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Ground In Scope claims in what the page actually renders.
 - **For Microservices, Infrastructure, Security, Data:** verify against the source repo, deployed config, or live system before drafting. Do not infer scope from imagination.
-- **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal line-ending state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
+- **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal rendering state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
 
 **Markdown conventions**
 - Section headers: `### {emoji} **{Title}**` (h3, emoji + bold).
 - Bullets are flush-left; no indented `-` bullets with bold labels.
-- Use `**bold**` for emphasis (matched delimiters). The mismatched-delimiter patterns from earlier theories were verified red herrings — see "MCP write notes" below.
-- Inline route templates: plain text without backticks (e.g., `#/study/{study_code}`). Backticks are fine for single-token names like `participantById` or `customfield_12350`.
+- Use `**bold**` for emphasis (matched delimiters).
+- Inline route templates: plain text without backticks, but **escape every curly brace as `\{` and `\}`** (e.g., `#/study/\{study_code\}`). See "MCP write notes" below for why this is required. Backticks are fine for single-token names like `participantById` or `customfield_12350`.
+- **Curly-brace rule (universal).** Anywhere curly braces appear in description text — URLs with path parameters, scope items naming a variable, acceptance criteria, glossary entries, notes, anywhere — escape them with backslashes: `\{program_short_name\}`, not `{program_short_name}`. The only exception is text inside a fenced code block, where the renderer treats content as literal. The Markdown source you author with backslash-escapes will round-trip into Jira-wiki as `\{...\}` and render in the UI as literal `{...}` with no parser-state corruption.
 
 **MCP write notes (description field caveat)**
-- **MCP `jira_update_issue` writes to the `description` field can produce broken renders.** The verified root cause is line endings: the Jira renderer requires CRLF (`\r\n`) to recognize line-bound markup; the MCP sometimes sends LF (`\n`). When line endings land as LF, headers and bullets render as literal text in the UI.
-- **It's not deterministic.** Of seven MCP-pushed application page epics in the 2026-04-30 normalization pass, six rendered cleanly and one (CTDC-1650) rendered visibly broken. The pattern is unpredictable.
-- **Default workflow:** push descriptions via MCP first. After pushing, **verify the render with a UI screenshot from the user**, not the wiki source.
-- **Fallback:** if a UI screenshot shows broken rendering, the user re-pastes the same description into the issue's Description field through the Jira web UI. The UI normalizes line endings to CRLF automatically. Re-verify with a follow-up screenshot.
-- **Other fields are safe via MCP.** Priority, summary, custom fields, status transitions, and labels write reliably through `jira_update_issue` because line endings don't affect them.
+
+The Jira-wiki renderer treats `{...}` as **macro syntax** — `{code}`, `{noformat}`, `{panel}`, `{color}`, etc. When the renderer encounters an unknown macro name like `{program_short_name}`, the parser does not gracefully fail back to literal text. Instead, parser state gets corrupted for the surrounding block, and the corruption propagates *forward* through the document. Symptoms include:
+
+- Adjacent headers losing their `h3.` recognition and rendering as literal `h3.` text
+- Bullets after the offending point losing their list context
+- Some headers disappearing entirely (no `h3.` prefix, just bare bold text on a line)
+- Paragraph layout fracturing right at the `{...}` occurrence
+
+This was the verified root cause of the CTDC-2040 (Program Details Page) render failure on 2026-04-30. The fix is straightforward: **escape every curly brace in description text as `\{...\}`** per the Markdown conventions rule above. After applying the fix, CTDC-2040 rendered cleanly on the next push.
+
+**Workflow:**
+
+1. Author Markdown with `\{...\}` escaping anywhere curly braces appear in body text.
+2. Push the description via the MCP (`jira_update_issue` with the `description` field).
+3. **Verify the render with a UI screenshot from the user**, not the wiki source. Wiki source returned by `jira_get_issue` is unreliable as a render preview.
+4. **If rendering is broken**, the most likely cause is unescaped curly braces somewhere in the description. Re-check the source for any `{...}` not preceded by a backslash.
+5. **Last-resort fallback:** if the source is clean and the render is still broken, ask the user to re-paste the description through the Jira web UI's Description field. The UI normalizes whatever transport-level state the MCP introduced. This is rarely needed once the curly-brace rule is followed.
+
+**Other fields are safe via MCP.** Priority, summary, custom fields, status transitions, and labels write reliably through `jira_update_issue` because they don't go through the wiki-text renderer.
 
 ---
 
 #### 7b-1. 🏛️ Application Pages (Drafted)
 
-> **Use this template for every epic that scopes a CTDC application page or major user-facing surface.** The canonical examples are Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), Cart (CTDC-1074), and Static Pages (CTDC-1015).
+> **Use this template for every epic that scopes a CTDC application page or major user-facing surface.** The canonical examples are Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), Cart (CTDC-1074), Static Pages (CTDC-1015), and Program Details (CTDC-2040).
 
 **Why this template**
 
@@ -491,7 +506,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 12. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the page back to CTDC's FAIR mission and the researcher's actual experience. This is the section that survives in stakeholder summaries.
 13. `### 🧩 **Components / Features Breakdown**` — Four sub-blocks, each with a bold sub-heading and bullet list: **UI Components**, **Backend / Data**, **Integration**, **Testing**.
 14. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment, accessibility conformance review cadence, and any cross-epic integration documentation requirements.
-15. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) the cross-reference list to all eight related application page epics (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages), and (c) any stack-wide reference (e.g., the file download epic CTDC-1764) when relevant.
+15. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) the cross-reference list to all related application page epics (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details), and (c) any stack-wide reference (e.g., the file download epic CTDC-1764) when relevant.
 
 **Standing emoji set (use these, not substitutes)**
 
@@ -512,15 +527,16 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Live UI verified before drafting.** Use Playwright (`browser_navigate` + `browser_snapshot`) on the production URL. If the route 404s because the page is forward-looking, verify the *adjacent* page that will provide the entry point (e.g., the Explore Dashboard's Participants tab for a future Participant Details page) and explicitly note the future-state stance in the epic.
 - **Cross-epic references threaded.** Out of Scope, Dependencies, and Notes must point to the related Application Pages epics and to CTDC-1764 (file download stack) when relevant.
 - **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
+- **Curly braces escaped as `\{...\}`** anywhere they appear in description text. URLs with path parameters, scope items naming a variable, acceptance criteria — all of them. See 7b-shared "Markdown conventions" and "MCP write notes."
 
 **Writing-and-publishing workflow**
 
 1. **Verify the live page** with Playwright before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
-2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared.
-3. **Push the description via the MCP** (`jira_update_issue` with the `description` field). The MCP write usually succeeds — see 7b-shared "MCP write notes" for the line-endings caveat and fallback.
+2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule.
+3. **Push the description via the MCP** (`jira_update_issue` with the `description` field).
 4. **Set non-description fields via the MCP** in the same call: `priority` to Major, plus any other fields you intend to set. Never include `labels` unless deliberately changing them.
 5. **Verify the rendered description with a UI screenshot** from the user. The wiki source is unreliable as a render preview.
-6. **If rendering is broken**, ask the user to re-paste the description through the Jira web UI's Description field. The UI fixes the line-ending issue automatically. Re-verify with a follow-up screenshot.
+6. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — that's the most likely cause. If the source is clean and the render is still broken, fall back to UI paste.
 7. **Update the related-epics cross-reference list** in the Notes section of every other Application Pages epic when a new page epic is added.
 
 ---
@@ -656,9 +672,10 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
 - **Wiki source is not ground truth for rendering.** Only a UI screenshot from the user reveals whether a Jira description renders correctly. The wiki source returned by `jira_get_issue` looks identical for working and broken tickets.
-- **MCP description writes are nondeterministic.** Five of seven application page epics rendered cleanly via MCP push; one (CTDC-1650) rendered visibly broken until manually re-pasted through the Jira UI. The verified root cause is line endings (LF vs CRLF), but it doesn't fail every time.
-- **Earlier theories were red herrings.** Before identifying the line-endings root cause, several rounds of pattern-matching on Markdown syntax (`__Word:**` mismatched delimiters, indented bullets, backtick code spans with `{...}`, asterisk-vs-underscore emphasis) produced confident-sounding but wrong diagnoses. CTDC-1645's stored description has every one of those "defects" and renders perfectly. Default to the verified line-endings diagnosis before reaching for syntax-level explanations on any new rendering issue.
-- **Theory thrash is a smell.** When debugging without ground-truth screenshots, multiple "this is the bug" theories in a row, each falsified by the next data point, mean the methodology is wrong, not just the theory. Stop pushing changes and ask for a screenshot before continuing.
+- **The verified description-render bug is unescaped curly braces.** Jira-wiki treats `{...}` as macro syntax (`{code}`, `{noformat}`, `{panel}`, etc.). When the renderer hits an unknown macro name like `{program_short_name}`, parser state corrupts for the surrounding block and the damage propagates *forward* through the document — adjacent headers lose their `h3.` recognition, bullets lose their list context, and some headers disappear entirely. The fix is to escape every curly brace in description text as `\{...\}`. CTDC-2040 (Program Details Page) was the test case that proved this; pre-fix push corrupted ~half the document, post-fix push rendered cleanly.
+- **Earlier suspected causes were wrong.** Before the curly-brace finding, several theories were advanced and abandoned: mismatched bold delimiters, indented bullets, backtick code spans, asterisk-vs-underscore emphasis, and most prominently CRLF/LF line endings. Each theory was confidently asserted in SKILL.md until the next data point falsified it. CTDC-1645's stored description has every one of those "defects" and renders perfectly. The line-endings theory was particularly seductive because it explained the apparent nondeterminism — but the real explanation is that some epic descriptions happened to contain `{...}` patterns and others didn't, which looked random because nobody was inspecting the body text for macro syntax.
+- **Cascade-from-a-point pattern indicates parser-state corruption, not a transport bug.** When render breakage propagates *forward* from a specific point in the document — paragraphs fracturing right where some specific token appears, then everything after that point breaking — the cause is parser-state corruption from that token, not anything to do with how the bytes were transported. Look for unescaped wiki macro syntax first.
+- **Theory thrash is a smell.** When debugging without ground-truth screenshots, multiple "this is the bug" theories in a row, each falsified by the next data point, mean the methodology is wrong, not just the theory. Stop pushing changes and ask for a screenshot before continuing. The 2026-04-30 session went through three wrong theories (CRLF/LF, underscore-italic, then a confused mix of both) before the correct cause was identified by reading the actual cascade pattern in a screenshot dump.
 
 ---
 
@@ -681,9 +698,9 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 
 **Rule:** When a custom field appears empty in a batch `jira_search` result, **always verify with a single-ticket `jira_get_issue` call before acting on it as "empty."** Flagging a field as empty in a stakeholder document (or asking the user to investigate) is a real cost — don't pay it on a false negative.
 
-### ⚠️ Description Field — MCP Writes Can Render Broken
+### ⚠️ Description Field — Escape Curly Braces
 
-See Section 7b-shared "MCP write notes." The MCP `jira_update_issue` tool sometimes sends LF-only line endings, which break Jira's Markdown renderer for the `description` field on this instance. The failure is nondeterministic — most writes succeed. Default workflow: push via MCP, verify rendering with a UI screenshot, fall back to UI paste if broken. Other fields (priority, summary, custom fields, status, labels) are unaffected.
+**Curly braces `{...}` in description text are treated as Jira-wiki macro syntax** and corrupt parser state for the surrounding block when the macro name is unknown. Symptoms include adjacent headers rendering as literal `h3.` text, bullets losing list context, and entire sections disappearing. **Fix:** escape every curly brace in description text as `\{...\}`. See Section 7b-shared "MCP write notes" for the full diagnostic and workflow. Other fields (priority, summary, custom fields, status, labels) are not routed through the wiki renderer and are unaffected.
 
 ### ❌ Fields That Do NOT Work via API on This Instance
 
