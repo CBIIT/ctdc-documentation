@@ -441,27 +441,35 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **FAIR mission stated.** Both Context & Background and User Impact tie back to making data Findable, Accessible, Interoperable, and Reusable.
 - **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
 
-#### ⚠️ Markdown gotchas in Jira Markdown→Wiki conversion (verified the hard way)
+#### 🚨 Critical: MCP writes corrupt description rendering — use the Jira UI
 
-The Jira MCP performs an automatic Markdown-to-Jira-wiki conversion when you push a description. The conversion is mostly reliable, but a few patterns silently produce broken renders. **Each rule below was verified with a screenshot of the actually-rendered Jira UI** — not inferred from the wiki source.
+This rule supersedes every previous theory in this section. After multiple rounds of debugging on 2026-04-30, the **actual** root cause of broken epic description rendering on this Jira instance is line endings, not Markdown syntax.
 
-- **Use matched `**bold**` delimiters everywhere.** Do not mix `__` and `**` in the same emphasis span. The pattern `__Word:**` (underscores opening, asterisks closing) renders as **literal text** — the `__` and `:*` show up as raw characters in the UI. CTDC-1645's Key Definitions section was broken this way until 2026-04-30. Use `- **Word:** Description...` for both label-style bullets in Definitions and Risk/Mitigation lines.
-- **Do not indent bullets that contain bold labels.** Two-space indents in front of `- **Word:**` confuse the converter and produce the same `__Word:*` literal-text rendering. Keep bullets flush-left.
-- **Avoid backtick code spans containing `{...}` placeholders.** The converter terminates the code span at the `}`, leaving the brace dangling — `` `#/route/{id}` `` becomes `` `#/route/{id` } ``. For inline route templates, use plain text (no backticks): `#/route/{id}`. Backticks are still fine for single-token names like `participantById` or `customfield_12350`.
-- **Single-asterisk italics `*Risk:*`** also render correctly as bold/italic in Jira wiki, but they are weaker visually than matched `**bold**` and don't match the gold-standard CTDC-1803 pattern. Always prefer `**Risk:**` and `**Mitigation:**`.
+**The defect:**
+- The Jira renderer requires CRLF (`\r\n`) line endings to recognize line-bound markup — `### headers`, list bullets, paragraph breaks, etc.
+- The Jira MCP `jira_update_issue` tool sends LF-only (`\n`) line endings.
+- Tickets edited manually in the Jira UI store CRLF and render correctly.
+- Tickets last edited via the MCP store LF and render with literal `###` text in headers, broken bullets, and other line-level breakdowns — even though the Markdown syntax is identical to a working ticket.
 
-When in doubt, fetch the description back via `jira_get_issue` after pushing and inspect the wiki source — if you see `__Word:*` or `` `#/route/{id` } `` in the stored output, the render will be visibly broken in the UI and needs a fix.
+**Evidence base:**
+- CTDC-1645 was edited via the MCP, but its source happens to have CRLF in the stored field. Renders perfectly.
+- CTDC-1650 was edited via the MCP with LF line endings. Rendered visibly broken (literal `h3.` text on every section after Epic Summary).
+- After Gina re-pasted the same content through the Jira UI, CTDC-1650 stored CRLF and rendered identically to CTDC-1645 — with the same "defective" Markdown patterns intact.
+
+**Implication for the prior gotchas list:** the patterns I flagged in earlier versions of this section — mismatched `__Word:**` delimiters, indented bullets with bold labels, backtick code spans containing `{...}`, asterisk-vs-underscore emphasis — are **NOT** the root cause of broken renders. CTDC-1645's source has every one of those "defects" and renders cleanly. They were red herrings. The line-ending difference is the only verified root cause.
+
+**The rule:** Use the Jira UI for any description that needs to render correctly. The MCP `jira_update_issue` write path is unsafe for description fields on this instance. Other fields (priority, summary, custom fields, status transitions) work fine via the MCP — only the description field is affected, because it's the only field where line endings drive Markdown structural rendering.
 
 #### Writing-and-publishing workflow
 
 1. **Verify the page in the live UI** with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
-2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules. Apply the Markdown gotchas rules from the block above.
-3. **Push via `jira_update_issue`** with `fields` containing `summary`, `priority`, and `description`. The Jira MCP performs Markdown-to-wiki conversion automatically — do not pre-convert.
-4. **Preserve the existing label** (e.g., `Task-1.3.8.X`) — do not include `labels` in the update payload unless deliberately changing them.
-5. **Set `priority` to `Major`** for application page epics unless directed otherwise.
+2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules.
+3. **Push the description via the Jira UI**, not the MCP. Either: (a) paste the full Markdown into the issue's Description field via the Jira web UI directly, or (b) provide the Markdown to the user and have them paste it. The UI normalizes line endings to CRLF automatically; the MCP does not.
+4. **Set non-description fields via the MCP** if helpful — `priority` (Major), `summary`, custom fields, and labels can be safely written through `jira_update_issue` because line endings don't affect them. Just exclude the `description` field from any MCP payload.
+5. **Preserve the existing label** (e.g., `Task-1.3.8.X`) — do not include `labels` in any update payload unless deliberately changing them.
 6. **Leave `status: Open`** and `assignee: Unassigned` unless directed otherwise — these are evergreen epics, not work items.
-7. **Verify the rendered description** by re-fetching the description via `jira_get_issue` after the update lands. If the wiki source contains `__Word:*` patterns or `` `#/route/{id` } `` patterns, the UI render will be visibly broken — fix and re-push before considering the work done. When possible, also confirm the rendered look in the Jira UI directly with the user.
-8. **Update the related-epics cross-reference list** in the Notes section of every other normalized epic when a new page epic is added.
+7. **Verify the rendered description by UI screenshot only.** Do not rely on the wiki source returned by `jira_get_issue` — it does not reveal line-ending state and looks identical for working and broken tickets. Only the rendered UI tells the truth.
+8. **Update the related-epics cross-reference list** in the Notes section of every other normalized epic when a new page epic is added. (Same UI-paste rule applies to those updates.)
 
 ---
 
@@ -529,7 +537,8 @@ When in doubt, fetch the description back via `jira_get_issue` after pushing and
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
-- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules, or new Markdown gotchas — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
+- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
+- Section 7b's MCP-write-corrupts-description rule supersedes all earlier theories about Markdown syntax defects — those were verified red herrings on 2026-04-30. If new Jira rendering issues emerge, default to the same diagnosis (line endings) before considering syntax-level explanations.
 
 ---
 
@@ -551,6 +560,10 @@ When in doubt, fetch the description back via `jira_get_issue` after pushing and
 **`jira_search` batch queries sometimes return `null` for populated custom fields.** This was observed with `customfield_23650` (Developer) on CTDC-1718 — the batch query returned `null`, but a single-ticket `jira_get_issue` confirmed the field was populated with `huangn4`.
 
 **Rule:** When a custom field appears empty in a batch `jira_search` result, **always verify with a single-ticket `jira_get_issue` call before acting on it as "empty."** Flagging a field as empty in a stakeholder document (or asking the user to investigate) is a real cost — don't pay it on a false negative.
+
+### ⚠️ Description Field — Use Jira UI, Not MCP
+
+See Section 7b. The MCP `jira_update_issue` tool sends LF-only line endings, which break Jira's Markdown renderer for the `description` field on this instance. Always use the Jira UI to write or update issue descriptions. Other fields (priority, summary, custom fields, status, labels) work fine via the MCP.
 
 ### ❌ Fields That Do NOT Work via API on This Instance
 
