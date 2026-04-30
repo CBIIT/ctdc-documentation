@@ -451,6 +451,18 @@ These rules apply to **every** epic template, regardless of grouping. Each per-g
 - **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal rendering state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
 
 **Markdown conventions**
+- **The `description` field expects Markdown input, not Jira wiki markup.** The `jira_update_issue` MCP tool docs are explicit: "for 'description', provide text in Markdown format." Markdown is converted server-side into Jira-wiki for storage. **If you write Jira-wiki by mistake (`*bold*`, `h3.`, `#` for ordered lists), the tool interprets the asterisks as Markdown italic emphasis and converts them to underscores — so your bold headers render as italic.** Always author in Markdown:
+
+  | Want | Write (Markdown) | Don't write (Jira-wiki) |
+  |---|---|---|
+  | h3 heading | `### **Title**` | `h3. *Title*` |
+  | Bold | `**bold**` | `*bold*` |
+  | Italic | `*italic*` | `_italic_` |
+  | Bullet | `- item` | `* item` |
+  | Numbered | `1. item` (auto-increments) | `# item` |
+  | Table | Jira-wiki `||h||` and `|c|` (passes through unchanged — see "Risk format" below) | (same — tables are the exception) |
+
+  Verified on CTDC-1960, 2026-04-30. The first push used Jira-wiki `*bold*` and section headers rendered as italic. The second push used Markdown `**bold**` and rendered correctly.
 - Section headers: `### {emoji} **{Title}**` (h3, emoji + bold).
 - Bullets are flush-left; no indented `-` bullets with bold labels.
 - Use `**bold**` for emphasis (matched delimiters).
@@ -478,6 +490,21 @@ This was the verified root cause of the CTDC-2040 (Program Details Page) render 
 
 **Other fields are safe via MCP.** Priority, summary, custom fields, status transitions, and labels write reliably through `jira_update_issue` because they don't go through the wiki-text renderer.
 
+**Risk format**
+
+Risks render as a three-column **table**, not a bullet list. Across the data-related epics, the table format reads better than prose-style "Risk: / Mitigation:" bullets — it gives the eye a clean three-column scan and looks more polished in stakeholder-facing rendering. Per-grouping templates may define their own risk format if their content genuinely needs prose, but the default is the table.
+
+**Format (Jira wiki table syntax — passes through Markdown unchanged):**
+
+```
+### ⚠️ **Risks & Mitigations**
+||Risk||Impact||Mitigation||
+|Schema changes break generation scripts|Mock files become outdated|Implement automated generation triggered by schema version updates|
+|Mock data does not reflect real-world complexity|Submitters misinterpret requirements|Include edge-case examples and relational integrity scenarios|
+```
+
+**Why Jira-wiki tables in a Markdown document?** The MCP's Markdown→Jira-wiki conversion does not handle GitHub-flavored Markdown tables (`| h | h |` / `|---|---|`) reliably for this MCP server's converter. Jira-wiki table syntax (`||h||` for headers and `|c|` for cells) passes through the converter unchanged and lands as a native Jira table. This is the one intentional exception to the "always author in Markdown" rule above. Verified on CTDC-1960, 2026-04-30 — the risk table was the only section that rendered correctly across all three pushes regardless of the surrounding Markdown/Jira-wiki confusion.
+
 ---
 
 #### 7b-1. 🏛️ Application Pages (Drafted)
@@ -502,7 +529,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 8. `### 🔗 **Dependencies**` — Bullet list of upstream systems, services, and sibling epics this page relies on. Always name Memgraph + OpenSearch when the page reads CTDC graph data, and the relevant GraphQL resolver families.
 9. `### 💭 **Assumptions**` — Bullet list of working assumptions (data model evolves backward-compatibly, content ownership, throughput envelope, etc.).
 10. `### 🚧 **Constraints**` — Bullet list of non-negotiables: security/privacy/Section 508, controlled-access protections, performance under growth, external link freshness if applicable.
-11. `### ⚠️ **Risks & Mitigations**` — Bullet list. Each item is **Risk:** statement, then **Mitigation:** statement. Cover at least: data drift, performance regression, scope creep from data-model changes, and surface-specific risks (link rot, session-state regression, etc.).
+11. `### ⚠️ **Risks & Mitigations**` — Three-column table per the universal "Risk format" convention in 7b-shared. Columns: Risk | Impact | Mitigation. Cover at least: data drift, performance regression, scope creep from data-model changes, and surface-specific risks (link rot, session-state regression, etc.).
 12. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the page back to CTDC's FAIR mission and the researcher's actual experience. This is the section that survives in stakeholder summaries.
 13. `### 🧩 **Components / Features Breakdown**` — Four sub-blocks, each with a bold sub-heading and bullet list: **UI Components**, **Backend / Data**, **Integration**, **Testing**.
 14. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment, accessibility conformance review cadence, and any cross-epic integration documentation requirements.
@@ -676,6 +703,7 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 - **Earlier suspected causes were wrong.** Before the curly-brace finding, several theories were advanced and abandoned: mismatched bold delimiters, indented bullets, backtick code spans, asterisk-vs-underscore emphasis, and most prominently CRLF/LF line endings. Each theory was confidently asserted in SKILL.md until the next data point falsified it. CTDC-1645's stored description has every one of those "defects" and renders perfectly. The line-endings theory was particularly seductive because it explained the apparent nondeterminism — but the real explanation is that some epic descriptions happened to contain `{...}` patterns and others didn't, which looked random because nobody was inspecting the body text for macro syntax.
 - **Cascade-from-a-point pattern indicates parser-state corruption, not a transport bug.** When render breakage propagates *forward* from a specific point in the document — paragraphs fracturing right where some specific token appears, then everything after that point breaking — the cause is parser-state corruption from that token, not anything to do with how the bytes were transported. Look for unescaped wiki macro syntax first.
 - **Theory thrash is a smell.** When debugging without ground-truth screenshots, multiple "this is the bug" theories in a row, each falsified by the next data point, mean the methodology is wrong, not just the theory. Stop pushing changes and ask for a screenshot before continuing. The 2026-04-30 session went through three wrong theories (CRLF/LF, underscore-italic, then a confused mix of both) before the correct cause was identified by reading the actual cascade pattern in a screenshot dump.
+- **Markdown vs Jira-wiki authoring confusion (verified 2026-04-30 on CTDC-1960).** The MCP `description` field expects Markdown; if you write Jira-wiki by mistake, asterisks get re-interpreted as Markdown italic emphasis and bold headers render as italic. The fix is in 7b-shared "Markdown conventions" — always author in Markdown (`### **Heading**`, `**bold**`, `1.` for numbered, `-` for bullets), and use Jira-wiki table syntax (`||h||` and `|c|`) only for tables, which passes through the converter unchanged. Confirmed working: CTDC-1960 second push (Markdown) rendered correctly with bold headers; first push (Jira-wiki) rendered headers as italic. The risk table from CTDC-1960 is now the canonical example for the "Risk format" subsection in 7b-shared.
 
 ---
 
