@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-04-29
+> **Last Updated:** 2026-04-30
 
 ---
 
@@ -392,7 +392,7 @@ So that [benefit/outcome].
 
 ### 7b. 🏛️ Application Page Epic Format (Gold Standard)
 
-> **Use this format for every epic that scopes a CTDC application page or major feature surface.** It is the structure used for the canonical Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), and Study Details (CTDC-1650) epics. New page or surface epics — and any normalization passes on existing ones — should match this template exactly.
+> **Use this format for every epic that scopes a CTDC application page or major feature surface.** It is the structure used for the canonical Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), and Cart (CTDC-1074) epics. New page or surface epics — and any normalization passes on existing ones — should match this template exactly.
 
 #### Why this format
 
@@ -441,15 +441,26 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **FAIR mission stated.** Both Context & Background and User Impact tie back to making data Findable, Accessible, Interoperable, and Reusable.
 - **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
 
+#### ⚠️ Markdown gotchas in Jira Markdown→Wiki conversion (verified the hard way)
+
+The Jira MCP performs an automatic Markdown-to-Jira-wiki conversion when you push a description. The conversion is mostly reliable, but a few patterns silently produce broken renders. **Each rule below was verified with a screenshot of the actually-rendered Jira UI** — not inferred from the wiki source.
+
+- **Use matched `**bold**` delimiters everywhere.** Do not mix `__` and `**` in the same emphasis span. The pattern `__Word:**` (underscores opening, asterisks closing) renders as **literal text** — the `__` and `:*` show up as raw characters in the UI. CTDC-1645's Key Definitions section was broken this way until 2026-04-30. Use `- **Word:** Description...` for both label-style bullets in Definitions and Risk/Mitigation lines.
+- **Do not indent bullets that contain bold labels.** Two-space indents in front of `- **Word:**` confuse the converter and produce the same `__Word:*` literal-text rendering. Keep bullets flush-left.
+- **Avoid backtick code spans containing `{...}` placeholders.** The converter terminates the code span at the `}`, leaving the brace dangling — `` `#/route/{id}` `` becomes `` `#/route/{id` } ``. For inline route templates, use plain text (no backticks): `#/route/{id}`. Backticks are still fine for single-token names like `participantById` or `customfield_12350`.
+- **Single-asterisk italics `*Risk:*`** also render correctly as bold/italic in Jira wiki, but they are weaker visually than matched `**bold**` and don't match the gold-standard CTDC-1803 pattern. Always prefer `**Risk:**` and `**Mitigation:**`.
+
+When in doubt, fetch the description back via `jira_get_issue` after pushing and inspect the wiki source — if you see `__Word:*` or `` `#/route/{id` } `` in the stored output, the render will be visibly broken in the UI and needs a fix.
+
 #### Writing-and-publishing workflow
 
 1. **Verify the page in the live UI** with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
-2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules.
+2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules. Apply the Markdown gotchas rules from the block above.
 3. **Push via `jira_update_issue`** with `fields` containing `summary`, `priority`, and `description`. The Jira MCP performs Markdown-to-wiki conversion automatically — do not pre-convert.
 4. **Preserve the existing label** (e.g., `Task-1.3.8.X`) — do not include `labels` in the update payload unless deliberately changing them.
 5. **Set `priority` to `Major`** for application page epics unless directed otherwise.
 6. **Leave `status: Open`** and `assignee: Unassigned` unless directed otherwise — these are evergreen epics, not work items.
-7. **Confirm the rendered description in Jira** after the update lands. Note any wiki-conversion quirks (e.g., bold-italic markers on `**Risk:**` may render unevenly — this is consistent with the gold-standard CTDC-1803 and is acceptable).
+7. **Verify the rendered description** by re-fetching the description via `jira_get_issue` after the update lands. If the wiki source contains `__Word:*` patterns or `` `#/route/{id` } `` patterns, the UI render will be visibly broken — fix and re-push before considering the work done. When possible, also confirm the rendered look in the Jira UI directly with the user.
 8. **Update the related-epics cross-reference list** in the Notes section of every other normalized epic when a new page epic is added.
 
 ---
@@ -518,7 +529,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
-- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
+- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules, or new Markdown gotchas — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
 
 ---
 
