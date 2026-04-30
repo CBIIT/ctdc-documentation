@@ -390,20 +390,95 @@ So that [benefit/outcome].
 
 ---
 
-### 7b. 🏛️ Application Page Epic Format (Gold Standard)
+### 7b. 🏛️ Epic Templates by Grouping
 
-> **Use this format for every epic that scopes a CTDC application page or major feature surface.** It is the structure used for the canonical Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), and Cart (CTDC-1074) epics. New page or surface epics — and any normalization passes on existing ones — should match this template exactly.
+CTDC epics fall into seven groupings, each with its own template tuned to that grouping's actual concerns. Section **7b-shared** holds the universal rules that apply to **every** template. Sections **7b-1** through **7b-7** hold the per-grouping templates. Only the Application Pages template (7b-1) is currently drafted; the other six are stubs to be drafted in focused sessions with a real CTDC example epic in hand.
 
-#### Why this format
+**The seven groupings:**
+
+1. **Application Pages** (7b-1) — User-facing pages and surfaces in the CTDC web application (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages).
+2. **Microservices** (7b-2) — Backend services with their own API contract, deployment, and lifecycle (e.g., the file service, the authn service, the backend GraphQL service).
+3. **Features** (7b-3) — Cross-cutting capabilities that span multiple pages or services (e.g., file download flows, manifest export, search).
+4. **Products** (7b-4) — Standalone deliverables consumed by external systems or end users (e.g., the megazip artifact, the CTDC application as a whole).
+5. **Infrastructure** (7b-5) — Deployment, CI/CD, environments, cloud topology, observability (e.g., Jenkins migration, environment provisioning).
+6. **Security** (7b-6) — Authn / authz / audit / compliance / vulnerability response (e.g., RAS-enabled file download, session timeout configuration, audit log gaps).
+7. **Data** (7b-7) — Data model, ingestion, releases, indexes (e.g., CMB v5 release, Memgraph schema changes, OpenSearch index updates).
+
+**When an epic could fit more than one grouping**, choose by **primary engineering ownership**:
+- Backend Engineering → Microservices
+- DevOps / Platform → Infrastructure
+- Federal InfoSec / FedRAMP → Security
+- Data Engineering / Stewards → Data
+- Frontend Engineering → Application Pages or Features (Application Pages if it scopes a single page; Features if it spans many)
+
+If the choice still isn't clear, default to the grouping whose template most closely matches the epic's actual content. The grouping label is a navigation aid for stakeholders, not a gatekeeping classification.
+
+---
+
+#### 7b-shared. Universal Epic Conventions
+
+These rules apply to **every** epic template, regardless of grouping. Each per-grouping section (7b-1 through 7b-7) inherits these without restating them.
+
+**Authorship & affiliation**
+- Preparer: Gina Kuffel, Senior Technical Project Manager
+- Organization: Frederick National Laboratory for Cancer Research (FNL/BACS)
+- Federal sponsor: NCI / Center for Biomedical Informatics and Technology (CBIIT)
+- Program: Cancer Research Data Commons (CRDC)
+
+**Domain content rules**
+- **Memgraph, never Neo4j.** Always reference Memgraph as the graph database with the parenthetical *"replaces the historical Neo4j references"* when first introduced. The public `crdc-ctdc-starter-kit` README is outdated and must not be mirrored.
+- **OpenSearch named explicitly** when the epic surfaces aggregations, counts, or facet-driven queries.
+- **FAIR mission stated.** Connect the epic back to making CTDC data Findable, Accessible, Interoperable, and Reusable somewhere in the description (typically in Context & Background and User Impact).
+- **CTDC ↔ ICDC translations.** When mirroring an ICDC pattern, translate node names and relationship names — `participant`/`case`, `specimen`/`sample`, `associated_with`/`of_*`, `data_file_uuid`/`file_uuid`, `study_accession`/`clinical_study_designation`. See Section 16.
+
+**Epic posture defaults**
+- **Priority:** Major (set via MCP, not the description).
+- **Status:** Open. These are evergreen containers, not work items.
+- **Assignee:** Unassigned, unless directed otherwise. Individual child tickets carry the actual ownership.
+- **Labels:** Preserve any existing label (e.g., `Task-1.3.8.X`). Do not add or remove labels in epic-normalization passes unless deliberately changing them.
+
+**Cross-epic linkage**
+- Out of Scope, Dependencies, and Notes sections must point readers to the epics that cover adjacent or excluded work.
+- Application page epics cross-reference the file download stack epic (CTDC-1764) when relevant.
+
+**Quality bar**
+- WCAG 2.1 AA accessibility, design system conformance, performance baselines under realistic data volumes, and automated test coverage appear as Performance & Quality acceptance criteria in every user-facing epic.
+- For non-user-facing epics (microservices, infrastructure, security, data), the equivalent quality bar is named in that grouping's template.
+
+**Verification & ground truth**
+- **For Application Pages and Features:** verify the live UI with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Ground In Scope claims in what the page actually renders.
+- **For Microservices, Infrastructure, Security, Data:** verify against the source repo, deployed config, or live system before drafting. Do not infer scope from imagination.
+- **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal line-ending state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
+
+**Markdown conventions**
+- Section headers: `### {emoji} **{Title}**` (h3, emoji + bold).
+- Bullets are flush-left; no indented `-` bullets with bold labels.
+- Use `**bold**` for emphasis (matched delimiters). The mismatched-delimiter patterns from earlier theories were verified red herrings — see "MCP write notes" below.
+- Inline route templates: plain text without backticks (e.g., `#/study/{study_code}`). Backticks are fine for single-token names like `participantById` or `customfield_12350`.
+
+**MCP write notes (description field caveat)**
+- **MCP `jira_update_issue` writes to the `description` field can produce broken renders.** The verified root cause is line endings: the Jira renderer requires CRLF (`\r\n`) to recognize line-bound markup; the MCP sometimes sends LF (`\n`). When line endings land as LF, headers and bullets render as literal text in the UI.
+- **It's not deterministic.** Of seven MCP-pushed application page epics in the 2026-04-30 normalization pass, six rendered cleanly and one (CTDC-1650) rendered visibly broken. The pattern is unpredictable.
+- **Default workflow:** push descriptions via MCP first. After pushing, **verify the render with a UI screenshot from the user**, not the wiki source.
+- **Fallback:** if a UI screenshot shows broken rendering, the user re-pastes the same description into the issue's Description field through the Jira web UI. The UI normalizes line endings to CRLF automatically. Re-verify with a follow-up screenshot.
+- **Other fields are safe via MCP.** Priority, summary, custom fields, status transitions, and labels write reliably through `jira_update_issue` because line endings don't affect them.
+
+---
+
+#### 7b-1. 🏛️ Application Pages (Drafted)
+
+> **Use this template for every epic that scopes a CTDC application page or major user-facing surface.** The canonical examples are Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), Cart (CTDC-1074), and Static Pages (CTDC-1015).
+
+**Why this template**
 
 These are **ongoing, evergreen epics** that remain Open across the life of the project. They serve as containers for all enhancements, bug fixes, and data-integration updates to a given page or surface. The structure makes them readable to engineers, PMs, and federal stakeholders without a Jira learning curve, and the section emojis act as visual anchors when scanning a long description.
 
-#### Section order (15 sections, exactly this sequence)
+**Section order (15 sections, exactly this sequence)**
 
 Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header — that absence is itself a signal.
 
 1. `### 🎯 **Epic Summary**` — One paragraph: what the epic delivers, the live URL, who consumes it, and the explicit statement that it is an ongoing epic tracking initial implementation, enhancements, bug fixes, and data-integration updates across the life of the CTDC project.
-2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific page/surface does, what data it surfaces, and where the data comes from (Memgraph + OpenSearch). Reference predecessor epics (e.g., closed initial-launch epics) here when applicable.
+2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific page/surface does, what data it surfaces, and where the data comes from (Memgraph + OpenSearch).
 3. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the page must achieve.
 4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. In Scope items must be verifiable against the live page (use Playwright to ground claims). Out of Scope items should explicitly point to the epic that covers the excluded work (e.g., *"Cart manifest creation and download (see CTDC-1074)"*).
 5. `### 👥 **Stakeholders**` — Bullet list of the standard stakeholder set: Product Owner, Senior TPM (FNL/BACS), NCI/CBIIT Federal Program Leadership, UX/UI Designer, Frontend Engineering Team (ESI), Backend/API Engineering Team (ESI), Data Engineering Team, Data Stewards, QA/Testers. Adjust only if a role is genuinely irrelevant.
@@ -416,9 +491,9 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 12. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the page back to CTDC's FAIR mission and the researcher's actual experience. This is the section that survives in stakeholder summaries.
 13. `### 🧩 **Components / Features Breakdown**` — Four sub-blocks, each with a bold sub-heading and bullet list: **UI Components**, **Backend / Data**, **Integration**, **Testing**.
 14. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment, accessibility conformance review cadence, and any cross-epic integration documentation requirements.
-15. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) the cross-reference list to all related application page epics, (c) any predecessor closed epic, and (d) any stack-wide reference (e.g., the file download epic CTDC-1764).
+15. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) the cross-reference list to all eight related application page epics (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages), and (c) any stack-wide reference (e.g., the file download epic CTDC-1764) when relevant.
 
-#### Standing emoji set (use these, not substitutes)
+**Standing emoji set (use these, not substitutes)**
 
 | Section | Emoji | Section | Emoji |
 |---|---|---|---|
@@ -431,45 +506,70 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 | Acceptance Criteria | ✅ | Documentation & Compliance | 📋 |
 | | | Notes | 📝 |
 
-#### Required content rules
+**Required content rules (Application Pages specific — universal rules in 7b-shared also apply)**
 
-- **Memgraph, never Neo4j.** Always reference Memgraph as the graph database, with the parenthetical noting it replaces the historical Neo4j references. The public `crdc-ctdc-starter-kit` README is outdated and must not be mirrored.
-- **OpenSearch named explicitly** when the page surfaces aggregations, counts, or facet-driven queries.
-- **Live URL named in Epic Summary.** Use the production URL (e.g., `https://clinical.datacommons.cancer.gov/#/studies`).
-- **Live UI verified before drafting.** Use Playwright (per project instructions) to snapshot the live page and ground In Scope claims in what actually renders. Do not infer scope from imagination.
-- **Cross-epic references threaded.** Out of Scope items, Dependencies, and Notes must point to the epics that cover adjacent work — at minimum the related application page epics (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages) and the file download stack (CTDC-1764) when relevant.
-- **FAIR mission stated.** Both Context & Background and User Impact tie back to making data Findable, Accessible, Interoperable, and Reusable.
+- **Live URL named in Epic Summary.** Use the production URL (e.g., `https://clinical.datacommons.cancer.gov/#/studies`). For pages that don't yet exist in production, state explicitly that the page is forward-looking and note what entry point the page will have when delivered.
+- **Live UI verified before drafting.** Use Playwright (`browser_navigate` + `browser_snapshot`) on the production URL. If the route 404s because the page is forward-looking, verify the *adjacent* page that will provide the entry point (e.g., the Explore Dashboard's Participants tab for a future Participant Details page) and explicitly note the future-state stance in the epic.
+- **Cross-epic references threaded.** Out of Scope, Dependencies, and Notes must point to the related Application Pages epics and to CTDC-1764 (file download stack) when relevant.
 - **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
 
-#### 🚨 Critical: MCP writes corrupt description rendering — use the Jira UI
+**Writing-and-publishing workflow**
 
-This rule supersedes every previous theory in this section. After multiple rounds of debugging on 2026-04-30, the **actual** root cause of broken epic description rendering on this Jira instance is line endings, not Markdown syntax.
+1. **Verify the live page** with Playwright before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
+2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared.
+3. **Push the description via the MCP** (`jira_update_issue` with the `description` field). The MCP write usually succeeds — see 7b-shared "MCP write notes" for the line-endings caveat and fallback.
+4. **Set non-description fields via the MCP** in the same call: `priority` to Major, plus any other fields you intend to set. Never include `labels` unless deliberately changing them.
+5. **Verify the rendered description with a UI screenshot** from the user. The wiki source is unreliable as a render preview.
+6. **If rendering is broken**, ask the user to re-paste the description through the Jira web UI's Description field. The UI fixes the line-ending issue automatically. Re-verify with a follow-up screenshot.
+7. **Update the related-epics cross-reference list** in the Notes section of every other Application Pages epic when a new page epic is added.
 
-**The defect:**
-- The Jira renderer requires CRLF (`\r\n`) line endings to recognize line-bound markup — `### headers`, list bullets, paragraph breaks, etc.
-- The Jira MCP `jira_update_issue` tool sends LF-only (`\n`) line endings.
-- Tickets edited manually in the Jira UI store CRLF and render correctly.
-- Tickets last edited via the MCP store LF and render with literal `###` text in headers, broken bullets, and other line-level breakdowns — even though the Markdown syntax is identical to a working ticket.
+---
 
-**Evidence base:**
-- CTDC-1645 was edited via the MCP, but its source happens to have CRLF in the stored field. Renders perfectly.
-- CTDC-1650 was edited via the MCP with LF line endings. Rendered visibly broken (literal `h3.` text on every section after Epic Summary).
-- After Gina re-pasted the same content through the Jira UI, CTDC-1650 stored CRLF and rendered identically to CTDC-1645 — with the same "defective" Markdown patterns intact.
+#### 7b-2. 🛠️ Microservices (Stub — Template TBD)
 
-**Implication for the prior gotchas list:** the patterns I flagged in earlier versions of this section — mismatched `__Word:**` delimiters, indented bullets with bold labels, backtick code spans containing `{...}`, asterisk-vs-underscore emphasis — are **NOT** the root cause of broken renders. CTDC-1645's source has every one of those "defects" and renders cleanly. They were red herrings. The line-ending difference is the only verified root cause.
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC microservice epic as the model. Candidate examples: the file service, the authn service, the backend GraphQL service. Until this template is drafted, microservice epics should follow the 7b-shared universal conventions and the most-relevant adjacent template (typically 7b-5 Infrastructure or 7b-6 Security).
 
-**The rule:** Use the Jira UI for any description that needs to render correctly. The MCP `jira_update_issue` write path is unsafe for description fields on this instance. Other fields (priority, summary, custom fields, status transitions) work fine via the MCP — only the description field is affected, because it's the only field where line endings drive Markdown structural rendering.
+When drafting this template, expected sections likely include API contract, service boundaries, deployment topology, dependency on other services, observability/SLOs, version compatibility, and cross-environment behavior. Final structure to be confirmed against a real example.
 
-#### Writing-and-publishing workflow
+---
 
-1. **Verify the page in the live UI** with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
-2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis above and the required content rules.
-3. **Push the description via the Jira UI**, not the MCP. Either: (a) paste the full Markdown into the issue's Description field via the Jira web UI directly, or (b) provide the Markdown to the user and have them paste it. The UI normalizes line endings to CRLF automatically; the MCP does not.
-4. **Set non-description fields via the MCP** if helpful — `priority` (Major), `summary`, custom fields, and labels can be safely written through `jira_update_issue` because line endings don't affect them. Just exclude the `description` field from any MCP payload.
-5. **Preserve the existing label** (e.g., `Task-1.3.8.X`) — do not include `labels` in any update payload unless deliberately changing them.
-6. **Leave `status: Open`** and `assignee: Unassigned` unless directed otherwise — these are evergreen epics, not work items.
-7. **Verify the rendered description by UI screenshot only.** Do not rely on the wiki source returned by `jira_get_issue` — it does not reveal line-ending state and looks identical for working and broken tickets. Only the rendered UI tells the truth.
-8. **Update the related-epics cross-reference list** in the Notes section of every other normalized epic when a new page epic is added. (Same UI-paste rule applies to those updates.)
+#### 7b-3. 🔄 Features (Stub — Template TBD)
+
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC feature epic as the model. Candidate examples: file download flows that span Explore + Cart + Participant Details, manifest export integration with downstream tools, global search. Until this template is drafted, feature epics should follow the 7b-shared universal conventions and use 7b-1 Application Pages as the closest analog.
+
+When drafting this template, expected sections likely emphasize cross-page surface area, user journey, the spread of UI/Backend/Data work, and the seam between feature delivery and ongoing page-level epic ownership.
+
+---
+
+#### 7b-4. 📦 Products (Stub — Template TBD)
+
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC product epic as the model. Candidate examples: the megazip ZIP artifact (CTDC-1924 / CTDC-1926 lineage), the CTDC application as a whole, manifest format spec as a versioned product. Until this template is drafted, product epics should follow the 7b-shared universal conventions.
+
+When drafting this template, expected sections likely emphasize the product contract with external consumers, versioning policy, backward compatibility, the consumer support obligation, and the difference between product evolution and product maintenance.
+
+---
+
+#### 7b-5. 🚧 Infrastructure (Stub — Template TBD)
+
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC infrastructure epic as the model. Candidate examples: Jenkins migration work, environment provisioning, deployment topology changes, observability rollouts. Until this template is drafted, infrastructure epics should follow the 7b-shared universal conventions.
+
+When drafting this template, expected sections likely emphasize environments (Dev/QA/Stage/Prod), deployment pipelines, runtime topology, observability/alerting, rollback strategy, and the difference between landed infrastructure and ongoing infrastructure operations.
+
+---
+
+#### 7b-6. 🔒 Security (Stub — Template TBD)
+
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC security epic as the model. Candidate examples: RAS-enabled file download (CTDC-1764), session timeout configuration, audit log gap remediation, FedRAMP control implementations. Until this template is drafted, security epics should follow the 7b-shared universal conventions.
+
+When drafting this template, expected sections likely emphasize threat model, authn/authz boundaries, audit logging requirements, controlled-access protections, compliance citations (NIST, FedRAMP, Section 508), and verification through penetration testing or compliance review.
+
+---
+
+#### 7b-7. 🧬 Data (Stub — Template TBD)
+
+> **Template not yet defined.** To be drafted in a focused session with a real CTDC data epic as the model. Candidate examples: CMB v5 release (CTDC-1753), Memgraph schema changes, OpenSearch index updates, data dictionary additions. Until this template is drafted, data epics should follow the 7b-shared universal conventions.
+
+When drafting this template, expected sections likely emphasize the data model delta, ingestion path, validation against the data dictionary, downstream consumer impact (which pages/features rely on the data), release cadence, and the difference between data releases and software releases (which CTDC tracks separately).
 
 ---
 
@@ -537,8 +637,28 @@ This rule supersedes every previous theory in this section. After multiple round
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
-- When the Application Page Epic Format (Section 7b) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing page epics so they stay consistent
-- Section 7b's MCP-write-corrupts-description rule supersedes all earlier theories about Markdown syntax defects — those were verified red herrings on 2026-04-30. If new Jira rendering issues emerge, default to the same diagnosis (line endings) before considering syntax-level explanations.
+- When a per-grouping epic template (7b-1 through 7b-7) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing epics in that grouping so they stay consistent
+
+### 9a. Epic Template Status Tracker
+
+Track which per-grouping epic templates are drafted vs. still TBD. Each future session that drafts a new template fills in that row.
+
+| Grouping | Template Status | Example Epic for Drafting |
+|---|---|---|
+| Application Pages (7b-1) | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
+| Microservices (7b-2) | 🚧 TBD | TBD |
+| Features (7b-3) | 🚧 TBD | TBD |
+| Products (7b-4) | 🚧 TBD | TBD |
+| Infrastructure (7b-5) | 🚧 TBD | TBD |
+| Security (7b-6) | 🚧 TBD | TBD |
+| Data (7b-7) | 🚧 TBD | TBD |
+
+### 9b. Lessons Learned from 2026-04-30 Normalization Pass
+
+- **Wiki source is not ground truth for rendering.** Only a UI screenshot from the user reveals whether a Jira description renders correctly. The wiki source returned by `jira_get_issue` looks identical for working and broken tickets.
+- **MCP description writes are nondeterministic.** Five of seven application page epics rendered cleanly via MCP push; one (CTDC-1650) rendered visibly broken until manually re-pasted through the Jira UI. The verified root cause is line endings (LF vs CRLF), but it doesn't fail every time.
+- **Earlier theories were red herrings.** Before identifying the line-endings root cause, several rounds of pattern-matching on Markdown syntax (`__Word:**` mismatched delimiters, indented bullets, backtick code spans with `{...}`, asterisk-vs-underscore emphasis) produced confident-sounding but wrong diagnoses. CTDC-1645's stored description has every one of those "defects" and renders perfectly. Default to the verified line-endings diagnosis before reaching for syntax-level explanations on any new rendering issue.
+- **Theory thrash is a smell.** When debugging without ground-truth screenshots, multiple "this is the bug" theories in a row, each falsified by the next data point, mean the methodology is wrong, not just the theory. Stop pushing changes and ask for a screenshot before continuing.
 
 ---
 
@@ -561,9 +681,9 @@ This rule supersedes every previous theory in this section. After multiple round
 
 **Rule:** When a custom field appears empty in a batch `jira_search` result, **always verify with a single-ticket `jira_get_issue` call before acting on it as "empty."** Flagging a field as empty in a stakeholder document (or asking the user to investigate) is a real cost — don't pay it on a false negative.
 
-### ⚠️ Description Field — Use Jira UI, Not MCP
+### ⚠️ Description Field — MCP Writes Can Render Broken
 
-See Section 7b. The MCP `jira_update_issue` tool sends LF-only line endings, which break Jira's Markdown renderer for the `description` field on this instance. Always use the Jira UI to write or update issue descriptions. Other fields (priority, summary, custom fields, status, labels) work fine via the MCP.
+See Section 7b-shared "MCP write notes." The MCP `jira_update_issue` tool sometimes sends LF-only line endings, which break Jira's Markdown renderer for the `description` field on this instance. The failure is nondeterministic — most writes succeed. Default workflow: push via MCP, verify rendering with a UI screenshot, fall back to UI paste if broken. Other fields (priority, summary, custom fields, status, labels) are unaffected.
 
 ### ❌ Fields That Do NOT Work via API on This Instance
 
