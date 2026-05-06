@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-04-30
+> **Last Updated:** 2026-05-06
 
 ---
 
@@ -41,7 +41,8 @@ The **Clinical and Translational Data Commons (CTDC)** is part of the NCI's Canc
 
 - **Frontend:** React web application (Bento Framework)
 - **GitHub org:** CBIIT
-- **Key repos:** `crdc-ctdc-ui`, `crdc-ctdc-backend`, `ctdc-model`, `ctdc-deployments`, `bento-ctdc-static-content`
+- **Canonical entry point:** `CBIIT/crdc-ctdc-starter-kit` — a meta-repo that pins all CTDC component repos as git submodules. This is the source of truth for which repos are part of the active CTDC system. See Section 17.
+- **Key repos (active):** `crdc-ctdc-ui`, `crdc-ctdc-backend`, `crdc-ctdc-files`, `crdc-ctdc-auth`, `crdc-ctdc-dataloader`, `crdc-ctdc-interoperation`, `bento-ctdc-static-content`, `ctdc-deployment`, `ctdc-model`, `ctdc-readMe-content`
 - **Sister project:** Integrated Canine Data Commons (ICDC) — same ecosystem, separate Jira project
 - **Jira project key:** `CTDC`
 - **Jira board ID:** `641`
@@ -392,13 +393,13 @@ So that [benefit/outcome].
 
 ### 7b. 🏛️ Epic Templates by Grouping
 
-CTDC epics fall into seven groupings, each with its own template tuned to that grouping's actual concerns. Section **7b-shared** holds the universal rules that apply to **every** template. Sections **7b-1** through **7b-7** hold the per-grouping templates. Only the Application Pages template (7b-1) is currently drafted; the other six are stubs to be drafted in focused sessions with a real CTDC example epic in hand.
+CTDC epics fall into seven groupings, each with its own template tuned to that grouping's actual concerns. Section **7b-shared** holds the universal rules that apply to **every** template. Sections **7b-1** through **7b-7** hold the per-grouping templates. Two templates are currently drafted (7b-1 Application Pages and 7b-3 Features); the other five are stubs to be drafted in focused sessions with a real CTDC example epic in hand.
 
 **The seven groupings:**
 
 1. **Application Pages** (7b-1) — User-facing pages and surfaces in the CTDC web application (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details).
 2. **Microservices** (7b-2) — Backend services with their own API contract, deployment, and lifecycle (e.g., the file service, the authn service, the backend GraphQL service).
-3. **Features** (7b-3) — Cross-cutting capabilities that span multiple pages or services (e.g., file download flows, manifest export, search).
+3. **Features** (7b-3) — Cross-cutting capabilities that span multiple pages or services (e.g., Local Find, file download flows, manifest export, search).
 4. **Products** (7b-4) — Standalone deliverables consumed by external systems or end users (e.g., the megazip artifact, the CTDC application as a whole).
 5. **Infrastructure** (7b-5) — Deployment, CI/CD, environments, cloud topology, observability (e.g., Jenkins migration, environment provisioning).
 6. **Security** (7b-6) — Authn / authz / audit / compliance / vulnerability response (e.g., RAS-enabled file download, session timeout configuration, audit log gaps).
@@ -412,6 +413,12 @@ CTDC epics fall into seven groupings, each with its own template tuned to that g
 - Frontend Engineering → Application Pages or Features (Application Pages if it scopes a single page; Features if it spans many)
 
 If the choice still isn't clear, default to the grouping whose template most closely matches the epic's actual content. The grouping label is a navigation aid for stakeholders, not a gatekeeping classification.
+
+**Feature vs Product disambiguation when an upstream package is involved.** This is a recurring decision because CTDC consumes several upstream Bento Core npm packages (`@bento-core/local-find`, `@bento-core/cart`, `@bento-core/authentication`, `@bento-core/header`, `@bento-core/footer`, `@bento-core/facet-filter`, `@bento-core/paginated-table`, and others). The decision rule:
+
+- If CTDC consumes an upstream package built by another team (e.g., the Bento Core team) and CTDC's work is **integrating, adapting, and operating** that capability within CTDC, the CTDC epic is a **Feature** epic. Document the upstream origin in the dedicated `📦 Upstream Provenance` section of the Features template (7b-3). The upstream team may have a Product epic in their own project tracking the package itself; that is not CTDC's concern.
+- Reserve **Product** epics (7b-4) for cases where CTDC is the primary builder of a deliverable consumed by external systems (e.g., the megazip artifact, the CTDC application as a whole as a deliverable to NCI, manifest format spec as a versioned product).
+- The **audience for CTDC's epic** is CTDC's engineering team and CTDC's stakeholders — not the upstream maintainers. That audience perspective is what makes Local Find a Feature, not a Product, in CTDC's Jira project.
 
 ---
 
@@ -448,6 +455,7 @@ These rules apply to **every** epic template, regardless of grouping. Each per-g
 **Verification & ground truth**
 - **For Application Pages and Features:** verify the live UI with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Ground In Scope claims in what the page actually renders.
 - **For Microservices, Infrastructure, Security, Data:** verify against the source repo, deployed config, or live system before drafting. Do not infer scope from imagination.
+- **Verify the canonical repo before reading code.** When an epic touches CTDC code, **the first verification step is confirming you are in the project-canonical repo**, not just any repo whose name matches. CTDC has historical/abandoned repos that share name fragments with the active canonical repo (e.g., `bento-ctdc-frontend` is the abandoned 2021–2023 frontend; `crdc-ctdc-ui` is the active starter-kit-canonical frontend). The single source of truth for which repos are canonical is the `.gitmodules` file in `CBIIT/crdc-ctdc-starter-kit`. See Section 17 for the full list.
 - **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal rendering state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
 
 **Markdown conventions**
@@ -489,6 +497,11 @@ This was the verified root cause of the CTDC-2040 (Program Details Page) render 
 5. **Last-resort fallback:** if the source is clean and the render is still broken, ask the user to re-paste the description through the Jira web UI's Description field. The UI normalizes whatever transport-level state the MCP introduced. This is rarely needed once the curly-brace rule is followed.
 
 **Other fields are safe via MCP.** Priority, summary, custom fields, status transitions, and labels write reliably through `jira_update_issue` because they don't go through the wiki-text renderer.
+
+**Comment body wiki-rendering quirks.** Comment bodies (added via `jira_add_comment` or `jira_transition_issue` with a `comment` parameter) also pass through the Jira-wiki renderer and have their own quirks separate from descriptions:
+
+- **Plus signs (`+`) get silently mangled.** The wiki renderer interprets `+` as inserted-text markup. A comment that says "Memgraph + OpenSearch" will render as "Memgraph  OpenSearch" with the `+` stripped. **Fix:** use plain English connectives like "and" or "plus" in comment bodies, or escape with a backslash if the literal `+` is essential. Verified on CTDC-1658 closure comment, 2026-05-06.
+- **Curly braces have the same macro-syntax issue as descriptions.** Apply the same `\{...\}` escaping rule.
 
 **Risk format**
 
@@ -576,11 +589,90 @@ When drafting this template, expected sections likely include API contract, serv
 
 ---
 
-#### 7b-3. 🔄 Features (Stub — Template TBD)
+#### 7b-3. 🔄 Features (Drafted)
 
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC feature epic as the model. Candidate examples: file download flows that span Explore + Cart + Participant Details, manifest export integration with downstream tools, global search. Until this template is drafted, feature epics should follow the 7b-shared universal conventions and use 7b-1 Application Pages as the closest analog.
+> **Use this template for every epic that scopes a CTDC cross-cutting capability** — a feature that lives on multiple surfaces or spans multiple services, owned end-to-end as a single capability rather than as page-specific or service-specific work. The canonical example is **CTDC-2042 (CTDC Local Find — Participant)**. Future candidates: file download flows that span Explore + Cart + Participant Details, manifest export integration with downstream tools, global header search, and similar cross-cutting capabilities consumed across multiple Application Pages.
 
-When drafting this template, expected sections likely emphasize cross-page surface area, user journey, the spread of UI/Backend/Data work, and the seam between feature delivery and ongoing page-level epic ownership.
+**Why this template**
+
+Features are **cross-cutting capabilities** — they live on multiple pages, often call multiple services, and compose with other features. Like Application Pages epics, they're **ongoing and evergreen** — the epic is a container for all enhancements, bug fixes, and integration updates to the capability over the life of the project. The structure differs from Application Pages in five places:
+
+1. **Surface Area** replaces the single-URL framing — features live on many pages, not one
+2. **Upstream Provenance** is first-class — many CTDC features are built on Bento Core npm packages, and that provenance shapes scope, bug-fix routing, and version pinning
+3. **Verification** is multi-surface plus code-level — Playwright on every hosting surface, plus code-level verification of the cross-cutting wiring (Redux state, GraphQL filter composition, etc.)
+4. **Adjacent Capabilities** under Scope distinguishes the feature from features that look similar but are different — the highest-leverage section for stopping scope creep
+5. **Composition** is first-class — features compose with other features (intersection, additive, exclusion) and that composition needs explicit rules
+
+**Section order (18 sections, exactly this sequence)**
+
+Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header.
+
+1. `### 🎯 **Epic Summary**` — One paragraph: what the feature delivers, the surfaces it lives on (not a single URL), who consumes it, and the explicit standing-epic statement.
+2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific feature does, what user need it serves, where it integrates into the user journey, and how it's implemented at a high level (Bento Framework foundation if applicable, Memgraph + OpenSearch backing if applicable).
+3. `### 📦 **Upstream Provenance**` — Origin and ownership story for the feature. Three required sub-paragraphs when an upstream package is involved: (a) who built the capability and where it's delivered as a package, (b) bug-fix routing — which seam goes to CTDC integration code vs. upstream package code, (c) any project-history note (e.g., "this targets the post-2023-reboot codebase, not the historical X"). For features that are entirely CTDC-original (no upstream package), state that explicitly and make the section a single paragraph naming CTDC as the sole owner.
+4. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the feature must achieve.
+5. `### 🗺️ **Scope**` — **Three sub-blocks** (one more than 7b-1): **In Scope**, **Out of Scope**, **Adjacent Capabilities (Not This Feature)**. The third sub-block names features that look similar but are different (e.g., for Local Find: "Global header search," "Cart selection," "Manifest export"); each adjacent capability points to its own epic when one exists.
+6. `### 🌐 **Surface Area**` — Bullet list of every page/route that hosts the feature, with the entry point on each. Plus a "Current deployment state" paragraph naming what's wired vs. what's not yet rendered (verified against the live system on a specific date).
+7. `### 👥 **Stakeholders**` — Same standard set as 7b-1, with the addition of any upstream team (e.g., "Bento Core Team" for features built on `@bento-core/*` packages).
+8. `### 📖 **Key Definitions / Concepts**` — Glossary of terms specific to this feature. Always include **Memgraph** (with the parenthetical *"replaces the historical Neo4j references"*) and **OpenSearch** when either is involved.
+9. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered list, verifiable on every hosting surface across Dev/QA/Stage/Prod) and **Performance & Quality** (numbered list including WCAG 2.1 AA, design system conformance, performance baselines, and automated test coverage on every hosting surface).
+10. `### 🧱 **Composition**` — Bullet list. Every feature composes with at least one other feature or composes with itself across surfaces. Make the composition rules explicit: which features it intersects with, unions with, or excludes. Each composition rule is one bullet with a one-sentence explanation. Always end with the negative-space rules ("Does not compose with X") that prevent scope creep.
+11. `### 🔗 **Dependencies**` — Bullet list of upstream systems, services, sibling epics, and pages this feature is hosted on. Always name Memgraph + OpenSearch when the feature reads CTDC graph data; name relevant GraphQL resolver families; name the Bento Framework package if the feature is built on one (e.g., `@bento-core/local-find`); name the canonical starter-kit meta-repo (`CBIIT/crdc-ctdc-starter-kit`) if the feature touches multiple components.
+12. `### 💭 **Assumptions**` — Bullet list of working assumptions (index parity, package API stability, data volume envelope, etc.).
+13. `### 🚧 **Constraints**` — Bullet list of non-negotiables: security/privacy/Section 508, controlled-access protections, performance under growth, **cross-surface consistency** (the feature must behave identically on every surface that hosts it).
+14. `### ⚠️ **Risks & Mitigations**` — Three-column table per the universal "Risk format" convention. Cover at least: data drift, performance regression at scale, cross-surface inconsistency, scope creep from adjacent capabilities, upstream package breaking changes (if applicable), and feature-specific risks.
+15. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the feature back to CTDC's FAIR mission and the researcher's actual experience.
+16. `### 🧩 **Components / Features Breakdown**` — **Five sub-blocks** (one more than 7b-1): **UI Components** (every component on every hosting surface), **State Management** (Redux slices, reducer wiring, persistence behavior), **Backend / Data** (resolvers, OpenSearch indexes, GraphQL schema fields), **Integration** (how the feature wires into hosting surfaces and composes with other features), **Testing** (test coverage strategy across surfaces).
+17. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment if data-model fields are involved, accessibility conformance review cadence, and cross-surface integration documentation requirements.
+18. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement that this remains Open across the project life with child tickets attached for individual enhancements, (b) cross-reference list to related Features epics and the hosting Application Pages epics, (c) any Bento Framework package the feature builds on, (d) the Bento parent epic if applicable, (e) closed predecessor epics (compressed to one sentence; longer historical context belongs in 📦 Upstream Provenance, not Notes).
+
+**Standing emoji set (16 entries — same as 7b-1 plus three additions)**
+
+| Section | Emoji | Section | Emoji |
+|---|---|---|---|
+| Epic Summary | 🎯 | Composition | 🧱 *(new vs 7b-1)* |
+| Context & Background | 🧬 | Dependencies | 🔗 |
+| Upstream Provenance | 📦 *(new vs 7b-1)* | Assumptions | 💭 |
+| Goal / Objectives | 🏁 | Constraints | 🚧 |
+| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
+| Surface Area | 🌐 *(new vs 7b-1)* | User Impact | 🌟 |
+| Stakeholders | 👥 | Components Breakdown | 🧩 |
+| Key Definitions | 📖 | Documentation & Compliance | 📋 |
+| Acceptance Criteria | ✅ | Notes | 📝 |
+
+**Required content rules (Features specific — universal rules in 7b-shared also apply)**
+
+- **Surface Area named in Epic Summary** — list the hosting pages/routes, not a single URL.
+- **Every hosting surface verified before drafting** — use Playwright (`browser_navigate` + `browser_snapshot`) on every page that hosts the feature. If the feature has UI components (search box, modal, query bar chip), each component is verified on each surface where it appears.
+- **Code-level verification of cross-cutting wiring** — for features that span FE + BE, verify the integration code as well: Redux store registration, reducer wiring, controller-level filter composition, GraphQL schema field definitions, OpenSearch index mappings.
+- **Verify the canonical repo before reading code.** Per 7b-shared "Verification & ground truth," confirm via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` that the repo you're reading is the project-canonical one, not a historical/abandoned variant. See Section 17.
+- **Upstream Provenance populated** — every feature epic states whether the capability is upstream-built (and which package), CTDC-original, or hybrid. Bug-fix routing is explicitly named.
+- **Adjacent Capabilities sub-block populated** — naming the features that look similar but are different is the single highest-leverage section for stopping scope creep.
+- **Composition section populated** — every feature composes with at least one other feature (facet filtering, cart, manifest export) or composes with itself across surfaces. Make the composition rules explicit, including the negative-space rules.
+- **Cross-epic references threaded** — Out of Scope, Dependencies, and Notes must point to related Features epics, hosting Application Pages epics, and CTDC-1764 (file download stack) when relevant.
+- **WCAG 2.1 AA + design system + performance baselines + automated tests on every surface** appear in Performance & Quality.
+- **Curly braces escaped as `\{...\}`** anywhere they appear.
+
+**Writing-and-publishing workflow**
+
+1. **Verify every hosting surface** with Playwright before drafting. Note the actual entry points on each page, the components that appear on each surface, and any cross-surface state. If the feature is forward-looking (UI not yet rendered), state that explicitly in Surface Area's "Current deployment state" paragraph.
+2. **Verify cross-cutting wiring at the code level** in the canonical starter-kit-pinned repos. Check Redux store, reducers, controllers, GraphQL schema, OpenSearch indexes, and any Bento package imports. Do not assume the recently-updated repo is the canonical one — confirm via `.gitmodules`.
+3. **Draft the description** in Markdown with all 18 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule.
+4. **Push the description via the MCP** in two steps: first `jira_create_issue` with a placeholder description (the `description` field is required at create time on this tracker — a one-line placeholder is fine), then immediately `jira_update_issue` with the full Markdown description. This separates the create-time validation pass from the wiki-conversion pass and produces the cleanest render.
+5. **Set non-description fields via the MCP** in the update call: `priority` to Major, `customfield_12351` (Epic Name) to the epic title, plus any labels you intend to carry over. Never include `labels` unless deliberately changing them.
+6. **Verify the rendered description with a UI screenshot** from the user. The wiki source is unreliable as a render preview.
+7. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — that's the most likely cause. If the source is clean and the render is still broken, fall back to UI paste.
+8. **Update the related-epics cross-reference list** in the Notes section of every other Features epic when a new feature epic is added.
+
+**Closed-predecessor cleanup pattern**
+
+When a new Features epic supersedes one or more older epics that are no longer coherent (terminology drift, architectural drift, abandoned codebase), the cleanup pattern is:
+
+1. Create the new epic and verify its render before touching predecessors.
+2. Re-parent any still-active child stories to the new epic via `customfield_12350` (Epic Link).
+3. Close stale child tickets (e.g., test stories authored against an abandoned codebase) with `Won't Fix` resolution and a comment pointing to the new epic and the active replacement story.
+4. Close predecessor epics with a comment that explicitly names: the new epic key, the architectural/terminology drift that justified the close, and a statement that closed children remain parented to the predecessor as historical record. This avoids losing 2022-era bug-fix history while keeping the active scope coherent.
+5. Verified pattern from CTDC-2042 (Local Find) creation 2026-05-06: predecessors CTDC-722 and CTDC-761 closed; stale test stories CTDC-826/827/828 closed; CTDC-1658 closed as Duplicate; active story CTDC-1691 re-parented.
 
 ---
 
@@ -589,6 +681,8 @@ When drafting this template, expected sections likely emphasize cross-page surfa
 > **Template not yet defined.** To be drafted in a focused session with a real CTDC product epic as the model. Candidate examples: the megazip ZIP artifact (CTDC-1924 / CTDC-1926 lineage), the CTDC application as a whole, manifest format spec as a versioned product. Until this template is drafted, product epics should follow the 7b-shared universal conventions.
 
 When drafting this template, expected sections likely emphasize the product contract with external consumers, versioning policy, backward compatibility, the consumer support obligation, and the difference between product evolution and product maintenance.
+
+**Note on Feature vs Product disambiguation:** Features that consume an upstream package (e.g., Local Find consuming `@bento-core/local-find`) are 7b-3 Features in CTDC's Jira project, not 7b-4 Products. The upstream team's perspective on the package is irrelevant to CTDC's classification. See the disambiguation paragraph in Section 7b above.
 
 ---
 
@@ -681,6 +775,7 @@ When drafting this template, expected sections likely emphasize the data model d
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
 - When a per-grouping epic template (7b-1 through 7b-7) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing epics in that grouping so they stay consistent
+- When a new active CTDC repo is added to (or an old one removed from) the starter-kit `.gitmodules` file, update Section 17 to keep the canonical-repo list in sync
 
 ### 9a. Epic Template Status Tracker
 
@@ -690,7 +785,7 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 |---|---|---|
 | Application Pages (7b-1) | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
 | Microservices (7b-2) | 🚧 TBD | TBD |
-| Features (7b-3) | 🚧 TBD | TBD |
+| Features (7b-3) | ✅ Drafted v1 | CTDC-2042 (Local Find — Participant) |
 | Products (7b-4) | 🚧 TBD | TBD |
 | Infrastructure (7b-5) | 🚧 TBD | TBD |
 | Security (7b-6) | 🚧 TBD | TBD |
@@ -705,19 +800,29 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 - **Theory thrash is a smell.** When debugging without ground-truth screenshots, multiple "this is the bug" theories in a row, each falsified by the next data point, mean the methodology is wrong, not just the theory. Stop pushing changes and ask for a screenshot before continuing. The 2026-04-30 session went through three wrong theories (CRLF/LF, underscore-italic, then a confused mix of both) before the correct cause was identified by reading the actual cascade pattern in a screenshot dump.
 - **Markdown vs Jira-wiki authoring confusion (verified 2026-04-30 on CTDC-1960).** The MCP `description` field expects Markdown; if you write Jira-wiki by mistake, asterisks get re-interpreted as Markdown italic emphasis and bold headers render as italic. The fix is in 7b-shared "Markdown conventions" — always author in Markdown (`### **Heading**`, `**bold**`, `1.` for numbered, `-` for bullets), and use Jira-wiki table syntax (`||h||` and `|c|`) only for tables, which passes through the converter unchanged. Confirmed working: CTDC-1960 second push (Markdown) rendered correctly with bold headers; first push (Jira-wiki) rendered headers as italic. The risk table from CTDC-1960 is now the canonical example for the "Risk format" subsection in 7b-shared.
 
+### 9c. Lessons Learned from 2026-05-06 Local Find Epic Creation (CTDC-2042)
+
+- **Verify the canonical repo before reading code, not just whether the repo exists.** When investigating a feature that touches code, the first verification step is confirming the repo's role in the canonical project structure — not just confirming a repo with a matching name exists. CTDC has a historical/abandoned frontend repo (`bento-ctdc-frontend`, last pushed 2023) and an active starter-kit-canonical frontend repo (`crdc-ctdc-ui`, actively developed). A "search for the repo, pick the most-recently-updated" heuristic happens to land on the right answer here, but only by coincidence. **The canonical entry point is `CBIIT/crdc-ctdc-starter-kit/.gitmodules`** — that file is the source of truth for which repos are part of the active CTDC system. See Section 17. The methodology improvement: when an epic touches code, read the starter-kit `.gitmodules` first, then read inside the canonical repo. This avoids a class of error where the right answer happens by luck rather than by methodology.
+- **Resolution naming differs by Jira instance age.** The NCI tracker (`tracker.nci.nih.gov`) uses the older `Won't Fix` resolution name; modern Jira Cloud uses `Won't Do`. Specifying `Won't Do` on a transition that requires a resolution returns "The selected resolution cannot be chosen during this action." Always use `Won't Fix` on this instance. `Duplicate` is also valid and accepted on the `Open → Close` transition. Verified on CTDC-826/827/828/722/1658 closures, 2026-05-06.
+- **Resolution requirements differ by source state.** The same workflow has different resolution-requirement rules depending on which status the issue is leaving. From `Open` (transition id 191 "Close"), a resolution is **required** and must be one of the allowed values. From `Testing Hold` (transition id 731 "Move to Closed"), a resolution is **not required** — passing `null` is accepted, and the resulting issue is closed with no resolution recorded. This means closing a `Testing Hold` ticket via the API leaves a "closed without resolution" hygiene gap unless you manually edit it in the Jira UI afterwards. Verified on CTDC-761 closure, 2026-05-06. **Recommendation:** when closing a `Testing Hold` ticket, follow up with a manual UI edit to set the resolution if reporting hygiene matters.
+- **Epic creation requires a non-null description at create time.** `jira_create_issue` rejects a `null` or missing description with "Description is required." The clean workaround that works on this tracker: seed a placeholder one-line description at creation, then immediately overwrite with the real Markdown description via `jira_update_issue`. This two-step pattern also produces cleaner Markdown→Jira-wiki conversion than trying to deliver the full description in one call. Verified on CTDC-2042 creation, 2026-05-06.
+- **Comment body wiki-rendering quirks (separate from description quirks).** Comment bodies pass through the same Jira-wiki renderer as descriptions and have their own gotchas. Verified failure mode: plus signs (`+`) get silently stripped — the renderer interprets them as inserted-text markup. A comment that says "Memgraph + OpenSearch" renders as "Memgraph  OpenSearch." Use plain English connectives like "and" or "plus" in comment bodies. Same `\{...\}` curly-brace escaping rule applies. Verified on CTDC-1658 closure comment, 2026-05-06.
+- **Multiple resolution values are allowed on the same transition.** The `Open → Close` transition (id 191) on this tracker accepts both `Won't Fix` and `Duplicate`. There is no API endpoint that enumerates the per-transition allowed resolutions ahead of time; discovery is by trial. **Recommendation:** when closing tickets, pick the most semantically appropriate resolution first; if it fails, fall back to `Won't Fix` as the safe default. Verified on CTDC-1658 closure with `Duplicate` resolution, 2026-05-06.
+
 ---
 
 ## 10. 🗃️ Jira Custom Field Reference
 
 > **Critical.** The NCI tracker (`tracker.nci.nih.gov`) has non-standard field configurations. Standard Jira field IDs and the `jira_link_to_epic` tool do NOT work reliably. Always use the confirmed field IDs below.
 >
-> These fields are confirmed on **Task** issue type in both **CTDC** and **ICDC** projects — they are consistent across both.
+> These fields are confirmed on **Task** and **Epic** issue types in both **CTDC** and **ICDC** projects — they are consistent across both.
 
 ### ✅ Confirmed Writable Fields (via `jira_update_issue`)
 
 | Field Name | Custom Field ID | Value Format | Notes |
 |---|---|---|---|
-| **Epic Link** | `customfield_12350` | `"CTDC-XXXX"` (plain string) | Set via `fields` parameter. Confirmed working on Task type. |
+| **Epic Link** | `customfield_12350` | `"CTDC-XXXX"` (plain string) | Set via `fields` parameter. Confirmed working on Task type. Re-parent existing children by setting this on each child, not on the epic. Verified on CTDC-1691 re-parent to CTDC-2042, 2026-05-06. |
+| **Epic Name** | `customfield_12351` | `"Epic display name"` (plain string) | The Epic Name field is separate from Summary on this tracker. Set this on epic creation via `additional_fields`. Verified on CTDC-2042 creation, 2026-05-06. |
 | **Developer** | `customfield_23650` | `[{"name": "username"}]` (array of objects) | Multi-value user picker. Set via `fields` parameter. |
 
 ### ⚠️ Known Gotcha — Batch Read Inconsistency
@@ -729,6 +834,30 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 ### ⚠️ Description Field — Escape Curly Braces
 
 **Curly braces `{...}` in description text are treated as Jira-wiki macro syntax** and corrupt parser state for the surrounding block when the macro name is unknown. Symptoms include adjacent headers rendering as literal `h3.` text, bullets losing list context, and entire sections disappearing. **Fix:** escape every curly brace in description text as `\{...\}`. See Section 7b-shared "MCP write notes" for the full diagnostic and workflow. Other fields (priority, summary, custom fields, status, labels) are not routed through the wiki renderer and are unaffected.
+
+### ⚠️ Comment Body Quirks
+
+Comment bodies (added via `jira_add_comment` or `jira_transition_issue` with a `comment` parameter) pass through the same Jira-wiki renderer as descriptions:
+
+- **Plus signs (`+`) get silently stripped** — interpreted as inserted-text markup. Use "and" or "plus" instead, or escape with backslash.
+- **Curly braces** must be escaped as `\{...\}` per the description rule above.
+
+Verified on CTDC-1658 closure comment, 2026-05-06.
+
+### 🧯 Closing Tickets via Transitions
+
+The NCI tracker workflow has two relevant gotchas when closing tickets via the MCP:
+
+**Resolution naming:** Use `Won't Fix`, not `Won't Do`. The newer `Won't Do` resolution does not exist on this older Jira instance. `Duplicate` is also valid for genuine duplicates. Both have been verified on the `Open → Close` transition (id 191).
+
+**Resolution requirement varies by source state:**
+
+| Source Status | Transition ID | Resolution Required? | Notes |
+|---|---|---|---|
+| `Open` | 191 (`Close`) | Yes — must be one of the allowed values | Confirmed: `Won't Fix`, `Duplicate` both work. `Won't Do` does NOT work. |
+| `Testing Hold` | 731 (`Move to Closed`) | No — accepts `null` | Issue closes with no resolution recorded. Follow up with a manual UI edit if reporting hygiene matters. |
+
+**Discovery pattern:** there is no API that enumerates allowed resolutions per transition. Discover by trial. When closing, pick the most semantically appropriate resolution first; fall back to `Won't Fix` if it fails. After a successful transition, the resolution field is **not editable** via `jira_update_issue` ("Field 'resolution' cannot be set") — you must set it during the transition itself, or accept the gap.
 
 ### ❌ Fields That Do NOT Work via API on This Instance
 
@@ -766,6 +895,35 @@ jira_update_issue(
     "customfield_12350": "CTDC-2008",
     "customfield_23650": [{"name": "millerer"}]
   }
+)
+```
+
+**Create Epic with Epic Name and Placeholder Description:**
+```json
+jira_create_issue(
+  project_key = "CTDC",
+  summary = "CTDC Local Find (Participant)",
+  issue_type = "Epic",
+  assignee = "tesfatsionnh",
+  description = "_Description being applied via update — see next revision._",
+  additional_fields = {"priority": {"name": "Major"}, "labels": ["Task-1.3.7.3"]}
+)
+
+# Then immediately:
+jira_update_issue(
+  issue_key = "CTDC-XXXX",
+  fields = {"description": "<full Markdown body>"},
+  additional_fields = {"customfield_12351": "CTDC Local Find (Participant)"}
+)
+```
+
+**Close a ticket with resolution:**
+```json
+jira_transition_issue(
+  issue_key = "CTDC-826",
+  transition_id = "191",
+  fields = {"resolution": {"name": "Won't Fix"}},
+  comment = "Closed as stale per CTDC Local Find epic restart 2026-05-06..."
 )
 ```
 
@@ -1017,6 +1175,7 @@ See you [day] at [time]! :raised_hands: Drop questions, heckles, or demo tips in
 | **Build system** | Maven (`pom.xml`, `mvnw`) |
 | **Language / framework** | Java 11+ / Spring Boot |
 | **Containerization** | Dockerfile at repo root |
+| **Canonical?** | Yes — pinned as a submodule in `CBIIT/crdc-ctdc-starter-kit`. See Section 17. |
 
 ### 15b. Architecture — Submodule Pattern
 
@@ -1098,6 +1257,7 @@ Or use the GitHub UI directly on the repo. Org-scoped searches can quietly miss 
 | **Repo URL** | `https://github.com/CBIIT/ctdc-model` |
 | **Default branch** | `prod` (NOT `main` or `master` — different from both frontend and backend) |
 | **Current version** | `v1.22.2` (verified 2026-04-27 — check `Version:` line at top of model file for latest) |
+| **Canonical?** | Yes — pinned as a submodule in `CBIIT/crdc-ctdc-starter-kit`. See Section 17. |
 
 ### 16b. Key File Locations
 
@@ -1172,3 +1332,60 @@ When a backend ticket needs to know whether a given relationship exists between 
 - **`specimen`** is CTDC's equivalent of ICDC's **`sample`**.
 - **CTDC file UUID field** is `data_file_uuid`. **ICDC file UUID field** is `file_uuid`. These are not interchangeable — adjust query results and frontend keys accordingly.
 - **CTDC study identifier field** is `study_accession`. **ICDC study identifier field** is `clinical_study_designation`. Translate when porting queries.
+
+---
+
+## 17. 🗂️ CTDC Repo Identity & Canonical Disambiguation
+
+> **Critical when an epic or ticket touches CTDC code.** CTDC has historical/abandoned repos that share name fragments with the active canonical repos. Reading code from the wrong repo silently produces wrong technical claims in tickets, epics, and stakeholder documents. Always verify the canonical repo first.
+
+### 17a. The Canonical Entry Point
+
+The single source of truth for which repos are part of the active CTDC system is the **`.gitmodules`** file in `CBIIT/crdc-ctdc-starter-kit`. The starter-kit is a meta-repo that pins each CTDC component as a git submodule. If a repo is listed in that file, it is canonical. If it is not, it is either historical, deprecated, or unrelated to active CTDC delivery.
+
+**Starter-kit URL:** `https://github.com/CBIIT/crdc-ctdc-starter-kit`
+**`.gitmodules` URL:** `https://github.com/CBIIT/crdc-ctdc-starter-kit/blob/main/.gitmodules`
+
+### 17b. Active Canonical Repos (from starter-kit `.gitmodules`)
+
+| Component | Canonical Repo | Default Branch | Purpose |
+|---|---|---|---|
+| **Frontend** | `CBIIT/crdc-ctdc-ui` | `main` | React web application — see all earlier sections referencing frontend code |
+| **Backend** | `CBIIT/crdc-ctdc-backend` | `master` | GraphQL backend — see Section 15 |
+| **File service** | `CBIIT/crdc-ctdc-files` | (verify before assuming) | File delivery service |
+| **Auth service** | `CBIIT/crdc-ctdc-auth` | (verify before assuming) | Authentication service |
+| **Data loader (CTDC-specific)** | `CBIIT/crdc-ctdc-dataloader` | (verify before assuming) | CTDC-specific data ingestion |
+| **Data loader (shared ICDC base)** | `CBIIT/icdc-dataloader` | (verify before assuming) | Shared loader code |
+| **Interoperation** | `CBIIT/crdc-ctdc-interoperation` | (verify before assuming) | Cross-CRDC interoperation |
+| **Static content** | `CBIIT/bento-ctdc-static-content` | (verify before assuming) | Static HTML/text content |
+| **Deployment** | `CBIIT/ctdc-deployment` | `main` | Deployment manifests |
+| **Data model** | `CBIIT/ctdc-model` | `prod` | Graph model — see Section 16 |
+| **ReadMe / help content** | `CBIIT/ctdc-readMe-content` | `prod` | User-facing help content |
+
+> **Important:** verify branch names against the `.gitmodules` file or each repo's GitHub default before assuming. The frontend uses `main`, the backend uses `master`, the data model uses `prod` — they are not consistent across components.
+
+### 17c. Historical / Deprecated Repos (DO NOT use as a source of truth)
+
+These repos exist on `org:CBIIT` and may surface in name-based GitHub searches, but they are **not** part of the active CTDC system. Reading code from them or citing their file paths in tickets is a methodology error.
+
+| Repo | Why It Surfaces in Searches | Status |
+|---|---|---|
+| `CBIIT/bento-ctdc-frontend` | Created June 2021, last pushed August 2023. Was the original CTDC frontend before the 2023 reboot. | **Abandoned.** The CTDC project was rebooted in July 2023 around the starter-kit + `crdc-ctdc-ui`. Any code or PRs in this repo predate the active production system. |
+| `CBIIT/QA_TestComplete` | Holds 2020-era TestComplete scripts for ICDC + CTDC. | **Inactive** as of 2023. |
+| `CBIIT/ctdc_uitesting` | 2020-era JUnit test scaffolding. | **Inactive** as of 2020. |
+| `CBIIT/ctdc-data-processing` | 2019-era data processing scripts; superseded by `ctdc-dataloader`. | **Inactive** as of 2022. |
+| `CBIIT/ctdc-deployments` (with the trailing `s`) | Older deployment artifacts. The canonical deployment repo is `ctdc-deployment` (no `s`). | **Inactive.** Confirmed by `.gitmodules` pin to `ctdc-deployment` (singular). |
+
+When in doubt, the rule is: **if the repo is not in the starter-kit `.gitmodules`, do not treat it as part of active CTDC.**
+
+### 17d. Verification Workflow When an Epic or Ticket Touches Code
+
+1. **Open `CBIIT/crdc-ctdc-starter-kit/.gitmodules`** as the first step. Confirm the component you're investigating is pinned there and note the repo URL.
+2. **Read inside the canonical repo only.** Do not read code from a name-similar repo without first checking it appears in `.gitmodules`.
+3. **Verify the branch.** Use the default branch listed in Section 17b above, or check the repo's GitHub default if the table lists "verify before assuming."
+4. **Cite repo paths in epics/tickets in the form `CBIIT/<repo-name>` with branch where ambiguity matters** (e.g., "branch `main`," "branch `master`," "branch `prod`"). This makes wrong-repo errors easier to catch in review.
+5. **If a code search returns a name-matching repo not in `.gitmodules`, ignore it.** This is the most common path to a wrong-repo error — GitHub search treats the historical repo and the canonical repo as equivalent matches by name, but they are not.
+
+### 17e. Why This Section Exists
+
+This section was added 2026-05-06 after a near-miss during the CTDC-2042 (Local Find — Participant) epic creation. The session author searched GitHub for CTDC frontend repos, found both `bento-ctdc-frontend` (last pushed 2023) and `crdc-ctdc-ui` (actively developed), and used the recently-updated heuristic to pick `crdc-ctdc-ui`. That happened to land on the correct canonical repo, but only by coincidence. The user (Senior TPM) caught the methodology gap and pointed at the starter-kit as the source of truth. Section 17 formalizes that as the verified-first-step methodology so the next person doesn't have to rely on coincidence. See also Section 9c for the lessons-learned record.
