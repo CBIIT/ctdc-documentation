@@ -370,24 +370,89 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 ## 7. 🎫 Ticket Writing Standards
 
-### 7a. Story Format
-```
-As a [type of user],
-I want to [action/feature],
-So that [benefit/outcome].
+### 7a. 📖 User Story Template (Drafted)
 
-**Acceptance Criteria:**
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
+> **Use this template for every CTDC user story.** The canonical example is **CTDC-1691 (End User can find specific Participant IDs using an Input Set)** — drafted 2026-05-06 as a child of CTDC-2042 (Local Find — Participant). The template is deliberately scoped at story level, not epic level. It inherits the 7b-shared universal conventions (Markdown authoring, curly-brace escaping, render verification by UI screenshot), so most of the gotchas are covered there.
 
-**Technical Notes:**
-[Any relevant implementation context]
+**Why this template**
 
-**Related:**
-- Epic: CTDC-XXXX
-- Design: [link if applicable]
-```
+User stories are smaller-scope deliverables than epics — they ship and close, rather than living forever as evergreen containers. The bare-bones As-a/I-want/So-that format is a starting point, but it leaves the engineer without enough structure to know when a story is *done*. This template gives every story:
+
+- A one-sentence summary the engineer can read in five seconds and know what's being asked
+- The classic As-a/I-want/So-that framing intact, written as flowing prose
+- An explicit link to the parent epic so the *why* is one click away
+- An In/Out of Scope split that prevents adjacent-feature creep
+- Acceptance Criteria split into Functional and Performance & Quality, mirroring the epic AC pattern
+- A dedicated Testing Requirements section so unit/integration/manual coverage is named explicitly, not buried in a P&Q bullet
+- A Notes section for upstream provenance, predecessor links, and composition rules
+
+The emoji set deliberately overlaps with the epic templates (🎯 🔗 🗺️ ✅ 📝) so a reader scanning a story and its parent epic side-by-side sees the same visual anchors. The two new ones are 👤 (User Story) and 🧪 (Testing Requirements) — both unique to the story scale.
+
+**Section order (7 sections, exactly this sequence)**
+
+Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header — same rule as the epic templates.
+
+1. `### 🎯 **Story Summary**` — One sentence: what this story delivers, who consumes it, on which surface. Example: *"This story delivers the Upload Participant Set capability on the Explore Dashboard, letting researchers paste or upload a list of Participant IDs to seed a cohort directly."*
+
+2. `### 👤 **User Story**` — The classic As-a / I-want / So-that, written as flowing prose. One paragraph, not three bullet lines. Example: *"As an end user with a known list of Participant IDs relevant to my research, I want to paste or upload that list directly into CTDC so that I can seed a cohort without having to rebuild it from scratch using filters."*
+
+3. `### 🔗 **Parent Epic & Context**` — One or two sentences naming the parent epic, and *why* this story belongs to it. Don't restate the epic's Context & Background — link out instead. Format:
+   - **Parent Epic:** CTDC-XXXX — *Epic Name*
+   - **Context:** *"Part of the Local Find feature — this story implements the Input Set entry point that lets users seed a cohort from a known list rather than from facet filters."*
+
+4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages epics) but trimmed. Out of Scope items should point to sibling stories or epics that cover excluded work when one exists.
+
+5. `### ✅ **Acceptance Criteria**` — Two sub-blocks, mirroring the epic AC pattern:
+   - **Functional** — Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `**bold**` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
+   - **Performance & Quality** — Numbered list with the standard CTDC quality bar:
+     1. WCAG 2.1 AA accessibility on all new UI elements
+     2. Design system conformance (colors, typography, spacing, button states)
+     3. Performance baseline maintained under realistic data volumes
+     4. Cross-browser parity on supported browsers (Chrome, Firefox, Safari, Edge)
+
+6. `### 🧪 **Testing Requirements**` — Three sub-blocks naming the test artifacts the dev needs to produce. Test coverage is a first-class deliverable on this team — Valentina is QA-only and does not write code, so every line of automated test that covers this story has to be written by the engineer. Burying that work in a single P&Q bullet hides the actual scope of what's being asked.
+   - **Unit Tests** — Numbered list of unit test surfaces (parsers, match logic, state reducers, utility functions). Each item is a single observable behavior, testable in isolation.
+   - **Integration Tests** — Numbered list of end-to-end flows that exercise multiple components together (modal flows, file upload flows, post-submit state changes, re-open flows, clear flows, error paths).
+   - **Manual QA Scenarios** — Numbered list of things that are hard to automate but still need verification: tooltip text content, cross-browser visual parity, accessibility audits (keyboard navigation, screen reader announcements, focus management), visual conformance against the design system.
+
+7. `### 📝 **Notes**` — Bullet list. Optional content: design references, technical hints the engineer needs, decisions already made, links to mockups or Figma, predecessor tickets, upstream package provenance, composition rules with adjacent features. If there's no meaningful note, write *"None at this time."*
+
+**Standing emoji set (7 entries)**
+
+| Section | Emoji |
+|---|---|
+| Story Summary | 🎯 |
+| User Story | 👤 *(unique to story scale)* |
+| Parent Epic & Context | 🔗 |
+| Scope | 🗺️ |
+| Acceptance Criteria | ✅ |
+| Testing Requirements | 🧪 *(unique to story scale)* |
+| Notes | 📝 |
+
+**Required content rules (Story specific — universal rules in 7b-shared also apply)**
+
+- **Story Summary names the surface.** Same as epic Surface Area / live URL — name the page or component the story touches (e.g., "Explore Dashboard," "Local Find Box on the Explore Dashboard," "Cart drawer").
+- **Parent Epic field set on the ticket itself**, not just named in the description. Use `customfield_12350` per Section 10. The description's Parent Epic line is a redundant reader aid; the field is the canonical link.
+- **Acceptance Criteria are testable.** Each Functional item must be a single observable behavior QA can pass/fail in one check. If an item has two clauses joined by "and," consider splitting.
+- **Testing Requirements is the dev's checklist before "Ready for QA."** It is not optional and not a duplicate of P&Q. P&Q says "the work must meet the bar"; Testing Requirements says "these are the test artifacts the dev produces to demonstrate the work meets the bar." Different audiences, different verification paths.
+- **Performance & Quality is non-negotiable** — every user-facing story carries the same bar. Don't trim it because the story feels small. Note: P&Q in this template is shortened compared to the epic version because the test-coverage line moved into Testing Requirements; the four remaining items (WCAG, design system, performance, cross-browser) are still mandatory.
+- **Curly braces escaped as `\{...\}`** anywhere they appear in description text — same rule as epics. Especially relevant in Notes when referencing variable names like `\{participant_id\}`.
+- **Upstream provenance threaded into Notes** when the story is part of a feature built on an upstream package. Routes bug fixes correctly between CTDC integration code and upstream package code.
+
+**Writing-and-publishing workflow**
+
+1. Pull the existing ticket via `jira_get_issue` to capture the original requirements text — preserve the substance, restructure the form. Fix typos and tighten wordings; don't drop requirements.
+2. Confirm the parent epic link via `customfield_12350` on the ticket itself; if missing, set it before pushing the description.
+3. Draft the description in Markdown with all 7 sections in order, applying the section emojis and content rules above.
+4. Push the description via `jira_update_issue` with the `description` field.
+5. Verify the rendered description with a UI screenshot from the user — wiki source is unreliable as a render preview (per 7b-shared).
+6. If rendering is broken, first re-check the Markdown source for any unescaped `{...}`. Then check for the Markdown-vs-Jira-wiki authoring confusion (asterisks rendering as italic instead of bold).
+
+**When to expand vs trim**
+
+- **Story has fewer than 5 functional ACs and no test surface complexity** → keep all 7 sections; the structure earns its keep on small stories by giving the engineer a checklist.
+- **Story is a pure documentation update or copy change with no code path** → Testing Requirements may legitimately be light (manual QA only, no Unit or Integration sub-blocks needed). State so explicitly with "None at this time" under the empty sub-blocks rather than dropping them.
+- **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the Bug Format pattern adapted for spikes, or write a free-form Task description with explicit "deliverables" rather than "acceptance criteria."
 
 ---
 
@@ -791,6 +856,8 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 | Security (7b-6) | 🚧 TBD | TBD |
 | Data (7b-7) | 🚧 TBD | TBD |
 
+**User Story template (Section 7a):** ✅ Drafted v1 — canonical example **CTDC-1691** (Upload Participant Set), drafted 2026-05-06 as a child of CTDC-2042.
+
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
 - **Wiki source is not ground truth for rendering.** Only a UI screenshot from the user reveals whether a Jira description renders correctly. The wiki source returned by `jira_get_issue` looks identical for working and broken tickets.
@@ -808,6 +875,15 @@ Track which per-grouping epic templates are drafted vs. still TBD. Each future s
 - **Epic creation requires a non-null description at create time.** `jira_create_issue` rejects a `null` or missing description with "Description is required." The clean workaround that works on this tracker: seed a placeholder one-line description at creation, then immediately overwrite with the real Markdown description via `jira_update_issue`. This two-step pattern also produces cleaner Markdown→Jira-wiki conversion than trying to deliver the full description in one call. Verified on CTDC-2042 creation, 2026-05-06.
 - **Comment body wiki-rendering quirks (separate from description quirks).** Comment bodies pass through the same Jira-wiki renderer as descriptions and have their own gotchas. Verified failure mode: plus signs (`+`) get silently stripped — the renderer interprets them as inserted-text markup. A comment that says "Memgraph + OpenSearch" renders as "Memgraph  OpenSearch." Use plain English connectives like "and" or "plus" in comment bodies. Same `\{...\}` curly-brace escaping rule applies. Verified on CTDC-1658 closure comment, 2026-05-06.
 - **Multiple resolution values are allowed on the same transition.** The `Open → Close` transition (id 191) on this tracker accepts both `Won't Fix` and `Duplicate`. There is no API endpoint that enumerates the per-transition allowed resolutions ahead of time; discovery is by trial. **Recommendation:** when closing tickets, pick the most semantically appropriate resolution first; if it fails, fall back to `Won't Fix` as the safe default. Verified on CTDC-1658 closure with `Duplicate` resolution, 2026-05-06.
+
+### 9d. Lessons Learned from 2026-05-06 User Story Template Drafting (CTDC-1691)
+
+- **The bare-bones As-a/I-want/So-that format is too thin for active engineering work.** The original 7a Story Format was a 12-line stub: As-a/I-want/So-that, a flat checkbox AC list, a Technical Notes line, and a Related links line. It worked as a template *shape* but it didn't tell engineers when a story was *done* — there was no defined quality bar, no test artifact requirement, and no link back to the parent epic's context. Stories were getting written with the substance from one engineer's head and nothing else, which made review uneven. The new 7-section template adds: a one-sentence Story Summary the engineer can read in five seconds; an explicit Parent Epic link in the body (in addition to the `customfield_12350` field); a Scope split that prevents adjacent-feature creep; a Functional+P&Q AC split mirroring the epic AC pattern; a dedicated Testing Requirements section; and a Notes section for upstream provenance and predecessor context.
+- **Testing as a P&Q bullet hides the dev's deliverable surface area.** During the design pass, the question came up whether test coverage should live as one bullet inside Performance & Quality (option A — keeps the section count to 6) or as a dedicated section (option B — section count goes to 7). The decision was option B, with the reasoning: Valentina is QA-only and does not write code, so every line of automated test that covers a story has to be written by the engineer who picks up the story. Burying test coverage in a single P&Q bullet hides the actual scope of what's being asked — by the time the engineer reads "automated test coverage added for new functionality," they have no way to know whether that means three unit tests or thirty. Splitting into Unit / Integration / Manual QA gives the engineer a checklist they can mark complete before moving the ticket to Ready for QA.
+- **The Functional+P&Q split mirrors the epic AC pattern intentionally.** The same shape (Functional ACs + Performance & Quality bar) appears in 7b-1 (Application Pages) and 7b-3 (Features) epic templates. Adopting it at the story level means a reader scanning a story and its parent epic side-by-side sees the same vocabulary and structure — visual continuity that "feels right." The emoji set was chosen the same way: 🎯 🔗 🗺️ ✅ 📝 are shared with epic templates; 👤 (User Story) and 🧪 (Testing Requirements) are unique to story scale.
+- **CTDC-1691 was the right canonical example because it has real complexity at story scale.** The original ticket had 16 functional requirements — a button, a modal, file upload, a parser, a match-against-database step, two tabs, post-submit state changes, and composition with facets. That's enough surface area to exercise every section of the new template without being so big that the template feels like overkill. Smaller stories (e.g., a single tooltip wording change) can legitimately have shorter Testing Requirements sub-blocks; the template explicitly allows "None at this time" entries. But the ceiling case for a story should still fit cleanly inside the template — and CTDC-1691 did.
+- **Numbering split is OK when an original AC has two independently testable clauses.** The original CTDC-1691 had 16 ACs; the rewrite has 19. The increase came from splitting two combined ACs (the original "if invalid → button doesn't change AND IDs stay in modal" became two separate testable ACs) and reordering for readability (visual presence first, behavior second, post-submit state third). No requirements were dropped. Splitting clauses joined by "and" is a recurring rewrite pattern when normalizing legacy ACs into the new template — applies broadly, not just to this ticket.
+- **Three-question elicitation pattern works well for template design.** The session opened with three multiple-choice questions: (1) how heavy should the template be, (2) how to handle parent epic context, (3) how to structure ACs. Answer 3 came back as "I am unsure," which was the right answer to give — that question deserved more deliberation. Having explicit reasoning written for each option after the user picked option 1 and option 2 (and especially when they declined to pick option 3) let the design conversation focus on the one decision that actually mattered. **Pattern:** when designing a new template, elicit a small number of structural choices up front; if the user defers on one, treat it as a signal that *that* question deserves the most reasoning effort, not that the user doesn't have an opinion.
 
 ---
 
