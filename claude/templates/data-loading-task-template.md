@@ -1,22 +1,23 @@
 ### 7e. 📦 Data Loading Task Template (Drafted)
 
-> **Use this template for every CTDC data loading task that loads new study data — either a brand-new study or new data added to an existing study — and promotes it through Dev → QA → Stage → Prod.** Canonical example: the CMB v5 megazip metadata load (see CTDC-1753 lineage). This template is **scoped to new-data loads only**. Data model changes, schema migrations, model version upgrades, and code-release deployments are separate work and do not use this template — see "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that loads a CRDC submission into CTDC — either a brand-new study or new data added to an existing study — and promotes it through Dev → QA → Stage → Prod.** Canonical example: the CMB v5 megazip metadata load (see CTDC-1753 lineage). This template covers the team's **data management** function — managing data submissions and loading them into CTDC's databases. It is **not** for software development work (frontend, backend, microservices, infrastructure, schema/model changes) — see "When NOT to use this template" at the end.
 
 **Why this template**
 
-New-study and add-to-existing-study data loads are deliberately separated from data model changes and software releases in CTDC workflows. All three move *something* through the four-tier promotion ladder (Dev → QA → Stage → Prod), but the *something* is different in each case:
+The CTDC team has two primary functions, and the two have completely separate operational lanes:
 
-- **Data load** (this template) — moves a **dataset** (study metadata, files, IndexD manifest entries) into the existing schema and existing application. No code changes, no schema changes.
-- **Data model change** — moves a **schema** change (new node types, new properties, renamed relationships) into the graph. Requires coordinated frontend and backend changes; tracked separately.
-- **Software release** — moves **code** through environments. Requires QA regression suites against application behavior; tracked separately.
+- **Software development** — designing, coding, testing, releasing the React frontend, the Java backend, the microservices, and the infrastructure. Verified against application *behavior*. Tracked with the User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, and Bug templates.
+- **Data management** — managing CRDC submissions and loading data into CTDC's databases. Verified against application *contents* (row counts, page renders, downloadable artifacts). Tracked with **this** template.
 
-This template owns only the first case. The verification points, signoff cadence, and pipeline choices below are tuned for new-data loads — they assume the model is stable and the code is unchanged.
+Application pages do get updated when new data is loaded — the Programs page, the Study List, the Study Details page, the Explore Dashboard. That is not a sign that the load involves software work. It's the application working as designed: rendering the new data with unchanged behavior. The model is stable, the code is unchanged; only the contents shift.
+
+This template owns only the data management lane. The verification points, signoff cadence, and pipeline choices below are tuned for loading data into a stable schema with unchanged application code.
 
 The most common antipatterns we've seen on data loading tickets:
 
 1. **One ticket per environment.** Splits the audit trail across four tickets and forces a manual reconstruction of "where is this release in the pipeline?" at every standup. A data load is a single end-to-end promotion, not four independent jobs.
 2. **No per-environment signoff record.** When QA, Stage, and Prod testers initial their work in Slack threads or comments, there's no consolidated record for compliance review or for the post-load retrospective if something goes wrong in Prod.
-3. **Mixed metaphor with software release tickets or model change tickets.** Writing the description as if it's a code deployment ("merge to main, tag the release") or a schema migration ("update the model, regenerate the loaders") obscures that this is a *data* promotion — a different operational pathway with different verification points (Memgraph contents, OpenSearch reindex status, Study Details page rendering, megazip download links).
+3. **Mixed metaphor with software development tickets.** Writing the description as if it's a code deployment ("merge to main, tag the release") or a frontend change ("update the component to render the new field") obscures that this is a *data* promotion — a different operational pathway with different verification points (Memgraph contents, OpenSearch reindex status, Study Details page rendering, megazip download links). If code or schema is changing, this is the wrong template — file software development work in its own ticket family.
 4. **Ambiguous data payload.** "Load the new metadata" without naming the Submission ID, the SharePoint folder, the AWS bucket, the metadata loading file location, and the IndexD manifest location leaves the data engineer guessing — and a guess on which `file.tsv` to load is exactly the kind of mistake that goes undetected until Prod verification. The Submission & Artifacts table in Section 3 exists specifically to eliminate this ambiguity.
 
 The template below resolves all four with three commitments:
@@ -31,7 +32,7 @@ A CTDC data load touches multiple systems in sequence. Knowing the chain helps e
 
 - **Source artifacts** — Release package + metadata loading file (`file.tsv` or similar) live in **SharePoint** under the release folder. Object files (BAMs, VCFs, DICOMs, megazips) live in **AWS S3** buckets owned by CRDC. The IndexD manifest (mapping each file's GUID to its bucket location) also lives in SharePoint until it's submitted to CRDC IndexD.
 - **Loading pipeline** — **Jenkins**. Two pipelines exist: *lower tiers* (targets Dev and QA) and *upper tiers* (targets Stage and Prod). The pipeline parses the metadata loading file, applies it to the graph, and triggers the reindex.
-- **Graph database** — **Memgraph**. This is the canonical metadata store. (Historical tickets and the `crdc-ctdc-starter-kit` README still reference Neo4j — those are outdated; current architecture is Memgraph.) The loading pipeline writes nodes and relationships here. **The model is assumed stable for a data load — if the model is changing, this is the wrong template.**
+- **Graph database** — **Memgraph**. This is the canonical metadata store. (Historical tickets and the `crdc-ctdc-starter-kit` README still reference Neo4j — those are outdated; current architecture is Memgraph.) The loading pipeline writes nodes and relationships here. **The model is assumed stable for a data load — if the model is changing, that's software development work and uses a different template.**
 - **Search index** — **OpenSearch**. The frontend's Explore Dashboard, autocomplete, and filters read from OpenSearch, not from Memgraph directly. After every metadata load, OpenSearch must be reindexed from Memgraph before the frontend reflects the change. The Jenkins pipeline handles this — but verification needs to confirm both the Memgraph write **and** the OpenSearch reindex landed.
 - **Application surfaces** — Study Details page, Explore Dashboard, Cart, Participant Details, etc. These are the pages a tester loads in their browser to verify the data actually shows up correctly. For megazip loads specifically, the Study Details page download link is the critical verification point.
 
@@ -145,8 +146,8 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Required content rules (Data Loading Task specific — universal Jira rules in 7b-shared also apply)**
 
-- **Scope is new-data loads only.** New studies or new data added to existing studies. **Data model changes, schema migrations, and code-release deployments do not use this template** — see "When NOT to use this template" at the end.
-- **No Acceptance Criteria section.** Data loading is operational SOP work; the completion bar is the Testing Signoff table plus the Verification Surfaces checklist. AC belongs on user stories that consume this data, not on the load itself.
+- **Scope is data management work only.** Loading a CRDC submission into CTDC — either a new study or new data added to an existing study. **Software development work (frontend, backend, microservices, infrastructure, schema/model changes) does not use this template** — that work uses the User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, or Bug templates. See "When NOT to use this template" at the end.
+- **No Acceptance Criteria section.** Data loading is operational SOP work; the completion bar is the Testing Signoff table plus the Verification Surfaces checklist. AC belongs on user stories in the software development lane, not on the load itself.
 - **One Task per end-to-end load** — Dev through Prod, not one ticket per environment. The Testing Signoff table is the single source of truth for where the load is in the pipeline.
 - **Issue type is Task** on this tracker, matching the convention used on the megazip family (CTDC-1983 etc.). Do not use Story or Subtask.
 - **Parent Epic field set on the ticket itself** via `customfield_12350` when a release-level epic exists. This makes the data load discoverable from the epic's child issues panel.
@@ -159,7 +160,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 **Writing-and-publishing workflow**
 
 1. Confirm the upstream data artifacts exist before drafting the load ticket. If the megazip file hasn't been created yet, or the metadata loading file isn't in SharePoint yet, or the IndexD entries aren't registered, the load ticket is premature — those upstream tickets should land first and be linked from Section 2 (Linked Work).
-2. Confirm this is a new-data load and not a data model change. If the schema is changing (new node types, new properties, renamed relationships), stop and use the appropriate model-change ticket pattern instead — this template does not cover that case.
+2. Confirm this work is data management, not software development. If code is changing in the frontend, backend, or microservices, or if the schema is changing, stop and file the work in the appropriate software development ticket family (User Story, Features Epic, Application Pages Epic, etc.) — this template does not cover those cases.
 3. Create the data loading task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, and the parent epic linked via `customfield_12350` in `additional_fields`. Assign to the TPM (Gina Kuffel) initially — the TPM coordinates the load and reassigns per-environment as work progresses.
 4. Push the description in two steps: create with the placeholder, then `jira_update_issue` with the full Markdown body. This is the same two-step pattern as the Features and Design Task templates — `jira_create_issue` renders inconsistently on long Markdown; `jira_update_issue` performs clean Markdown-to-Jira-wiki conversion.
 5. Add a "Relates" issue link between the data loading task and every upstream artifact ticket (megazip creation, IndexD registration, etc.) named in Section 2.
@@ -177,12 +178,17 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When NOT to use this template**
 
-This template is scoped to new-data loads. The following kinds of work look superficially similar but are different operationally and use different patterns:
+The CTDC team has two primary functions: software development and data management. This template covers data management only. Anything in the software development lane uses a different template — even when it produces a visible change to the data shown in the app.
 
-- **Data model changes / schema migrations** — adding new node types, new properties, renamed relationships, or changed cardinalities. These require coordinated frontend and backend code changes plus a graph migration step before any data load. Track separately.
-- **Model version upgrades** — moving the CTDC data model from one published version to another. Coordinated work spanning backend code, loader regeneration, frontend display, and data re-shaping. Track separately.
-- **Code-release deployments** — pushing a new build of the CTDC frontend, backend, or microservices through environments. Different pipeline, different verification (QA regression suite, not data-counts), different signoff cadence. Track separately.
-- **CRDC infrastructure changes** — Fence, IndexD, Submission Portal upgrades or configuration changes owned by CRDC platform teams. Out of CTDC scope entirely.
-- **Pure file-creation tickets** — making a megazip, generating an IndexD manifest, registering GUIDs. These are the *upstream artifact creation* tickets (e.g., CTDC-1983–1986) that feed this template, not the load itself.
+**Software development work** — does NOT use this template. Use the appropriate template from the software development family instead:
 
-If a task involves both data model change *and* a data load, draft two tickets: the model-change ticket runs first; the data-load ticket runs after the model is stable in each environment. Do not collapse them into one — the verification surfaces diverge, and the rollback story is harder when both kinds of change land in the same ticket.
+- **Frontend, backend, or microservices code changes** — new features, refactors, bug fixes, library upgrades. Use **User Story** (for a single user-facing change), **Features Epic** (for a multi-story feature like Local Find), **Application Pages Epic** (for a whole-page redesign like Participant Details), **Microservices Epic**, **Design Task** (for visual design work), or **Bug** (for defects).
+- **Schema / data model changes** — adding new node types, new properties, renamed relationships, changed cardinalities, model version upgrades. This is software development work, not data management. It touches backend loader code, frontend rendering, and the graph migration step. File it in the software development family — typically a User Story or Features Epic, with the graph migration as one of its tasks.
+- **Infrastructure / DevOps changes** — Jenkins pipeline updates, deployment configuration, environment provisioning. Use the relevant Infrastructure or DevOps ticket pattern.
+
+**Other work that is neither this template nor mainstream software development:**
+
+- **CRDC platform changes** — Fence, IndexD, Submission Portal upgrades owned by CRDC platform teams. Out of CTDC scope entirely; CTDC files dependency tickets if affected, but does not own the work.
+- **Pure file-creation tickets** — making a megazip, generating an IndexD manifest, registering GUIDs in IndexD. These are the *upstream artifact creation* tickets (e.g., CTDC-1983–1986) that feed *this* template, not the load itself. They're data-adjacent operational tasks tracked separately.
+
+If a CRDC submission requires schema changes before it can be loaded, that's two pieces of work in two lanes: the schema change is a software development ticket, and the load is a data management ticket that uses this template. They depend on each other but are tracked separately, with the load blocked until the schema change has landed and stabilized in each environment.
