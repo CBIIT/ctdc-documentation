@@ -11,6 +11,7 @@ The SKILL.md remains the operational knowledge base (SOPs, JQL recipes, deck sta
 | Template | File | Status | Canonical Examples |
 |---|---|---|---|
 | **Design Task** | [`design-task-template.md`](./design-task-template.md) | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
+| **Data Loading Task** | [`data-loading-task-template.md`](./data-loading-task-template.md) | ✅ Drafted v1 (2026-05-15) | CMB v5 load (CTDC-1753 lineage) |
 
 ---
 
@@ -80,4 +81,4 @@ When the user asks Claude to draft a ticket or run a recurring workflow:
 
 ---
 
-*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session.*
+*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 to standardize end-to-end Dev→QA→Stage→Prod data promotion tickets.*
