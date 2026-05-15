@@ -6,12 +6,23 @@ The SKILL.md remains the operational knowledge base (SOPs, JQL recipes, deck sta
 
 ---
 
+## 🧭 The Two Functions of the CTDC Team
+
+Templates in this library map to one of the team's two primary functions. Knowing which lane a piece of work belongs in is the first step in picking the right template.
+
+- **Software development** — designing, coding, testing, and releasing the React frontend, the Java backend, the microservices, and the infrastructure. Verified against application *behavior*. Includes schema and data model changes (those touch backend loader code, frontend rendering, and a graph migration step). Tracked with the User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, and Bug templates.
+- **Data management** — managing CRDC submissions and loading data into CTDC's databases. Verified against application *contents* (row counts, page renders, downloadable artifacts). Tracked with the Data Loading Task template.
+
+Application pages updating when new data is loaded is the application working as designed — it does not mean software work is involved. The model is stable, the code is unchanged; only the contents shift.
+
+---
+
 ## 🎫 Template Inventory
 
-| Template | File | Status | Canonical Examples |
-|---|---|---|---|
-| **Design Task** | [`design-task-template.md`](./design-task-template.md) | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
-| **Data Loading Task** *(new-data loads only)* | [`data-loading-task-template.md`](./data-loading-task-template.md) | ✅ Drafted v2 (2026-05-15) — scope narrowed to new-study and add-to-existing-study loads; Submission & Artifacts anchor table added | CMB v5 load (CTDC-1753 lineage) |
+| Lane | Template | File | Status | Canonical Examples |
+|---|---|---|---|---|
+| Software development | **Design Task** | [`design-task-template.md`](./design-task-template.md) | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
+| Data management | **Data Loading Task** | [`data-loading-task-template.md`](./data-loading-task-template.md) | ✅ Drafted v3 (2026-05-15) — scope is data management only; software development work uses the templates above | CMB v5 load (CTDC-1753 lineage) |
 
 ---
 
@@ -27,7 +38,7 @@ Recurring per-cadence workflows (per-sprint, per-release, per-meeting) that prod
 
 ## 📖 Templates Still Inline in SKILL.md (Not Yet Migrated)
 
-These templates still live as sections inside `claude/SKILL.md`. They will be migrated here when they next get materially expanded, or in a focused migration pass.
+These templates still live as sections inside `claude/SKILL.md`. They will be migrated here when they next get materially expanded, or in a focused migration pass. All of the below are software-development-lane templates.
 
 | Template | SKILL.md Section | Status | Canonical Examples |
 |---|---|---|---|
@@ -39,7 +50,6 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 | **Infrastructure Epic** | Section 7b-5 | 🚧 Stub — TBD | TBD |
 | **Security Epic** | Section 7b-6 | 🚧 Stub — TBD | TBD |
 | **Data Epic** | Section 7b-7 | 🚧 Stub — TBD | TBD |
-| **Data Model Change Task** | *(not yet drafted)* | 🚧 Gap — companion to Data Loading Task; see Data Loading Task "When NOT to use" section | TBD |
 | **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
 
 ---
@@ -64,7 +74,7 @@ When migrating an inline SKILL.md section to this folder, or drafting a new comp
    - Ticket templates: `<artifact-type>-template.md` (e.g., `bug-template.md`, `epic-features-template.md`).
    - Workflow SOPs: `<cadence>-<artifact-type>-workflow.md` (e.g., `post-meeting-sprint-recap-workflow.md`, `pre-release-tagging-hygiene-workflow.md`).
 2. Inside the file, follow the standard structure: header with usage statement, "Why this template/workflow" rationale, section order or step order, standing emoji set, required content rules, writing-and-publishing or run-and-distribute workflow, when-to-expand-vs-trim guidance.
-3. Add a row to the appropriate inventory table above (Template Inventory or Workflow / SOP Inventory).
+3. Add a row to the appropriate inventory table above (Template Inventory or Workflow / SOP Inventory). Note the lane (software development vs. data management) for ticket templates.
 4. If migrating from SKILL.md, leave a small cross-reference in SKILL.md pointing here (don't delete the section header — replace its body with a pointer).
 5. Update `SKILL.md` Section 9a (Epic Template Status Tracker) with the new entry if it's a ticket template.
 6. Add a lessons-learned subsection in `SKILL.md` Section 9 if the component's drafting produced any reusable methodology insights.
@@ -75,11 +85,12 @@ When migrating an inline SKILL.md section to this folder, or drafting a new comp
 
 When the user asks Claude to draft a ticket or run a recurring workflow:
 
-1. **First, check if a component exists for that task** — look in this folder and in `SKILL.md` Section 7 (for ticket templates) or Section 12 (for meeting/sprint workflows).
-2. **If yes, follow the component exactly** — section order, emoji set, content rules, step order, all of it.
-3. **If no component exists yet**, fall back to the closest adjacent component and note the gap to the user so it can be drafted.
-4. **Always link the canonical component file** in the ticket's Notes section or in chat replies if relevant, so the next person picking up similar work knows where the convention is documented.
+1. **First, decide which lane the work is in** — software development or data management. The Data Loading Task template covers only the data management lane. Everything else is software development.
+2. **Check if a component exists for that task** — look in this folder and in `SKILL.md` Section 7 (for ticket templates) or Section 12 (for meeting/sprint workflows).
+3. **If yes, follow the component exactly** — section order, emoji set, content rules, step order, all of it.
+4. **If no component exists yet**, fall back to the closest adjacent component and note the gap to the user so it can be drafted.
+5. **Always link the canonical component file** in the ticket's Notes section or in chat replies if relevant, so the next person picking up similar work knows where the convention is documented.
 
 ---
 
-*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 (v1) and iterated to v2 the same day to narrow scope to new-data loads only and to add a Submission & Artifacts anchor table — the v2 commit also identified a gap for a future Data Model Change Task template.*
+*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 and iterated through v3 the same day to clarify scope as data management only — schema and model changes belong in the software development lane and use the existing software development templates.*
