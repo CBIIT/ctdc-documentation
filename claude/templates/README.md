@@ -11,7 +11,7 @@ The SKILL.md remains the operational knowledge base (SOPs, JQL recipes, deck sta
 | Template | File | Status | Canonical Examples |
 |---|---|---|---|
 | **Design Task** | [`design-task-template.md`](./design-task-template.md) | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
-| **Data Loading Task** | [`data-loading-task-template.md`](./data-loading-task-template.md) | ✅ Drafted v1 (2026-05-15) | CMB v5 load (CTDC-1753 lineage) |
+| **Data Loading Task** *(new-data loads only)* | [`data-loading-task-template.md`](./data-loading-task-template.md) | ✅ Drafted v2 (2026-05-15) — scope narrowed to new-study and add-to-existing-study loads; Submission & Artifacts anchor table added | CMB v5 load (CTDC-1753 lineage) |
 
 ---
 
@@ -39,6 +39,7 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 | **Infrastructure Epic** | Section 7b-5 | 🚧 Stub — TBD | TBD |
 | **Security Epic** | Section 7b-6 | 🚧 Stub — TBD | TBD |
 | **Data Epic** | Section 7b-7 | 🚧 Stub — TBD | TBD |
+| **Data Model Change Task** | *(not yet drafted)* | 🚧 Gap — companion to Data Loading Task; see Data Loading Task "When NOT to use" section | TBD |
 | **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
 
 ---
@@ -81,4 +82,4 @@ When the user asks Claude to draft a ticket or run a recurring workflow:
 
 ---
 
-*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 to standardize end-to-end Dev→QA→Stage→Prod data promotion tickets.*
+*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 (v1) and iterated to v2 the same day to narrow scope to new-data loads only and to add a Submission & Artifacts anchor table — the v2 commit also identified a gap for a future Data Model Change Task template.*
