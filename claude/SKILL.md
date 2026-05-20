@@ -800,6 +800,32 @@ When drafting this template, expected sections likely emphasize the data model d
 
 ---
 
+### 7d. 📚 Data Management Templates (Component Library)
+
+Data management ticket templates live in the component library at **`claude/templates/`**, not inline in this SKILL.md. The component library is the canonical location; this section is the entry-point pointer.
+
+**Templates available:**
+
+| Template | File | Use When |
+|---|---|---|
+| **Data Loading Task** | [`data-loading-task-template.md`](./templates/data-loading-task-template.md) | Loading a CRDC submission's contents into CTDC's databases. Schema is stable; data is changing. |
+| **Data Modeling for Study Submission** | [`data-modeling-study-submission-template.md`](./templates/data-modeling-study-submission-template.md) | A study submission's CDE Request Workbook drives schema additions (new properties, enums, permissible values). Almost always MINOR-version additions. The common case. |
+| **Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Infrastructure-level model changes initiated by the CTDC data team — breaking schema changes, framework upgrades, multi-repo refactors. Rare. |
+
+**Decision tree** (matches `claude/templates/README.md`):
+
+- *Is new data being loaded into the existing schema?* → **Data Loading Task**
+- *Is the schema changing because a study needs new properties/enums/permissible values, with a CDE Request Workbook as the spec?* → **Data Modeling for Study Submission**
+- *Is the schema changing in a breaking way, or requires loader/frontend code changes (framework upgrade, multi-repo refactor)?* → **Data Model Update Task**
+
+**Universal pattern for data submissions** (verified 2026-05-20 on CTDC-1666 ↔ CTDC-2051 and CTDC-1804 ↔ CTDC-1799):
+
+Every CTDC data submission generates multiple tickets — a user story for the submission as a whole, a modeling ticket for schema additions, eventually a loading ticket, possibly supporting tasks (documentation review, mapping work, anonymization options). The **parent user story carries study identity** (program, study name, dbGaP ID, submitter, chronology, document references, study description). Downstream tickets link back to the parent user story and **do not duplicate study identity** in their descriptions. This pattern is required for Data Modeling tickets (Section 7g of the template); apply it to Data Loading and any other downstream tickets the same way.
+
+See `claude/templates/README.md` for the full library overview and `claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
+
+---
+
 ## 8. 👥 Key Contacts & Roles
 
 ### Team Roster
@@ -845,21 +871,31 @@ When drafting this template, expected sections likely emphasize the data model d
 - When a per-grouping epic template (7b-1 through 7b-7) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing epics in that grouping so they stay consistent
 - When a new active CTDC repo is added to (or an old one removed from) the starter-kit `.gitmodules` file, update Section 17 to keep the canonical-repo list in sync
 
-### 9a. Epic Template Status Tracker
+### 9a. Template Status Tracker
 
-Track which per-grouping epic templates are drafted vs. still TBD. Each future session that drafts a new template fills in that row.
+Tracks the status of every CTDC ticket template — software-development lane and data-management lane. Each future session that drafts a new template or iterates an existing one fills in that row.
 
-| Grouping | Template Status | Example Epic for Drafting |
-|---|---|---|
-| Application Pages (7b-1) | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
-| Microservices (7b-2) | 🚧 TBD | TBD |
-| Features (7b-3) | ✅ Drafted v1 | CTDC-2042 (Local Find — Participant) |
-| Products (7b-4) | 🚧 TBD | TBD |
-| Infrastructure (7b-5) | 🚧 TBD | TBD |
-| Security (7b-6) | 🚧 TBD | TBD |
-| Data (7b-7) | 🚧 TBD | TBD |
+**Software development lane**
 
-**User Story template (Section 7a):** ✅ Drafted v1 — canonical example **CTDC-1691** (Upload Participant Set), drafted 2026-05-06 as a child of CTDC-2042.
+| Template | Section / File | Status | Canonical Example |
+|---|---|---|---|
+| User Story | Section 7a | ✅ Drafted v1 (2026-05-06) | CTDC-1691 (Upload Participant Set, child of CTDC-2042) |
+| Application Pages Epic | Section 7b-1 | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
+| Microservices Epic | Section 7b-2 | 🚧 TBD | TBD |
+| Features Epic | Section 7b-3 | ✅ Drafted v1 | CTDC-2042 (Local Find — Participant) |
+| Products Epic | Section 7b-4 | 🚧 TBD | TBD |
+| Infrastructure Epic | Section 7b-5 | 🚧 TBD | TBD |
+| Security Epic | Section 7b-6 | 🚧 TBD | TBD |
+| Data Epic | Section 7b-7 | 🚧 TBD | TBD |
+| Bug Format | Section 7c | ✅ Lightweight format | n/a |
+
+**Data management lane** — templates live in the component library at `claude/templates/`; see also Section 7d.
+
+| Template | File | Sub-function | Status | Canonical Example |
+|---|---|---|---|---|
+| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data | ✅ Drafted v4 (2026-05-15) | CMB v5 load (CTDC-1753 lineage) |
+| Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v3 (2026-05-20) — canonical 6-section shape; workbook is term-level source of truth | CTDC-2051 ↔ CTDC-1666; CTDC-1799 ↔ CTDC-1804 |
+| Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — infrastructure | ✅ Drafted v2 (2026-05-20) | First pilot pending |
 
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
@@ -897,6 +933,16 @@ The CTDC-1922 (Programs Page) rewrite went through three render-failure debuggin
 - **Curly-brace cascade from `{N}` units of measure (reinforcement of 9b).** Two `"{N} STUDIES"` strings in the CTDC-1922 first draft — one in Scope, one in Functional AC #5 — corrupted parser state and cascaded forward through Stakeholders → Key Definitions → Success Metrics on the first push, masking the underlying glossary-format issue beneath the cascade damage. Fix is the same as 9b: escape every curly brace in description text as `\{...\}`. The new reinforcement: **any time `{...}` could plausibly appear in body text — including units, counters, placeholders, template variables, or single-letter macro names like `{N}` — escape with backslashes.** Even single-letter unknown macro names corrupt parser state. The 9b lesson was technically already sufficient; this session confirms the rule covers a wider surface than the original CTDC-2040 finding suggested.
 - **Older Application Pages epics are NOT being retroactively normalized.** Per Senior TPM direction 2026-05-11, the broken glossary/risks patterns in older epics (CTDC-2040 and any others that share them) are left alone — going-forward template rules only. The 7b-1 "Required content rules" updates and this 9e record carry the new standard for any new or rewritten epic; existing epics stay as-is. This means the canonical-example list in 7b-1 contains epics that do NOT fully conform to the template — readers must cross-check examples against the spec, not the other way around. A future normalization sweep could revisit this decision; this session deliberately scopes it out.
 - **Read SKILL.md first.** The three failure cycles on CTDC-1922 cost more time than the original drafting would have if 7b-1, 7b-shared, and 9b had been read at session start. SKILL.md is the first read on any CTDC drafting task — not the recovery step after a broken push. Treat the "always check SKILL.md before drafting CTDC communications or documents" memory as a hard precondition, not a soft preference.
+
+---
+
+### 9f. Lessons Learned from 2026-05-20 (Data Modeling Template Iteration)
+
+Seven methodology lessons from the same-day iteration of the Data Modeling for Study Submission template (v1 → v2 → v3) and the retrofit of CTDC-1799 / CTDC-1804 to match the canonical CTDC-2051 / CTDC-1666 pair. Lessons cover template authorship discipline (when canonical examples are upstream of template files, when not to import sections from sibling templates), the "source of truth is a structural rule" principle, the parent-user-story pattern as a CTDC-wide convention, and clean-restore as a valid recovery move when a pattern drifts.
+
+Full record: [`claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md`](./templates/lessons-learned/2026-05-20-data-modeling-templates.md)
+
+The most universal rule from the session, worth keeping in mind on every CTDC drafting task: **The canonical example is upstream of the template. When in doubt, pull the approved example fresh from its source and match it exactly.**
 
 ---
 
