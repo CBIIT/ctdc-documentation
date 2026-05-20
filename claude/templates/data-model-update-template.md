@@ -1,15 +1,19 @@
 ### 7f. 🧬 Data Model Update Task Template (Drafted)
 
-> **Use this template for every CTDC data model update — any change to the schema in `CBIIT/ctdc-model`** (new node types, new properties, renamed relationships, changed cardinalities, enum value additions, model version upgrades). Like the Data Loading Task, this template covers **data management** work and promotes through Dev → QA → Stage → Prod. Schema changes touch loader code in `CBIIT/crdc-ctdc-dataloader` and frontend rendering — those code updates are children of this data management ticket, not separate software development tickets.
+> **Use this template for infrastructure-level model changes to `CBIIT/ctdc-model`** — breaking schema changes (MAJOR-version), model framework upgrades, cross-cutting refactors, or coordinated multi-repo model evolution where loader code in `crdc-ctdc-dataloader` and/or frontend rendering must change alongside the schema. This is the heavyweight template for the rare cases where the model changes in a way that ripples beyond `ctdc-model` into application code. **For the common case** — a study submission requesting new properties, enums, or permissible values via a CDE Request Workbook — use the **Data Modeling for Study Submission** template (Section 7g) instead. Like the other data management templates, this one promotes through Dev → QA → Stage → Prod and is verified against application *behavior* (loader runs, page renders, regression suite), not just the model repo.
 
 **Why this template**
 
-The CTDC team's data management function has two sub-functions, and both promote data through the same Dev → QA → Stage → Prod ladder:
+The CTDC team's data management function has two sub-functions, and the modeling sub-function itself has two distinct work patterns:
 
 - **Loading data** — taking a CRDC submission's *contents* (study metadata, files, IndexD entries) and getting them into CTDC's databases. Tracked with the Data Loading Task template (Section 7e).
-- **Modeling data** — changing the *shape* of what CTDC's databases can hold (new node types, new properties, renamed relationships, version bumps). Tracked with **this** template.
+- **Modeling data** — changing the *shape* of what CTDC's databases can hold. Two work patterns:
+  - **Study-driven model additions** — properties, enums, or permissible values requested by an incoming study submission, anchored on a CDE Request Workbook. Almost always MINOR-version additions. Common — one per study onboarding or property request. Tracked with the Data Modeling for Study Submission template (Section 7g).
+  - **Infrastructure-level model changes** — breaking schema changes, framework upgrades, multi-repo refactors initiated by the data team itself (not a study). Rare. Tracked with **this** template.
 
-A model update is a single end-to-end change: edit `model-desc/` YAML files, update `version-history.md`, bump the YAML `Version:` field, update any dataloader / frontend code that consumes the new schema, run the lower-tiers Jenkins pipeline against Dev/QA, promote `develop` → `prod` in `ctdc-model`, tag the release, verify downstream sync, run upper-tiers pipeline against Stage/Prod. The work spans repos and pipelines, but it is one piece of work and lives in one ticket.
+The boundary between 7g and 7f is *who's driving the change* and *what's in scope*. A study coming to CTDC with their CDE Workbook is 7g; an internal decision to restructure how participants link to studies, or to upgrade the underlying Bento MDF framework, is 7f. Most actual modeling work in any given quarter will go through 7g — this template (7f) exists for the rare cases where the change is heavier than property additions and requires explicit code coordination.
+
+A model update covered by this template is a single end-to-end change: edit `model-desc/` YAML files, update `version-history.md`, bump the YAML `Version:` field, update any dataloader / frontend code that consumes the new schema, run the lower-tiers Jenkins pipeline against Dev/QA, promote `develop` → `prod` in `ctdc-model`, tag the release, verify downstream sync, run upper-tiers pipeline against Stage/Prod. The work spans repos and pipelines, but it is one piece of work and lives in one ticket.
 
 The canonical procedural reference for *how* model changes are designed, branched, committed, reviewed, tagged, and synced downstream is the SOP in the model repo itself: **[`SOP_CTDC_Data_Model_Contribution.md`](https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md)**. This Jira template does **not** duplicate that SOP — it tracks the model change as a ticket and points at the SOP for procedural detail. If anything in this template appears to conflict with the SOP, the SOP is authoritative.
 
@@ -21,8 +25,9 @@ The most common antipatterns we've seen on model update tickets:
 4. **Three required-together artifacts updated independently.** Adding a property to `ctdc_model_properties_file.yaml` without referencing it in the relevant node's `Props:` list in `ctdc_model_file.yaml` will pass validation but the property will not appear in the Data Model Navigator. Likewise, forgetting to update `version-history.md` leaves the Navigator's Version tab stale. Section 3's checklist enforces the trio.
 5. **No per-environment signoff record.** Same antipattern as Data Loading. When QA, Stage, and Prod testers initial their work in Slack threads or comments, there's no consolidated record. The Testing Signoff table in Section 9 is the single source of truth.
 6. **Missing SemVer classification.** "Update the model" doesn't communicate whether the change is MAJOR (breaking), MINOR (backward-compatible addition), or PATCH (bug fix). Downstream consumers need to know whether to plan a migration. Section 3 makes SemVer impact a required field.
+7. **Using this template for study-driven additions that don't touch code.** If the change is purely adding properties or enums requested by a study, with no loader or frontend code changes, the lighter 7g template is the right fit. Reaching for this template's heavier machinery for a MINOR study-driven addition leads to verification-surface checklists that don't apply (the Memgraph schema check, the four-environment ladder for the modeling work itself, the dataloader / frontend rows in the Affected Code table). Use 7g for that case and reserve this template for the genuinely cross-cutting work.
 
-The template below resolves all six with three commitments:
+The template below resolves all seven with three commitments:
 
 1. **One Task per end-to-end model update.** Single source of truth from initial schema edit through Prod signoff and downstream verification. The Testing Signoff section is the artifact that justifies the one-ticket approach.
 2. **Branching mirrors Jenkins tiering.** The `ctdc-model` repo's `develop` branch maps to Dev + QA (lower tiers); the `prod` branch maps to Stage + Prod (upper tiers). The promotion workflow is the same two-tier ladder as Data Loading, plus the tag-and-release step between tiers.
@@ -88,7 +93,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    Reference: the canonical procedure for editing, branching, tagging, and downstream-syncing model changes lives at **[`SOP_CTDC_Data_Model_Contribution.md`](https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md)** on the `prod` branch of `ctdc-model`. This ticket tracks the change; the SOP describes the procedure.
 
-4. `### 🏗️ **Affected Code & Loaders**` — Required field. Every model update touches the model repo itself; some also touch loader code, frontend rendering, and Navigator resources. Mark each row affected; cross off rows that this specific change does not impact.
+4. `### 🏗️ **Affected Code & Loaders**` — Required field. Every model update touches the model repo itself; some also touch loader code, frontend rendering, and Navigator resources. Mark each row affected; cross off rows that this specific change does not impact. **If only the `ctdc-model` and Navigator rows are affected (no loader or frontend changes), this template is likely overkill — consider the Data Modeling for Study Submission template (Section 7g) instead.**
 
    | Artifact | Affected? | Owner | Notes |
    |---|---|---|---|
@@ -165,6 +170,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
     - Will the frontend need new component work to render the change, or is it transparent? (Determines whether frontend engineering is on the critical path.)
     - Is the SemVer classification (MAJOR/MINOR/PATCH) accurate per the SOP's rules?
     - Is the timing for tag-and-release coordinated with any downstream consumers that may need to plan around the version bump?
+    - Is this change really infrastructure-level (template 7f), or is it actually a study-driven addition that should use template 7g? (If the change is purely property/enum additions requested by a study, with no code touches in `crdc-ctdc-dataloader` or frontend, use 7g.)
 
 11. `### 📝 **Notes**` — Bullet list. Optional content: links to design discussions or model-owner meetings, prior model-change retrospectives, references to caDSR Common Data Elements being adopted, terminology translations (Bento "Case" → CTDC "Participant"). If there's no meaningful note, write "None at this time."
 
@@ -186,7 +192,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Required content rules (Data Model Update Task specific — universal Jira rules in 7b-shared also apply)**
 
-- **Scope is data model updates only.** Schema changes to `CBIIT/ctdc-model`. Loading new study data or adding data to an existing study uses the Data Loading Task template (Section 7e). Software development that does not touch the schema (frontend features, backend refactors, microservice changes, bug fixes that don't involve the model) uses the software development template family (User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, Bug).
+- **Scope is infrastructure-level model changes only.** Breaking schema changes, framework upgrades, coordinated multi-repo refactors that touch loader code in `crdc-ctdc-dataloader` and/or frontend rendering. **Study-driven model additions** (properties, enums, permissible values requested by an incoming study submission, anchored on a CDE Request Workbook) use the **Data Modeling for Study Submission** template (Section 7g). Loading new study data or adding data to an existing study uses the Data Loading Task template (Section 7e). Software development that does not touch the schema (frontend features, backend refactors, microservice changes, bug fixes that don't involve the model) uses the software development template family (User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, Bug).
 - **No Acceptance Criteria section.** Model updates are operational SOP work; the completion bar is the Testing Signoff table plus the Verification Surfaces checklist. AC belongs on user stories that consume the new schema, not on the model change itself.
 - **One Task per end-to-end model update** — develop branch through Prod, not one ticket per repo. The Affected Code & Loaders table (Section 4) and Testing Signoff table (Section 9) together are the single source of truth for what's been touched and where the change is in the pipeline.
 - **Issue type is Task** on this tracker. Do not use Story or Subtask.
@@ -194,16 +200,16 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **YAML `Version:` field and git tag must match exactly.** Surface this in Section 3 as two distinct rows (Target model version + Target git tag) so the values can be eyeballed before tagging. A mismatch silently fails the downstream sync.
 - **Three schema artifacts updated together.** The checklist in Section 3 (Schema artifact checklist) enforces the trio: `ctdc_model_file.yaml`, `ctdc_model_properties_file.yaml`, `version-history.md`. Update one without the others and the Navigator becomes inconsistent.
 - **SemVer impact is a required field.** MAJOR / MINOR / PATCH must be classified at ticket creation per the SOP's rules. Downstream consumers plan migration around this classification.
-- **Affected Code & Loaders table is mandatory and complete.** All five canonical rows present; the always-required rows checked; the conditional rows (dataloader, frontend) checked or explicitly crossed off. Don't silently omit a row.
+- **Affected Code & Loaders table is mandatory and complete.** All five canonical rows present; the always-required rows checked; the conditional rows (dataloader, frontend) checked or explicitly crossed off. Don't silently omit a row. **If only the always-required rows are checked (no dataloader or frontend touches), strongly consider whether 7g is the right template instead** — this template's heavier verification machinery is intended for changes that ripple beyond the model repo.
 - **The model SOP is authoritative for procedure.** This template tracks the change; the SOP at `https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md` describes how to do it. If the SOP changes, this template's references should be re-checked against it.
 - **Curly braces escaped as `\{...\}`** anywhere they appear in description text — same rule as every other Jira description on this tracker.
 
 **Writing-and-publishing workflow**
 
-1. Confirm this work is a data model update (a schema change), not a data load or a software-only feature. If only data contents are changing (new study, new files), use the Data Loading Task template (7e). If only application behavior is changing without touching the schema, use the software development template family.
-2. Confirm the SemVer classification per the SOP — MAJOR / MINOR / PATCH. This drives whether backward-compatibility planning is needed.
+1. Confirm this work is an infrastructure-level model change (breaking, framework upgrade, multi-repo refactor), not a study-driven addition. If the change is anchored on a study's CDE Request Workbook and is mostly property/enum additions, use the Data Modeling for Study Submission template (Section 7g) instead. If only data contents are changing (new study, new files), use the Data Loading Task template (Section 7e). If only application behavior is changing without touching the schema, use the software development template family.
+2. Confirm the SemVer classification per the SOP — MAJOR / MINOR / PATCH. Most 7f-appropriate work is MAJOR or coordinated MINOR with code touches. PATCH-only work is rare but valid; pure property/enum additions are usually 7g territory.
 3. Verify the target YAML `Version:` and target git tag values are identical character-for-character. Write them as two separate rows in Section 3's table so the values are easy to compare.
-4. Determine which Section 4 rows are affected. The model repo and Navigator are always checked; the dataloader and frontend rows are checked per the actual scope of the change.
+4. Determine which Section 4 rows are affected. The model repo and Navigator are always checked; the dataloader and frontend rows are checked per the actual scope of the change. **If only the always-required rows are checked, reconsider whether 7g is the right fit.**
 5. Create the data model update task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, and the parent epic linked via `customfield_12350` in `additional_fields`. Assign to the TPM (Gina Kuffel) initially — the TPM coordinates the multi-repo work and reassigns per-environment as work progresses.
 6. Push the description in two steps: create with the placeholder, then `jira_update_issue` with the full Markdown body. This is the same two-step pattern as the Features, Design Task, and Data Loading templates — `jira_create_issue` renders inconsistently on long Markdown; `jira_update_issue` performs clean Markdown-to-Jira-wiki conversion.
 7. Add a "Relates" issue link between the data model update task and: any downstream Data Loading Task (Section 2), any consuming feature ticket, and any related model updates.
@@ -213,19 +219,20 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When to expand vs trim**
 
-- **MINOR change** (new optional property, new optional node, added enum value, new optional relationship) → use the template as written. Backward-compatible; existing data remains valid; usually no migration required.
+- **MINOR change** (new optional property, new optional node, added enum value, new optional relationship) → if it's driven by a study, use 7g instead. If it's internally driven *and* requires loader / frontend code touches, use this template. If it's internally driven and pure schema-only, this template still applies but the verification will be light.
 - **PATCH change** (description fix, examples, metadata text) → use the template but expect Sections 4 (Affected Code & Loaders) and 6 (Verification Surfaces) to be light — only the model repo and Navigator are touched; no loader or frontend changes; verification focuses on the Navigator's display.
 - **MAJOR change** (removed required property, type change, removed node, removed enum, tightened constraint) → use the template and expand: Section 3 should explicitly describe what existing data does under the new schema; Section 10 (Open Questions / Risks) must include the backward-compatibility plan; expect a Data Loading Task to follow with re-load of affected studies.
-- **Multi-property batched change** (several properties / nodes changing together for one release) → use one ticket per coherent change-set. If the changes are independent and could ship at different times, use one ticket each. If they must ship together as one version bump, one ticket with expanded Section 3 detail.
+- **Multi-property batched change** (several properties / nodes changing together for one release) → use one ticket per coherent change-set. If the changes are independent and could ship at different times, use one ticket each. If they must ship together as one version bump, one ticket with expanded Section 3 detail. If the bundle is study-driven (one study's workbook), use 7g; if it's internally coordinated infrastructure work, use this template.
 - **Pure documentation update to `ctdc-model`** (README, owner guide, SOP edits) → this template is overkill. A free-form Task with the doc change description and a single PR link is enough.
 
 **When NOT to use this template**
 
-This template covers data model updates only — schema changes in `CBIIT/ctdc-model`. The following kinds of work are different:
+This template covers infrastructure-level model changes only — breaking schema changes, framework upgrades, multi-repo refactors. The following kinds of work are different:
 
-- **Loading data into the existing schema** — new studies, new data added to existing studies, megazip loads. Use the **Data Loading Task** template (Section 7e). That's the sibling template in the data management lane.
+- **Study-driven model additions** — properties, enums, or permissible values requested by an incoming study submission, anchored on a CDE Request Workbook. Use the **Data Modeling for Study Submission** template (Section 7g). That's where most CTDC modeling work belongs. This template (7f) is the heavyweight escape hatch for the rare cross-cutting case.
+- **Loading data into the existing schema** — new studies, new data added to existing studies, megazip loads. Use the **Data Loading Task** template (Section 7e). That's the sibling template in the data management lane for the loading sub-function.
 - **Software development that does not change the schema** — frontend features, backend refactors, microservice work, bug fixes, library upgrades. Use the software development family: User Story, Features Epic, Application Pages Epic, Microservices Epic, Design Task, Bug.
 - **CRDC platform changes** — Fence, IndexD, Submission Portal upgrades owned by CRDC platform teams. Out of CTDC scope.
 - **Bento Core MDF framework changes** — changes to the underlying MDF tooling itself (`bento-mdf` submodule). Upstream concern; file with the Bento team.
 
-If a CRDC submission requires schema changes before it can be loaded, that's two pieces of data management work: this template tracks the model update; the Data Loading Task template tracks the load. They depend on each other but live in separate tickets, with the load blocked until the model update has landed and stabilized in each environment.
+If a CRDC submission requires schema changes before it can be loaded, that's two pieces of data management work: this template tracks the model update; the Data Loading Task template tracks the load. They depend on each other but live in separate tickets, with the load blocked until the model update has landed and stabilized in each environment. If the submission's changes are entirely additive (properties, enums, permissible values), the model work is a 7g ticket; if the submission requires breaking changes or restructuring, the model work is a 7f ticket. Most submission-driven work is 7g.
