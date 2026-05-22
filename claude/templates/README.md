@@ -47,11 +47,12 @@ Application pages updating when new data is loaded is the application working as
 
 ## 🔁 Workflow / SOP Inventory
 
-Recurring per-cadence workflows (per-sprint, per-release, per-meeting) that produce stakeholder artifacts. These are different from ticket templates — they're instructions for *what to do*, not *how to format a ticket*.
+Recurring per-cadence workflows (per-sprint, per-release, per-meeting, per-quarter) that produce stakeholder artifacts. These are different from ticket templates — they're instructions for *what to do*, not *how to format a ticket*.
 
 | Workflow | File | Cadence | Status | Canonical Examples |
 |---|---|---|---|---|
 | **Post-Meeting Sprint Recap** | [`post-meeting-sprint-recap-workflow.md`](./post-meeting-sprint-recap-workflow.md) | Once per sprint, immediately after Review & Retro | ✅ Drafted v1 (2026-05-15) | Sprint 25 recap (2026-04-24), Sprint 26 recap (2026-05-15) |
+| **CSP Quarterly Report** | [`csp-quarterly-report-workflow.md`](./csp-quarterly-report-workflow.md) | Once per quarter, aligned to BACS/FNL reporting period | ✅ Drafted v1 (2026-05-22) | Nov 2025 – Jan 2026 CSP (drafted 2026-03-02); Mar 2026 – May 2026 CSP (drafted 2026-05-22) |
 
 ---
 
@@ -91,12 +92,12 @@ When migrating an inline SKILL.md section to this folder, or drafting a new comp
 
 1. Create the file in this folder. Naming conventions:
    - Ticket templates: `<artifact-type>-template.md` (e.g., `bug-template.md`, `epic-features-template.md`).
-   - Workflow SOPs: `<cadence>-<artifact-type>-workflow.md` (e.g., `post-meeting-sprint-recap-workflow.md`, `pre-release-tagging-hygiene-workflow.md`).
+   - Workflow SOPs: `<cadence>-<artifact-type>-workflow.md` (e.g., `post-meeting-sprint-recap-workflow.md`, `pre-release-tagging-hygiene-workflow.md`, `csp-quarterly-report-workflow.md`).
 2. Inside the file, follow the standard structure: header with usage statement, "Why this template/workflow" rationale, section order or step order, standing emoji set, required content rules, writing-and-publishing or run-and-distribute workflow, when-to-expand-vs-trim guidance.
 3. Add a row to the appropriate inventory table above (Template Inventory or Workflow / SOP Inventory). Note the lane (software development vs. data management) and the sub-function and work pattern (for data management templates) for ticket templates.
 4. If migrating from SKILL.md, leave a small cross-reference in SKILL.md pointing here (don't delete the section header — replace its body with a pointer).
 5. Update `SKILL.md` Section 9a (Epic Template Status Tracker) with the new entry if it's a ticket template.
-6. Add a lessons-learned subsection in `SKILL.md` Section 9 if the component's drafting produced any reusable methodology insights.
+6. Add a lessons-learned subsection in `SKILL.md` Section 9 if the component's drafting produced any reusable methodology insights. For workflow components, drop a dated lessons-learned file into `claude/templates/lessons-learned/YYYY-MM-DD-<short-name>.md`.
 
 ---
 
@@ -109,11 +110,11 @@ When the user asks Claude to draft a ticket or run a recurring workflow:
    - *Is the schema changing because a study submission needs new properties / enums / permissible values, with a CDE Request Workbook as the spec?* → **Data Modeling for Study Submission (7g)** — this is the common case
    - *Is the schema changing in a breaking way or in a way that requires loader / frontend code changes (framework upgrade, multi-repo refactor, structural change initiated internally)?* → **Data Model Update Task (7f)** — the rare heavyweight case
    - *None of the above?* → software development family
-2. **Check if a component exists for that task** — look in this folder and in `SKILL.md` Section 7 (for ticket templates) or Section 12 (for meeting/sprint workflows).
+2. **Check if a component exists for that task** — look in this folder and in `SKILL.md` Section 7 (for ticket templates) or Section 12 (for meeting/sprint/quarterly workflows).
 3. **If yes, follow the component exactly** — section order, emoji set, content rules, step order, all of it.
 4. **If no component exists yet**, fall back to the closest adjacent component and note the gap to the user so it can be drafted.
 5. **Always link the canonical component file** in the ticket's Notes section or in chat replies if relevant, so the next person picking up similar work knows where the convention is documented.
 
 ---
 
-*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 and iterated through v4 the same day to settle the scope: data management has two sub-functions (loading and modeling). The Data Model Update Task template was added 2026-05-15 as the first modeling template, designed around the heavyweight case (breaking changes, framework upgrades, multi-repo coordination). On 2026-05-20, the Data Modeling for Study Submission template was added as the common-case modeling template. Through three same-day iterations the template settled on its canonical v3 shape: six sections (Modeling Summary, CDE Request Workbook, Branch & Release Signoff, Verification Surfaces, Open Questions & Risks, Notes). v3 enforces the discipline that the workbook is the term-level source of truth and the ticket exists for milestone tracking only — Term Status Summary, Modeling & Promotion Workflow, Linked Work, and Collaboration sections that appeared in an intermediate v2 draft were removed because they duplicated content that already lives in the workbook, the SOP, Jira's native issue links, or the assignee field. CTDC-2051 (NCI-MATCH Arm Z1D, parent CTDC-1666) and CTDC-1799 (CIMAC-CIDC, parent CTDC-1804) are both in v3 shape and serve as the canonical pair.*
+*This folder was created 2026-05-06 alongside the Design Task template. The Post-Meeting Sprint Recap workflow was added 2026-05-15 from the Sprint 26 Review & Retro session. The Data Loading Task template was added 2026-05-15 and iterated through v4 the same day to settle the scope: data management has two sub-functions (loading and modeling). The Data Model Update Task template was added 2026-05-15 as the first modeling template, designed around the heavyweight case (breaking changes, framework upgrades, multi-repo coordination). On 2026-05-20, the Data Modeling for Study Submission template was added as the common-case modeling template. Through three same-day iterations the template settled on its canonical v3 shape: six sections (Modeling Summary, CDE Request Workbook, Branch & Release Signoff, Verification Surfaces, Open Questions & Risks, Notes). v3 enforces the discipline that the workbook is the term-level source of truth and the ticket exists for milestone tracking only — Term Status Summary, Modeling & Promotion Workflow, Linked Work, and Collaboration sections that appeared in an intermediate v2 draft were removed because they duplicated content that already lives in the workbook, the SOP, Jira's native issue links, or the assignee field. CTDC-2051 (NCI-MATCH Arm Z1D, parent CTDC-1666) and CTDC-1799 (CIMAC-CIDC, parent CTDC-1804) are both in v3 shape and serve as the canonical pair. The CSP Quarterly Report workflow was added 2026-05-22 from the March 2026 – May 2026 CSP drafting session. The drafting session uncovered six lessons captured in `lessons-learned/2026-05-22-csp-quarterly-report.md`: software releases and data releases are strictly separate events; three dates per software release with the public one leading; the Bento Framework does not yet include a DMN (DMN contributions go to the CRDC Data Hub team's package); Monthly Summaries carry program-level context Jira can't see; excluding Test issue types from the Jira pull is essential; and the prior CSP's format is to be matched verbatim rather than reinvented.*
