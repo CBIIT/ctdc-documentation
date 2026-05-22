@@ -9,7 +9,7 @@
 
 ## Context
 
-This session produced the March 2026 – May 2026 CSP and, in doing so, established the workflow file `csp-quarterly-report-workflow.md`. The session uncovered six lessons that materially shaped the workflow's rules. Documenting them here so the *reasoning* survives, not just the rules.
+This session produced the March 2026 – May 2026 CSP and, in doing so, established the workflow file `csp-quarterly-report-workflow.md`. The session uncovered seven lessons that materially shaped the workflow's rules. Documenting them here so the *reasoning* survives, not just the rules.
 
 The session also produced a leadership-styled v1.0 of the CSP before the prior-CSP format was disclosed. When the prior format was shared, the entire document was re-styled from scratch. Both files were retained — the leadership v1.0 may be useful for separate stakeholder briefings, but the paste-into-master version is the actual deliverable.
 
@@ -125,6 +125,29 @@ The CSP's CTDC content is paste-into-master — it gets consolidated by BACS/FNL
 **Rule baked into the workflow**
 
 > Always pull the prior CSP `.docx` first and match its format verbatim before drafting any content. If a leadership-styled version is wanted separately for a briefing or internal review, build it as a parallel artifact — do not mix the styles into the paste-into-master deliverable.
+
+---
+
+## Lesson 7: Scoping, spikes, and design work are NOT delivery
+
+**What went wrong**
+
+Both the summary paragraph and the Task 1.3.1 bullet for the dynamic megazip file generation capability initially used the verb "standing up" — *"...standing up the dynamic megazip file generation capability that will enable on-demand, large-scale file downloads from the Study Details page..."* The TPM corrected this near the end of the session: the megazip capability did NOT ship in v1.3.0.3 and will likely be the headline of the next CSP. What actually happened during this period was architecture and design work — a federal-compliance spike, Gen3 SDK research, a File Service megazip architectural design document (in progress), a sequence diagram, multi-file-download UX designs, and twelve Phase-2 implementation tasks scoped. None of that was delivery to users.
+
+**Why it matters**
+
+Verbs like "stood up," "delivered," "shipped," "rolled out," "launched," and "deployed to Production" tell federal leadership that a capability is live. Architecture documents, spikes, sequence diagrams, design mockups, and "Phase-2 tasks scoped" tell federal leadership that a capability is being designed. Mixing the two is one of the most easily-made factual errors in a CSP, because the distinction often turns on a single verb. Once federal leadership reads "the team stood up megazip downloads," they will assume the feature works in Production — and the contractor's credibility on factual reporting takes a hit when they later find out it doesn't.
+
+The reverse case matters just as much: when a capability that was previously reported as in-flight does ship in the current period, that's the moment to call it out as delivered — and to cross-reference the prior CSP that reported the scoping/design progress so federal leadership can connect the two reporting periods.
+
+**Rule baked into the workflow**
+
+> Architecture documents, spikes, sequence diagrams, design mockups, and scoped Phase-2 tasks are progress on a capability planned for a future release, not delivery of the capability itself. They belong in the CSP narrative as in-flight work, never as completed delivery. Use "advancing the architecture and design for [X] that will enable [outcome] in a future release" instead of "standing up [X]." Add explicit "did NOT ship in v[version]" framing on the in-flight bullet. The capability itself is reported as delivery in the CSP for the quarter when it ships to users — at which point the previously-in-flight CSP should be cross-referenced.
+
+**Canonical examples**
+
+- *Mar–May 2026 CSP (in-flight phrasing):* "Dynamic megazip file generation capability — new epic scoped to deliver on-demand, large-scale file downloads from the Study Details page in a future release. The capability did NOT ship in v1.3.0.3 and is expected to be reported in a future CSP once it is publicly released. Progress this period: [spike, research, design, UX, query update, twelve scoped Phase-2 tasks]."
+- *Next CSP (delivery phrasing, anticipated):* "Dynamic megazip file generation capability publicly released in CTDC v[version] on [public date], enabling on-demand, large-scale file downloads from the Study Details page. See the March–May 2026 CSP for the architecture and design work that preceded this release."
 
 ---
 
