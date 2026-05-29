@@ -649,11 +649,81 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 ---
 
-#### 7b-2. 🛠️ Microservices (Stub — Template TBD)
+#### 7b-2. 🛠️ Microservices (Drafted)
 
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC microservice epic as the model. Candidate examples: the file service, the authn service, the backend GraphQL service. Until this template is drafted, microservice epics should follow the 7b-shared universal conventions and the most-relevant adjacent template (typically 7b-5 Infrastructure or 7b-6 Security).
+> **Use this template for every epic that scopes a CTDC backend microservice** — a service with its own deployment lifecycle, configuration, and contract, owned as a discrete operational unit rather than as a page (7b-1) or a cross-cutting frontend capability (7b-3). The canonical example is **CTDC-1968 (CTDC Bento Data Retriever Service)** — drafted 2026-05-29 as the model for this grouping. Future candidates: the file service (`crdc-ctdc-files`), the authn service (`crdc-ctdc-auth`), the backend GraphQL service (`crdc-ctdc-backend`), and the Interop service (`crdc-ctdc-interoperation`).
 
-When drafting this template, expected sections likely include API contract, service boundaries, deployment topology, dependency on other services, observability/SLOs, version compatibility, and cross-environment behavior. Final structure to be confirmed against a real example.
+**Why this template**
+
+Microservices are **discrete backend services** — they have their own deployment topology, their own configuration and secrets, their own operational lifecycle, and a contract with their consumers that is not a rendered UI. Like Application Pages and Features epics, a microservice epic is **ongoing and evergreen** — the epic is a container for the initial stand-up plus all subsequent configuration changes, source/contract additions, and operational work over the life of the project. The structure inherits the 7b-shared backbone and most of the 7b-1/7b-3 sections, but differs in four places that capture concerns a page or a frontend feature simply does not have:
+
+1. **Service Interface & API Contract** replaces the single-URL / Surface Area framing — a service is defined by what it consumes and what it exposes, and (critically for CTDC) the "contract" is often an OpenSearch document shape or a GraphQL schema slice rather than an HTTP endpoint.
+2. **Service Boundaries & Interactions** is the microservice analog of 7b-3's Composition — the highest-leverage section for a service, naming what the service owns versus the adjacent services it must *not* absorb (CTDC's Interop/Data-Retriever decouple is the textbook case).
+3. **Deployment Topology & Environments** is first-class — runtime (ECS/container), per-environment configuration and secrets, and scheduling/triggering behavior are core to a service in a way they never are for a page.
+4. **Observability & Operations** is first-class — health, structured logging, alerting, external-dependency availability, and (for scheduled services) silent-failure monitoring are part of the deliverable, not an afterthought.
+
+**Section order (20 sections, exactly this sequence)**
+
+Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header.
+
+1. `### 🎯 **Epic Summary**` — One paragraph: what the service delivers, what it consumes and exposes (not a single URL), who consumes it, and the explicit standing-epic statement.
+2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific service does, what need it serves, how it sits in the stack, and what data stores it reads/writes (OpenSearch and/or Memgraph — *replaces the historical Neo4j references* — named explicitly).
+3. `### 📦 **Upstream Provenance**` — Origin and ownership story. Same three-part shape as 7b-3: (a) who built the service and where the code lives, (b) bug-fix routing — which seam goes to CTDC config/deployment vs. the upstream engine repo, (c) project-history note. For services that are entirely CTDC-original, state that explicitly and make this a single paragraph naming CTDC as the sole owner.
+4. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the service must achieve.
+5. `### 🔌 **Service Interface & API Contract**` — The microservice analog of Surface Area. Three sub-parts: **Inputs the service consumes** (external/internal sources, with the entity/match key when relevant), **Output the service produces** (the consumer-facing contract — name it precisely: HTTP API, GraphQL schema slice, *or* the OpenSearch document shape the frontend reads), and **Operational interface** (how it is invoked — request/response service, CLI, scheduled job — with the relevant flags/endpoints). Be explicit when the consumer reads a data store rather than calling the service directly: in that case the **document shape is the contract** that must stay versioned and back-compatible.
+6. `### 🧭 **Service Boundaries & Interactions**` — Bullet list. What the service owns, and the explicit negative-space boundaries against adjacent services that look related but are not this service's responsibility. Each boundary names the adjacent service and its epic key. Always end with the hard "does not" list (does not authenticate, does not mint GUIDs, does not touch the graph, etc.) — this is the section that stops responsibility creep.
+7. `### 🗺️ **Scope**` — **Three sub-blocks** (same as 7b-3): **In Scope**, **Out of Scope**, **Adjacent Services (Not This Service)**. Out of Scope items point to the sibling epic that covers the excluded work. Adjacent Services names services that look similar but are different; each points to its own epic/repo when one exists. Engine/upstream changes belong in Out of Scope when the service is instanced from an upstream engine.
+8. `### 🌐 **Deployment Topology & Environments**` — Bullet list: environments (Dev/QA/Stage/Prod), runtime (container/ECS, persistent vs. scheduled), scheduling/triggering behavior, configuration and secrets handling (env-var injection, never committed), and a **"Current deployment state"** line stating what is provisioned vs. not-yet (verified against `.gitmodules`/deployed config on a specific date).
+9. `### 👥 **Stakeholders**` — Standard set, tuned for a backend service: Product Owner, Senior TPM (FNL/BACS), NCI/CBIIT Federal Program Leadership, Backend/API Engineering (ESI), DevOps/Platform (ESI), Data Engineering, Frontend Engineering (as downstream consumer when applicable), QA/Testers, plus any upstream engine maintainers.
+10. `### 📖 **Key Definitions / Concepts**` — Glossary specific to the service. Always include **OpenSearch** and/or **Memgraph** (with the *"replaces the historical Neo4j references"* parenthetical) when either is involved, plus service-specific terms (modes, output structures, source types, runtime platform).
+11. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered, verifiable on each environment) and a **Service Quality Bar** (numbered — the non-user-facing analog of Performance & Quality). The Service Quality Bar replaces WCAG/design-system items with: contract stability/back-compatibility, automated test coverage (unit + integration/contract), observability in place, service-to-service security (secrets, least-privilege), performance under realistic volume, and cross-environment parity.
+12. `### 📈 **Observability & Operations**` — Bullet list: run status & logging, completion/failure alerting, external-dependency availability handling, scheduled-job monitoring (silent-failure detection for non-request-driven services), and retry/failure semantics that protect existing data on a failed run.
+13. `### 🔗 **Dependencies**` — Bullet list: the upstream engine repo (with branch), external APIs, the data store(s) it reads/writes (name the index/schema location in `crdc-ctdc-backend` when relevant), DevOps/ECS, the consumer epic/story, and the starter-kit meta-repo when the service touches multiple components.
+14. `### 💭 **Assumptions**` — Bullet list: external-API stability, match-key sufficiency, config-only (no engine change) where applicable, data-volume envelope, acceptable refresh cadence.
+15. `### 🚧 **Constraints**` — Bullet list of non-negotiables: service-to-service security/secrets, external-dependency availability, cross-environment parity, data freshness, and the engine/config ownership boundary.
+16. `### ⚠️ **Risks & Mitigations**` — Three-column Jira-wiki table per the universal "Risk format" convention. Cover at least: external-dependency change/outage, wrong storage/contract target, stale data from missed runs, config drift across environments, upstream engine breaking change, and boundary/scope re-coupling.
+17. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the service back to CTDC's FAIR mission and the researcher's actual experience — even for a backend service, name the experience the end user ultimately feels (the page/feature this service powers).
+18. `### 🧩 **Components / Service Breakdown**` — **Five sub-blocks**, each a bold sub-heading + bullets: **Service / API**, **Data Fetch & Integration** (or the service's core processing concern), **Storage & Persistence** (name the store; this is where a resolved storage-target decision lives), **Deployment / Infra**, **Testing**.
+19. `### 📋 **Documentation & Compliance**` — Bullet list: operations runbook, config reference, consumer-contract documentation, data-dictionary alignment for stored data, and security review cadence.
+20. `### 📝 **Notes**` — Bullet list. Always include: (a) the standing-epic statement, (b) any resolved decision that was previously an open question (with a pointer to where the evidence lives), (c) the upstream engine and the CTDC-owns-config-only note when applicable, (d) closed predecessor tickets compressed to one sentence each, (e) cross-references to related Microservices/Infrastructure epics and the consuming page/feature epic, (f) the canonical-repo reminder.
+
+**Standing emoji set (18 entries — 7b-1 backbone, the 📦 addition shared with 7b-3, plus three microservice-specific 🔌 🧭 📈)**
+
+| Section | Emoji | Section | Emoji |
+|---|---|---|---|
+| Epic Summary | 🎯 | Key Definitions | 📖 |
+| Context & Background | 🧬 | Acceptance Criteria | ✅ |
+| Upstream Provenance | 📦 *(shared w/ 7b-3)* | Observability & Operations | 📈 *(new)* |
+| Goal / Objectives | 🏁 | Dependencies | 🔗 |
+| Service Interface & API Contract | 🔌 *(new)* | Assumptions | 💭 |
+| Service Boundaries & Interactions | 🧭 *(new)* | Constraints | 🚧 |
+| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
+| Deployment Topology & Environments | 🌐 | User Impact | 🌟 |
+| Stakeholders | 👥 | Components / Service Breakdown | 🧩 |
+| | | Documentation & Compliance | 📋 |
+| | | Notes | 📝 |
+
+**Required content rules (Microservices specific — universal rules in 7b-shared also apply)**
+
+- **The contract is named precisely in Service Interface.** A CTDC microservice's consumer-facing contract is frequently *not* an HTTP API — it is an OpenSearch document shape or a GraphQL schema slice the frontend reads. State which it is. When the consumer reads a store rather than calling the service, say so explicitly and treat the **document/index shape as the versioned contract**.
+- **Service Boundaries populated with negative space.** Naming the adjacent services the service must NOT absorb is the highest-leverage section for a microservice epic (CTDC's Interop ↔ Data-Retriever decouple is the canonical case). Always include the hard "does not" list.
+- **Deployment Topology verified before drafting.** Confirm environments, runtime (ECS/container), and scheduling against deployed config — and whether a CTDC instance/repo exists yet (check the starter-kit `.gitmodules`). State the "Current deployment state" with a verification date.
+- **Verify against the source repo, not imagination.** Per 7b-shared "Verification & ground truth," read the actual engine/service repo (README, project structure, writers/fetchers) before describing the interface, components, or storage target. Confirm the canonical repo via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` first; an upstream engine repo (e.g., `crdc-icdc-data-retriever`) may legitimately not be pinned in the CTDC starter-kit if CTDC only instances it via config.
+- **Storage/contract target is resolved with evidence, not left vague.** If the source epic carried an "OpenSearch vs Memgraph" style open question, resolve it by reading the code (which writer exists?) and citing precedent tickets — record the resolution and its evidence in Components → Storage & Persistence and in Notes. Do not invent a closure; ground it.
+- **Service Quality Bar, not WCAG.** User-facing P&Q items (WCAG, design system) do not apply to a backend service. Replace them with contract stability, test coverage, observability, service-to-service security, performance under realistic volume, and cross-environment parity. (When the service *is* directly user-facing, fold in the relevant user-facing items as well.)
+- **Memgraph never Neo4j; OpenSearch named explicitly; FAIR mission stated** — per 7b-shared. Even a backend service ties back to FAIR in User Impact via the surface it powers.
+- **Curly braces escaped as `\{...\}`** anywhere they appear — including env-var substitution syntax like `$\{VAR:-fallback\}`, which is common in service configs and will otherwise corrupt the render.
+
+**Writing-and-publishing workflow**
+
+1. **Verify the canonical repo first** via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` (Section 17). Then **read the actual service/engine repo** — README, project structure, the writer/fetcher/config modules — so the Interface, Components, and storage-target claims are grounded, not inferred.
+2. **Confirm deployment topology and current state** — environments, runtime, scheduling, and whether a CTDC instance exists yet. Note the verification date.
+3. **Resolve any storage/contract open question** by reading the code (which writers/schemas exist) and citing precedent tickets; record the resolution with evidence.
+4. **Draft the description** in Markdown with all 20 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule (watch for `$\{...\}` config syntax).
+5. **Push the description via the MCP** in two steps: `jira_create_issue` with a placeholder description, then immediately `jira_update_issue` with the full Markdown body (for an existing epic, a single `jira_update_issue` is fine). Set `priority` to Major and `customfield_12351` (Epic Name) as needed. Never include `labels` unless deliberately changing them.
+6. **Verify the rendered description with a UI screenshot** from the user. Wiki source is unreliable as a render preview.
+7. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — most likely the `$\{...\}` config syntax. If the source is clean and the render is still broken, fall back to UI paste.
+8. **Update the 9a Template Status Tracker** row for Microservices, and the related-epics cross-reference list in the Notes section of other Microservices epics when a new one is added.
 
 ---
 
@@ -883,7 +953,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 |---|---|---|---|
 | User Story | Section 7a | ✅ Drafted v1 (2026-05-06) | CTDC-1691 (Upload Participant Set, child of CTDC-2042) |
 | Application Pages Epic | Section 7b-1 | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
-| Microservices Epic | Section 7b-2 | 🚧 TBD | TBD |
+| Microservices Epic | Section 7b-2 | ✅ Drafted v1 (2026-05-29) | CTDC-1968 (CTDC Bento Data Retriever Service) |
 | Features Epic | Section 7b-3 | ✅ Drafted v1 | CTDC-2042 (Local Find — Participant) |
 | Products Epic | Section 7b-4 | 🚧 TBD | TBD |
 | Infrastructure Epic | Section 7b-5 | 🚧 TBD | TBD |
