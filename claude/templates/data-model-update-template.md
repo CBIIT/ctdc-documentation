@@ -1,4 +1,4 @@
-### 7f. 🧬 Data Model Update Task Template (Drafted v6)
+### 7f. 🧬 Data Model Update Task Template (Drafted v7)
 
 > **Use this template for every CTDC data model change to `CBIIT/ctdc-model` that is driven internally — by the CTDC project itself — rather than by an incoming study submission.** That spans the full weight range: a lightweight additive change (new optional properties or enum values requested by the CTDC application roadmap, e.g. Program/Portfolio curation fields) *and* a heavyweight infrastructure change (breaking MAJOR-version schema changes, model framework upgrades, cross-cutting multi-repo refactors). The distinguishing factor is the **driver**, not the weight. **Study-driven** changes — properties, enums, or permissible values requested by a study submission — use the **Data Modeling for Study Submission** template (Section 7g) instead. Like the other data management templates, this one moves through Dev → QA → Stage → Prod, but the mechanism is the **Data Model Contribution** process — a git feature branch → PR into `develop` → PR `develop` → `prod` → tag and GitHub Release — **not** a data-loading pipeline. It is validated against schema state and the Data Model Navigator, and propagates downstream to the CRDC Data Hub via the release tag. The Promotion Workflow (Section 4) follows [`SOP_CTDC_Data_Model_Contribution.md`](https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md), which is authoritative.
 
@@ -39,16 +39,16 @@ The most common antipatterns we've seen on model update tickets:
 5. **Treating schema changes as software development.** Schema changes generate code work (loader updates, frontend renderers), but the *concern* is data shape — what nodes exist, what properties they carry, what relationships connect them. That is data management. The cascading code work is owned by the data management ticket, not split out as standalone software development tickets that lose the connection to the model change.
 6. **YAML `Version:` field doesn't match the git tag.** The downstream Data Hub reads the version from `model-desc/ctdc_model_file.yaml`, not from the tag name. A mismatch silently fails to advance the displayed version downstream. The Section 3 Model Change Details table makes the target version explicit, with a note that the value goes into both the YAML field and the tag, so they can be verified together before tagging.
 7. **Three required-together artifacts updated independently.** Adding a property to `ctdc_model_properties_file.yaml` without referencing it in the relevant node's `Props:` list in `ctdc_model_file.yaml` will pass validation but the property will not appear in the Data Model Navigator. Likewise, forgetting to update `version-history.md` leaves the Navigator's Version tab stale. Section 3's checklist enforces the trio.
-8. **No per-environment signoff record.** When QA, Stage, and Prod testers initial their work in Slack threads or comments, there's no consolidated record. The Testing Signoff table in Section 5 is the single source of truth, and the per-environment verification detail lives inline in the Promotion Workflow steps (Section 4).
+8. **Duplicating Jira's own tracking inside the description.** A Testing Signoff or per-environment signoff table in the description duplicates what the ticket's status, transitions, and assignee already capture. Don't track Dev/QA/Stage/Prod progress in a description table — let the Jira workflow do it. The Promotion Workflow steps (Section 4) describe what to validate at each environment; the ticket's status records where it is.
 9. **Missing SemVer classification.** "Update the model" doesn't communicate whether the change is MAJOR (breaking), MINOR (backward-compatible addition), or PATCH (bug fix). Downstream consumers need to know whether to plan a migration. Section 3 makes SemVer impact a required field.
 10. **Skipping the caDSR / ServiceNow request or the DC sign-off.** New or updated CDEs and permissible values must be requested from caDSR via a ServiceNow ticket, and DC model changes require a formal Data Commons sign-off before promotion to `prod`. Both live in Section 2 and gate the Promotion Workflow in Section 4 — they are not optional even for additive internal changes.
 
 The template below resolves all ten with four commitments:
 
 1. **Every change has a workbook.** Section 2 anchors the change to its CDE Request Workbook — the internal CTDC workbook for this template's internally-driven scope — and captures the caDSR/ServiceNow coordination and DC sign-off. The workbook is the term-level source of truth; the ticket tracks milestones.
-2. **One Task per end-to-end model update.** Single source of truth from initial schema edit through Prod signoff and downstream verification. The Testing Signoff section is the consolidated completion record.
+2. **One Task per end-to-end model update.** Single source of truth from initial schema edit through Prod validation and downstream verification. The ticket's Jira status is the completion record — the description holds the workbook pointer, the change details, and the workflow, not a signoff table.
 3. **Branching follows the Contribution SOP.** Work happens on a feature branch off `develop`; `develop` is validated on Dev + QA and `prod` on Stage + Prod, with a `develop` → `prod` PR and a tag-and-release between them. This is the git contribution flow, not a data-loading pipeline.
-4. **Explicit schema, explicit milestones.** Section 3 names the schema artifacts being changed (the three-files trio) and the SemVer impact. Per-environment verification is folded into the Promotion Workflow (Section 4) and signed off in Testing Signoff (Section 5). Everything term-level stays in the workbook.
+4. **Explicit schema, explicit milestones.** Section 3 names the schema artifacts being changed (the three-files trio) and the SemVer impact. Per-environment verification is folded into the Promotion Workflow (Section 4); how far the change has progressed is tracked by the ticket's Jira status, not a signoff table in the description. Everything term-level stays in the workbook.
 
 **Pipeline, branch, & store anatomy (read this once before drafting)**
 
@@ -68,7 +68,7 @@ A CTDC model update touches multiple systems in sequence. Knowing the chain help
 - **Downstream consumer** — **`CBIIT/crdc-datahub-models`**. After tagging a release on `ctdc-model`'s `prod` branch, GitHub Actions sync the new version into `crdc-datahub-models`. Verify by inspecting `cache/content.json` on the `prod` branch of that downstream repo.
 - **Data Model Navigator** — the user-facing UI that displays the model. Reads from `version-history.md` and the YAML files; updates flow automatically once the new version is in place.
 
-**Section order (6 sections, exactly this sequence)**
+**Section order (5 sections, exactly this sequence)**
 
 Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header — same rule as every other CTDC template.
 
@@ -87,7 +87,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    | caDSR / coordination item | Value |
    |---|---|
    | ServiceNow request ID(s) | *(link to the SN request — or "Not yet submitted" / "Not required: no new or changed CDEs")* |
-   | DC formal sign-off | *(Approver and date — required before `develop` → `prod`; recorded here and in Section 5)* |
+   | DC formal sign-off | *(Approver and date — required before `develop` → `prod`; recorded here in this table)* |
 
 3. `### 🧬 **Model Change Details**` — Required field. The milestone-level record of the change. Per-property, per-enum, and per-relationship detail lives in the workbook (Section 2), not here.
 
@@ -119,28 +119,18 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    4. Make the changes locally, updating the three artifacts together (Section 3 checklist): `ctdc_model_properties_file.yaml` (the property definition), `ctdc_model_file.yaml` (the node's `Props:` list and/or a new node and its relationships), and `version-history.md`. Bump the `Version:` field in `ctdc_model_file.yaml` — this is what drives downstream Data Hub detection.
    5. Stage and commit with an imperative message and ticket reference (`git commit -m "CTDC-XXXX: <summary>"`), then push the branch. Ensure CI / integration tests pass; resolve any errors before moving on.
    6. Open a PR into `develop`. Title `CTDC-XXXX: <brief description>`; description covers what changed and why, the SemVer impact, validation performed, and migration notes if breaking. Assign a GitHub reviewer, assign the Jira ticket to the reviewer, and copy the PR link into the Jira comments.
-   7. After approval, merge into `develop` and validate on the Dev and QA environments — confirm the schema change is present and the Data Model Navigator reflects the new version. Record in Section 5.
+   7. After approval, merge into `develop` and validate on the Dev and QA environments — confirm the schema change is present and the Data Model Navigator reflects the new version. Progress is tracked by the ticket's Jira status, not a table in this description.
 
    **`develop` → `prod` — Stage + Prod, tag, release**
    8. Governance gate (per the DM Updates SOP): confirm the formal DC sign-off in Section 2 is recorded before promoting, and that any requested caDSR codes are recorded in the workbook (or that remaining `TBD` placeholders are an accepted, documented risk).
    9. ⚠️ Verify the `Version:` field in `ctdc_model_file.yaml` exactly matches the SemVer tag you are about to create. The Data Hub reads the version from the YAML, not the tag name — a mismatch silently fails to advance the displayed version downstream.
-   10. Open a PR from `develop` → `prod`; repeat the review and CI process. After merge, validate on the Stage and Prod environments. Record in Section 5.
+   10. Open a PR from `develop` → `prod`; repeat the review and CI process. After merge, validate on the Stage and Prod environments.
    11. Tag and release (required for production propagation): create a git tag matching the SemVer version (e.g., `v2.1.0`) and create/update the GitHub Release notes for that version.
    12. Downstream verification in `CBIIT/crdc-datahub-models`: GitHub Actions sync the CTDC model pointer; verify `cache/content.json` on the `prod` branch reflects the new version. Prod validation plus this downstream verification together are the trigger to close the ticket.
 
-5. `### ✅ **Testing Signoff**` — The consolidated completion record. The tester fills in date and initials per environment as work progresses. The DC sign-off row records the formal Data Commons approval gating `prod` promotion. **Prod signoff is the trigger to transition the ticket to Closed.**
+5. `### 📝 **Notes**` — Bullet list. Optional content: links to design discussions or model-owner meetings, prior model-change retrospectives, terminology translations (Bento "Case" → CTDC "Participant"), and any open item that needs to travel with the ticket (open items are otherwise tracked as Jira comments, not as a description section). If there's no meaningful note, write "None at this time."
 
-   | Milestone / Environment | Completion Date | Initials |
-   |---|---|---|
-   | DC formal sign-off (gates `prod`) | | |
-   | Dev | | |
-   | QA | | |
-   | Stage | | |
-   | Prod | | |
-
-6. `### 📝 **Notes**` — Bullet list. Optional content: links to design discussions or model-owner meetings, prior model-change retrospectives, terminology translations (Bento "Case" → CTDC "Participant"), and any open item that needs to travel with the ticket (open items are otherwise tracked as Jira comments, not as a description section). If there's no meaningful note, write "None at this time."
-
-**Standing emoji set (6 entries)**
+**Standing emoji set (5 entries)**
 
 | Section | Emoji |
 |---|---|
@@ -148,7 +138,6 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 | CDE Request Workbook | 📚 *(shared with study-submission modeling template — same source-of-truth role)* |
 | Model Change Details | 🧬 *(unique to data model update task)* |
 | Promotion Workflow | 🚦 *(shared with data loading task — same operational shape)* |
-| Testing Signoff | ✅ |
 | Notes | 📝 |
 
 **Required content rules (Data Model Update Task specific — universal Jira rules in 7b-shared also apply)**
@@ -156,9 +145,9 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Scope is internally / CTDC-driven model changes, across the full weight range.** Lightweight additive changes *and* heavyweight infrastructure changes. The driver — the CTDC project itself, not an incoming study — is what selects this template. **Study-driven** model changes use the **Data Modeling for Study Submission** template (Section 7g). Loading new study data uses the Data Loading Task template (Section 7e). Software development that does not touch the schema uses the software development template family.
 - **Every change records in a CDE Request Workbook (Section 2).** For this template that is the internal CTDC workbook, owned by the project (no individual owner). There is no "no workbook" path. The workbook is the term-level source of truth; the ticket does not duplicate per-term inventory.
 - **The ticket is a milestone tracker, not a term inventory.** No per-property, per-enum, per-relationship, or per-CDE-code listing in the ticket — that lives in the workbook. Model Change Details carries SemVer, versions, and backward compatibility only.
-- **caDSR / ServiceNow and DC sign-off are not optional.** New or updated CDEs/PVs go through a ServiceNow request to caDSR (record the SN link in Section 2). DC model changes require a formal DC sign-off recorded in Section 2 and Section 5, gating `prod` promotion (Section 4). This holds even for additive internal changes.
-- **No Acceptance Criteria section.** Model updates are operational SOP work; the completion bar is the Testing Signoff table (Section 5) plus the verification steps embedded in the Promotion Workflow (Section 4). AC belongs on user stories that consume the new schema, not on the model change itself.
-- **One Task per end-to-end model update** — develop branch through Prod, not one ticket per repo. The Testing Signoff table (Section 5) is the consolidated source of truth for where the change is in the pipeline; native Jira issue links carry the multi-repo and cross-ticket relationships.
+- **caDSR / ServiceNow and DC sign-off are not optional.** New or updated CDEs/PVs go through a ServiceNow request to caDSR (record the SN link in Section 2). DC model changes require a formal DC sign-off recorded in the Section 2 caDSR table, gating `prod` promotion (Section 4). This holds even for additive internal changes.
+- **No Acceptance Criteria section.** Model updates are operational SOP work; the completion bar is the ticket reaching Closed once the verification steps embedded in the Promotion Workflow (Section 4) pass. AC belongs on user stories that consume the new schema, not on the model change itself.
+- **One Task per end-to-end model update** — develop branch through Prod, not one ticket per repo. The ticket's Jira status is the source of truth for where the change is in the pipeline; native Jira issue links carry the multi-repo and cross-ticket relationships.
 - **Issue type is Task** on this tracker. Do not use Story or Subtask.
 - **Parent Epic field set on the ticket itself** via `customfield_12350` when a release-level epic exists.
 - **YAML `Version:` field and git tag must match exactly.** Surface this in Section 3's Target model version row, with the note that the value goes into both the YAML field and the tag. A mismatch silently fails the downstream sync.
@@ -177,8 +166,8 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 6. Push the description in two steps: create with the placeholder, then `jira_update_issue` with the full Markdown body. `jira_create_issue` renders inconsistently on long Markdown; `jira_update_issue` performs clean Markdown-to-Jira-wiki conversion. **Do not hand-edit the description in the Jira UI afterward** — the wiki editor mangles monospace tokens (property names with underscores) and Markdown bullets; re-push through `jira_update_issue` instead.
 7. Add native Jira issue links (Relates / Blocks) to the parent epic, any downstream Data Loading Task, and consuming feature tickets.
 8. Verify the rendered description with a UI screenshot — wiki source is unreliable as a render preview.
-9. As each environment completes, the assigned tester adds their initials and date to Section 5 (Testing Signoff). The DC sign-off row in Section 5 is filled when the formal DC approval lands.
-10. **Prod signoff plus downstream-sync verification together are the close trigger.** Once Section 5's Prod row is filled in *and* `crdc-datahub-models` `cache/content.json` on `prod` shows the new version, transition the ticket to Closed.
+9. As each environment completes, the assignee advances the ticket's Jira status. The DC sign-off is recorded in the Section 2 caDSR table when the formal DC approval lands.
+10. **Prod validation plus downstream-sync verification together are the close trigger.** Once Prod is validated *and* `crdc-datahub-models` `cache/content.json` on `prod` shows the new version, transition the ticket to Closed.
 
 **When to expand vs trim**
 
@@ -202,6 +191,7 @@ If a CRDC submission requires schema changes before it can be loaded, that's two
 
 **Changelog**
 
+- **v7 (2026-06-02)** — Removed the **Testing Signoff** section. Per-environment progress (Dev/QA/Stage/Prod) is tracked by the ticket's native Jira status, transitions, and assignee — a signoff table in the description duplicated that. The formal DC sign-off is recorded in the Section 2 caDSR table; the close trigger (Prod validated plus downstream sync verified) lives in the Promotion Workflow. Antipattern 8 was flipped from prescribing a signoff table to warning against duplicating Jira's own tracking in the description. Now **5 sections**.
 - **v6 (2026-06-02)** — Corrected the **Promotion Workflow** (Section 4): it had described the data-*loading* promotion ladder (Jenkins lower/upper-tier pipelines, per-environment data loads). Model contribution does not run a loading pipeline — it is a git feature-branch → PR into `develop` → PR `develop` → `prod` → tag and GitHub Release flow, with downstream propagation via GitHub Actions, exactly per [`SOP_CTDC_Data_Model_Contribution.md`](https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md). Also corrected the loading-pipeline framing that had leaked into the intro blockquote, the "why this template" paragraph, commitment 3, and the pipeline-anatomy bullet. A Jenkins data load runs only if existing data must be re-loaded under the new schema, which is a separate Data Loading Task (7e).
 - **v5 (2026-06-01)** — Removed the **Linked Work** section; related tickets are carried by native Jira issue links (Relates / Blocks) and don't need a mirrored description section. Now **6 sections**.
 - **v4 (2026-06-01)** — Slimmed to **7 sections** to match the structure settled on the canonical pilot CTDC-2068. Removed the **Affected Code & Loaders**, **Verification Surfaces**, **Per-Environment Verification**, **Collaboration & Handoffs**, and **Open Questions / Risks** sections — the multi-repo touch is carried by Jira issue links and the Promotion Workflow; per-environment verification is folded into the Promotion Workflow steps and signed off in Testing Signoff; open items are tracked as Jira comments. Trimmed **Model Change Details** to SemVer impact, current/target model version, and backward compatibility (plus the three-files schema-artifact checklist); removed the per-property / per-enum / per-relationship / node-type rows and the property-definitions block (term-level detail lives in the CDE Request Workbook). Removed the **Workbook Owner** row from the workbook table (ownership stated in the section prose) and the separate **caDSR CDE status** row. Kept **Linked Work** and the workbook's **Source-of-Truth / Out-of-Scope** rows. Added a note against hand-editing the description in the Jira UI (it mangles monospace and bullets).
