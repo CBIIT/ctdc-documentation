@@ -1,6 +1,6 @@
-### 7h. 🔖 IndexD Registration Task Template (v4)
+### 7h. 🔖 IndexD Registration Task Template (v5)
 
-> **Use this template for every CTDC data management task that registers a study's files in CRDC IndexD — minting GUIDs that the paired Data Loading Task will reference.** The canonical example is **CTDC-2060** (Index NCTN-NCORP TCIA Images-Only AHEP0731 Files), drafted 2026-05-26 as the first Sprint 28 ingestion ticket. CTDC-2060 was authored under this template's v1, iterated to v2 shape directly in Jira, then refined to v3 when the team formalized the principle that **Open Questions / Risks belong on the parent user story, not on the Task**. **v4 (2026-06-01)** corrects three conventions: the IndexD registration (Index) task and its Data Loading task are linked with **`Relates` and run in parallel** — IndexD registration does **not** block the load; the artifacts table row is **`Release Package`** (constant bucket plus a placeholder directory), not `Release Package Location`; and the registration (Index) task carries the **`Data-Concierge`** label. This template covers the **upstream artifact creation** work pattern within the loading-data sub-function — it is the **parallel partner** of a Data Loading Task (Section 7e), not a substitute for one, and not a blocker of one. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that registers a study's files in CRDC IndexD — minting GUIDs that the paired Data Loading Task will reference.** The canonical example is **CTDC-2060** (Index NCTN-NCORP TCIA Images-Only AHEP0731 Files), drafted 2026-05-26 as the first Sprint 28 ingestion ticket. CTDC-2060 was authored under this template's v1, iterated to v2 shape directly in Jira, then refined to v3 when the team formalized the principle that **Open Questions / Risks belong on the parent user story, not on the Task**. **v4 (2026-06-01)** corrects three conventions: the IndexD registration (Index) task and its Data Loading task are linked with **`Relates` and run in parallel** — IndexD registration does **not** block the load; the artifacts table row is **`Release Package`** (constant bucket plus a placeholder directory), not `Release Package Location`; and the registration (Index) task carries the **`Data-Concierge`** label. **v5 (2026-06-03)** restructures the Submission & Artifacts table to mirror the Data Loading Task's shape: the constant **AWS Account ID** and **AWS S3 Bucket** are split into their own rows, **Release Package** holds the directory name only, and the spot-check anchor is renamed **Sample GUID**; the **Consent group / ACL value** and **Object Files Location** rows are removed because both are captured in the indexd.tsv manifest itself (the `acl` and `url` columns), so restating them in the table was redundant. This template covers the **upstream artifact creation** work pattern within the loading-data sub-function — it is the **parallel partner** of a Data Loading Task (Section 7e), not a substitute for one, and not a blocker of one. See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -39,20 +39,20 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    | Field | Value | Notes |
    |---|---|---|
-   | CRDC Submission ID | *(Submission Portal ID — one per submission)* | Use the ID issued by the CRDC Submission Portal. |
-   | Release Package | AWS Bucket: `nci-cbiit-clinicaltrialdatacommons-metadata/<directory-placeholder>` | The bucket is always the same; the directory is created when the study is released from the CRDC Submission Portal, so the directory name stays a placeholder until release. The Release Package contains the metadata TSVs AND the indexd.tsv manifest. |
-   | Object Files Location | AWS Bucket: `nci-crdc-data-bucket-prod` *(confirm before assuming)* | GUIDs are listed per-file in the indexd.tsv manifest inside the Release Package, not enumerated here. The bucket is the destination the manifest's `url` column points to. |
-   | Consent group / ACL value | ID: *(e.g., `phs004135.c1`)*; Name: *(e.g., `GRU-COL`)*; Number: *(e.g., `1`)* | The ID value is what's placed in the `acl` field of every manifest row. Verify the `acl` value matches on every row of the indexd.tsv during validation (workflow step 1). Wrong value here produces registered records with wrong access control. |
-   | Example GUID | *(the first minted GUID, used as the spot-check anchor)* | Used for spot-check anchor in the Verification section. Fill in once the Release Package is generated; the CRDC Submission Portal pipeline assigns the GUIDs ahead of registration. |
+   | CRDC Submission ID | *(Submission Portal ID — one per submission)* | Issued by the CRDC Submission Portal; one per submission. |
+   | AWS Account ID | `101183076466` | Constant for CTDC — the CTDC data commons AWS account. |
+   | AWS S3 Bucket | `nci-cbiit-clinicaltrialdatacommons-metadata` | Constant for CTDC — the metadata bucket that holds every release package. |
+   | Release Package | *(directory name)* | Directory name only, within the AWS S3 Bucket above. The directory is created when the study is released from the CRDC Submission Portal, so it stays a placeholder until release. Contains the indexd.tsv manifest the CTDS team registers. |
+   | Sample GUID | *(the first minted GUID, used as the spot-check anchor)* | The spot-check anchor used in the Verification section. Fill in once the Release Package is generated; the CRDC Submission Portal pipeline assigns the GUIDs ahead of registration. |
 
-   **Naming discipline**: the **Release Package** row is named *without* a "Location" suffix because its value is a constant bucket plus a *placeholder directory* that does not exist until the study is released — a partially-known address, not a fixed one. The **Object Files Location** row keeps the "Location" suffix because it holds a fixed bucket address. The general rule still holds — a row that holds a stable address ends in "Location" — and the Release Package is the documented exception while its directory remains a placeholder.
+   **Naming discipline**: the constant bucket address now lives in its own **AWS S3 Bucket** row, and **Release Package** holds only the directory name within it — so there is no longer a combined "address" row that would need a "Location" suffix. This mirrors the Data Loading Task's table exactly.
 
-   **Rows omitted compared to v1**: "GUID prefix" (always `dg.4DFC/` for CRDC — implicit; mention only if the study uses a non-standard prefix); "indexd.tsv manifest path" (it's part of the Release Package — saying so in the Release Package row's Notes is sufficient); "CTDC Data Model version" (belongs on the Data Loading Task, not the IndexD ticket — IndexD registration doesn't care about model versions).
+   **Rows omitted**: "GUID prefix" (always `dg.4DFC/` for CRDC — implicit; mention only if the study uses a non-standard prefix); "indexd.tsv manifest path" (it's part of the Release Package — saying so in the Release Package row's Notes is sufficient); "CTDC Data Model version" (belongs on the Data Loading Task, not the IndexD ticket — IndexD registration doesn't care about model versions). As of **v5**, also omitted: **"Object Files Location"** (the manifest's `url` column already points to the object files) and **"Consent group / ACL value"** (the manifest's `acl` column carries it on every row) — both are captured in the indexd.tsv manifest itself, so restating them in the table was redundant.
 
 3. `### 🚦 **Registration Workflow**` — Numbered list grouped into three phases. Standard CTDC sequence (verified on CTDC-2060):
 
    **Pre-registration**
-   1. Extract the indexd.tsv manifest from the Release Package in the `nci-cbiit-clinicaltrialdatacommons-metadata` bucket. Validate that every row's `acl` field contains the consent group ID, the row count matches the file count for this study, every row's `url` resolves to a real location in the Object Files bucket, and the GUID placeholder format is consistent with the `dg.4DFC/` prefix.
+   1. Extract the indexd.tsv manifest from the Release Package in the `nci-cbiit-clinicaltrialdatacommons-metadata` bucket. Validate that every row carries a non-empty `acl` value and that the `acl` is uniform across all rows (the manifest is the source of truth for the consent group — it is no longer restated in the artifacts table), the row count matches the file count for this study, every row's `url` resolves to a real object-file location, and the GUID placeholder format is consistent with the `dg.4DFC/` prefix.
 
    **External handoff**
    2. Upload the extracted indexd.tsv to the [DCF Google Drive folder](https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb) for indexing. Filename convention is preserved from the Release Package; do not rename.
@@ -62,14 +62,14 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    **Confirmation and verification**
    6. Confirm NCI DCFS has received the manifest and acknowledged the CRINTAKE intake ticket.
-   7. Once indexing is complete (announced via CRINTAKE or by direct DCFS notification), spot-check minted GUIDs using the example GUID in the Submission & Artifacts section. GUID spot-check success is the trigger to transition the ticket to Closed. The paired Data Loading Task runs in parallel and is **not** gated on this Closed transition — file downloads for the study resolve once the spot-check passes.
+   7. Once indexing is complete (announced via CRINTAKE or by direct DCFS notification), spot-check minted GUIDs using the sample GUID in the Submission & Artifacts section. GUID spot-check success is the trigger to transition the ticket to Closed. The paired Data Loading Task runs in parallel and is **not** gated on this Closed transition — file downloads for the study resolve once the spot-check passes.
 
    **Step count: 7 (1 pre-registration, 4 external handoff, 2 confirmation and verification).**
 
 4. `### 🧪 **Verification**` — How CTDC confirms the registration actually worked. Bullet list (italic-labelled, em-dash separators — this is the rendering-safe pattern verified on CTDC-2060):
 
    - *Spot-check method* — Resolve a sample of GUIDs by hitting the IndexD resolution endpoint at `nci-crdc.datacommons.io/index/` with the GUID appended. The endpoint returns the full IndexD record (`did`, `urls`, `hashes`, `size`, `acl`, `authz`, `rev`, `baseid`).
-   - *Successful spot-check criteria* — The endpoint returns a non-error response; the `urls` field contains the expected S3 location in the Object Files bucket; the `acl` field contains the consent group ID; the `size` and `hashes` values are non-empty.
+   - *Successful spot-check criteria* — The endpoint returns a non-error response; the `urls` field contains the expected S3 object-file location; the `acl` field carries the manifest's consent group value (matching what was validated in workflow step 1); the `size` and `hashes` values are non-empty.
    - *How many GUIDs to spot-check* — At minimum, the first, middle, and last GUIDs in the manifest. If the study has more than 1,000 files, spot-check at least 5, including any GUIDs flagged by CTDS as edge cases.
    - *If a spot-check fails* — Do not close this ticket. Reopen the CRINTAKE ticket with the specific GUIDs and resolution-endpoint responses; coordinate the fix with CTDS. Until the spot-check passes, file downloads for the study will not resolve even though the parallel load may already have completed. **Open the issue on the parent submission user story's Open Questions / Risks section** so it's tracked at the program level.
 
@@ -151,10 +151,10 @@ The CTDC team has two primary functions: software development and data managemen
 
 **Canonical example**
 
-**CTDC-2060** — *Index NCTN-NCORP TCIA Images-Only AHEP0731 Files* (drafted 2026-05-26). This is the v3-shaped canonical reference. The ticket carries:
+**CTDC-2060** — *Index NCTN-NCORP TCIA Images-Only AHEP0731 Files* (drafted 2026-05-26). Authored under the v3 shape and **pending re-alignment to the v5 Submission & Artifacts table** (see the version note above). As it currently stands the ticket carries:
 
 - 5 sections in the v3 order (Registration Summary, Submission & Artifacts, Registration Workflow, Verification, Notes)
-- 5-row Submission & Artifacts table with the "Location" naming discipline
+- 5-row Submission & Artifacts table in the older shape (Object Files Location and Consent group / ACL rows still present, Example GUID not yet renamed) — pending the v5 revision
 - 7-step workflow grouped Pre-registration / External handoff / Confirmation and verification
 - `Relates` links to CTDC-1805 (program-level user story) and DHDM-143 (study-specific Data Hub tracker), set via Jira native Links panel — not duplicated in description
 - Parent Epic CTDC-1664 set via `customfield_12350`
