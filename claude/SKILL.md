@@ -961,6 +961,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Security Epic | Section 7b-6 | 🚧 TBD | TBD |
 | Data Epic | Section 7b-7 | 🚧 TBD | TBD |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
+| Design Task | `claude/templates/design-task-template.md` | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
 
 **Data management lane** — templates live in the component library at `claude/templates/`; see also Section 7d.
 
