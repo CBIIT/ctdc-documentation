@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-05-06
+> **Last Updated:** 2026-06-03
 
 ---
 
@@ -880,15 +880,16 @@ Data management ticket templates live in the component library at **`claude/temp
 |---|---|---|
 | **Data Loading Task** | [`data-loading-task-template.md`](./templates/data-loading-task-template.md) | Loading a CRDC submission's contents into CTDC's databases. Schema is stable; data is changing. |
 | **IndexD Registration Task** | [`indexd-registration-task-template.md`](./templates/indexd-registration-task-template.md) | Minting GUIDs for a submission's files via the external CTDS/DCFS handoff. Prerequisite to the Data Loading Task — file registration happens here before the load can proceed. |
-| **Data Modeling for Study Submission** | [`data-modeling-study-submission-template.md`](./templates/data-modeling-study-submission-template.md) | A study submission's CDE Request Workbook drives schema additions (new properties, enums, permissible values). Almost always MINOR-version additions. The common case. |
-| **Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Infrastructure-level model changes initiated by the CTDC data team — breaking schema changes, framework upgrades, multi-repo refactors. Rare. |
+| **Data Modeling for Study Submission** | [`data-modeling-study-submission-template.md`](./templates/data-modeling-study-submission-template.md) | An incoming **study submission** drives schema additions (new properties, enums, permissible values). Study-driven; records in that study's CDE Request Workbook (owned by the study's Data Concierge). |
+| **Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Model changes initiated by the **CTDC project itself** (application roadmap or data team) — the full range from a single additive optional property to a breaking multi-repo refactor. Internally/CTDC-driven; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner). |
 
 **Decision tree** (matches `claude/templates/README.md`):
 
 - *Is new data being loaded into the existing schema?* → **Data Loading Task**
 - *Are the files in the submission still pending IndexD GUID minting via the external CTDS/DCFS team?* (prerequisite to a planned Data Loading Task) → **IndexD Registration Task**
-- *Is the schema changing because a study needs new properties/enums/permissible values, with a CDE Request Workbook as the spec?* → **Data Modeling for Study Submission**
-- *Is the schema changing in a breaking way, or requires loader/frontend code changes (framework upgrade, multi-repo refactor)?* → **Data Model Update Task**
+- *Is the schema changing because an incoming **study submission** needs new properties/enums/permissible values, with that study's CDE Request Workbook as the spec?* → **Data Modeling for Study Submission** — study-driven; records in the study's workbook
+- *Is the schema changing because the **CTDC project itself** decided to change it (application roadmap or data team), anywhere from a single additive optional property to a breaking multi-repo refactor?* → **Data Model Update Task** — internally/CTDC-driven; records in the internal CTDC workbook
+- *(Either way, the change always records in a CDE Request Workbook — the driver just decides which one. There is no "no workbook" path. 7f and 7g share one identical 7-section shape; pick by driver, then follow the matching template's context.)*
 
 **Universal pattern for data submissions** (verified 2026-05-20 on CTDC-1666 ↔ CTDC-2051 and CTDC-1804 ↔ CTDC-1799):
 
@@ -965,10 +966,10 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | File | Sub-function | Status | Canonical Example |
 |---|---|---|---|---|
-| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data | ✅ Drafted v4 (2026-05-15) | CMB v5 load (CTDC-1753 lineage) |
-| IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v1 (2026-05-26) — external CTDS/DCFS handoff for GUID minting; prerequisite to Data Loading Task | CTDC-1907 (workflow shape; predates parent-user-story discipline — one-time retrofit recommended) |
-| Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v3 (2026-05-20) — canonical 6-section shape; workbook is term-level source of truth | CTDC-2051 ↔ CTDC-1666; CTDC-1799 ↔ CTDC-1804 |
-| Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — infrastructure | ✅ Drafted v2 (2026-05-20) | First pilot pending |
+| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v7 (2026-06-03) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to 7h | CMB load (CTDC-1753 lineage); AHEP0731 load (CTDC-2063) |
+| IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v4 (2026-06-01) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label | CTDC-2060 (AHEP0731 Images-Only — canonical, v4 shape); CTDC-1907 referenced for historical context only |
+| Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v5 (2026-06-02) — converged with 7f onto one identical 7-section shape (Modeling Summary · CDE Request Workbook · DM Federal Lead & SME Review · Model Change Details · Branch & Release Signoff · Verification Surfaces · Notes); differs from 7f only by context (study workbook, Submission Portal close trigger); milestone tracker — no specifics, no counts | CTDC-2051 ↔ CTDC-1666 (retrofitted to v5); CTDC-1799 ↔ CTDC-1804 (pending retrofit) |
+| Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — internally / CTDC-driven | ✅ Drafted v9 (2026-06-02) — all internally-driven model changes, any SemVer level (additive through breaking); converged with 7g onto one identical 7-section shape; milestone tracker — no specifics, no counts; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner); DM Federal Lead & SME Review (ServiceNow ticket + DHDM Jira Issue) gates prod | CTDC-2068 (Program curation properties — canonical pilot) |
 
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
