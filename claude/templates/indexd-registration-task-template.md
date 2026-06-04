@@ -1,6 +1,6 @@
-### 7h. 🔖 IndexD Registration Task Template (v5)
+### 7h. 🔖 IndexD Registration Task Template (v6)
 
-> **Use this template for every CTDC data management task that registers a study's files in CRDC IndexD — minting GUIDs that the paired Data Loading Task will reference.** The canonical example is **CTDC-2060** (Index NCTN-NCORP TCIA Images-Only AHEP0731 Files), drafted 2026-05-26 as the first Sprint 28 ingestion ticket. CTDC-2060 was authored under this template's v1, iterated to v2 shape directly in Jira, then refined to v3 when the team formalized the principle that **Open Questions / Risks belong on the parent user story, not on the Task**. **v4 (2026-06-01)** corrects three conventions: the IndexD registration (Index) task and its Data Loading task are linked with **`Relates` and run in parallel** — IndexD registration does **not** block the load; the artifacts table row is **`Release Package`** (constant bucket plus a placeholder directory), not `Release Package Location`; and the registration (Index) task carries the **`Data-Concierge`** label. **v5 (2026-06-03)** restructures the Submission & Artifacts table to mirror the Data Loading Task's shape: the constant **AWS Account ID** and **AWS S3 Bucket** are split into their own rows, **Release Package** holds the directory name only, and the spot-check anchor is renamed **Sample GUID**; the **Consent group / ACL value** and **Object Files Location** rows are removed because both are captured in the indexd.tsv manifest itself (the `acl` and `url` columns), so restating them in the table was redundant. This template covers the **upstream artifact creation** work pattern within the loading-data sub-function — it is the **parallel partner** of a Data Loading Task (Section 7e), not a substitute for one, and not a blocker of one. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that registers a study's files in CRDC IndexD — minting GUIDs that the paired Data Loading Task will reference.** The canonical example is **CTDC-2060** (Index NCTN-NCORP TCIA Images-Only AHEP0731 Files), drafted 2026-05-26 as the first Sprint 28 ingestion ticket. CTDC-2060 was authored under this template's v1, iterated to v2 shape directly in Jira, then refined to v3 when the team formalized the principle that **Open Questions / Risks belong on the parent user story, not on the Task**. **v4 (2026-06-01)** corrects three conventions: the IndexD registration (Index) task and its Data Loading task are linked with **`Relates` and run in parallel** — IndexD registration does **not** block the load; the artifacts table row is **`Release Package`** (constant bucket plus a placeholder directory), not `Release Package Location`; and the registration (Index) task carries the **`Data-Concierge`** label. **v5 (2026-06-03)** restructures the Submission & Artifacts table to mirror the Data Loading Task's shape: the constant **AWS Account ID** and **AWS S3 Bucket** are split into their own rows, **Release Package** holds the directory name only, and the spot-check anchor is renamed **Sample GUID**; the **Consent group / ACL value** and **Object Files Location** rows are removed because both are captured in the indexd.tsv manifest itself (the `acl` and `url` columns), so restating them in the table was redundant. **v6 (2026-06-04)** slims the task to **four sections**: the Registration Summary is reduced to a single sentence (consent codes and on-hold status are visible in Jira statuses and on the parent user story, not restated here), the Workflow drops the *Confirmation and verification* phase (the spot-check lives wholly in the Verification section now), and the **Notes** section is removed entirely (terminology and historical context are not task-level content). This template covers the **upstream artifact creation** work pattern within the loading-data sub-function — it is the **parallel partner** of a Data Loading Task (Section 7e), not a substitute for one, and not a blocker of one. See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -10,7 +10,7 @@ CTDC's role in IndexD registration is **coordination**, not engineering: validat
 
 **Tasks execute; user stories deliberate.** This is the core principle the template enforces. Tasks are operational work units the assignee executes — they should carry only what's needed to do the work. **Open questions, risks, and unresolved decisions belong on the parent user story**, where the team negotiates scope and tracks risk at the program level. By the time work is decomposed into Tasks, those questions should be resolved enough that the Task can be executed. If a Task accumulates open questions, that's a signal the parent user story isn't fully baked — and the questions should be raised there, not buried in a Task description where they don't influence sequencing decisions and are harder to find.
 
-The v3 template is **task-shaped: five sections totaling under 700 words, with ownership, external-coordination, and deliberative content removed.** The assignee can read this template-shaped ticket and know exactly what to do without paging through narrative.
+The template is **task-shaped: four sections totaling well under 700 words, with ownership, external-coordination, and deliberative content removed.** The assignee can read this template-shaped ticket and know exactly what to do without paging through narrative.
 
 The five most common antipatterns this template prevents:
 
@@ -29,11 +29,11 @@ The five most common antipatterns this template prevents:
 - **Resolution endpoint** — `https://nci-crdc.datacommons.io/index/<guid>`. Public endpoint for resolving a GUID to its IndexD record. Used for verification spot-checks.
 - **Paired Data Loading Task** — The CTDC ticket that loads this study, linked via `Relates` and run **in parallel** with this registration. The two are not sequential: metadata can load before GUIDs are minted. File downloads for the loaded study resolve once this registration's GUID spot-check passes; the load ticket references the GUIDs in its metadata loading file's `data_file_uuid` column.
 
-**Section order (5 sections, exactly this sequence)**
+**Section order (4 sections, exactly this sequence)**
 
 Each section header is an `h3` Markdown heading using the emoji + bold title format shown. If a section has no real content for a given registration, omit the header entirely rather than stub it with "None at this time." Keep the remaining sections in the order shown so a reader scanning multiple registration tickets sees the same visual flow.
 
-1. `### 🎯 **Registration Summary**` — One paragraph. What's being indexed (file count + file type if known), which submission this registration belongs to (named by parent user story key — set via Jira `Relates` link, NOT restated in description), and the paired Data Loading Task this registration runs in parallel with. **Do not duplicate study identity from the parent submission user story** — chronology, submitter, dbGaP IDs, POC team, SharePoint folders, and study description all live on the parent user story and the registration ticket references them by the native Links panel. Example (from CTDC-2060): *"Register the NCTN-NCORP TCIA Images-Only AHEP0731 study files in CRDC IndexD, minting GUIDs for the object files that the paired Data Loading Task will reference. This is the first study from the NCTN-NCORP TCIA Images-Only submission (parent CTDC-1805) to receive a consent code (phs004135.c1 / GRU-COL) and proceed to indexing."*
+1. `### 🎯 **Registration Summary**` — **One sentence**: what's being indexed and the paired Data Loading Task this registration runs in parallel with. **Do not restate study identity, consent codes, dbGaP IDs, submission chronology, or on-hold status** — all of that lives on the parent submission user story (linked via the native Links panel) and is visible in Jira statuses. Example: *"Register the NCTN-NCORP TCIA Images-Only AHEP0731 study files in CRDC IndexD, minting GUIDs for the object files that the paired Data Loading Task will reference."*
 
 2. `### 📦 **Submission & Artifacts**` — Required field. A five-row table holding the artifacts the external CTDS team needs to do the work. Study identity (program, study name, dbGaP, submitter, chronology) lives on the parent submission user story linked via the native Links panel — not in this table. The five rows:
 
@@ -49,10 +49,10 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    **Rows omitted**: "GUID prefix" (always `dg.4DFC/` for CRDC — implicit; mention only if the study uses a non-standard prefix); "indexd.tsv manifest path" (it's part of the Release Package — saying so in the Release Package row's Notes is sufficient); "CTDC Data Model version" (belongs on the Data Loading Task, not the IndexD ticket — IndexD registration doesn't care about model versions). As of **v5**, also omitted: **"Object Files Location"** (the manifest's `url` column already points to the object files) and **"Consent group / ACL value"** (the manifest's `acl` column carries it on every row) — both are captured in the indexd.tsv manifest itself, so restating them in the table was redundant.
 
-3. `### 🚦 **Registration Workflow**` — Numbered list grouped into three phases. Standard CTDC sequence (verified on CTDC-2060):
+3. `### 🚦 **Registration Workflow**` — Numbered list grouped into two phases. Standard CTDC sequence:
 
    **Pre-registration**
-   1. Extract the indexd.tsv manifest from the Release Package in the `nci-cbiit-clinicaltrialdatacommons-metadata` bucket. Validate that every row carries a non-empty `acl` value and that the `acl` is uniform across all rows (the manifest is the source of truth for the consent group — it is no longer restated in the artifacts table), the row count matches the file count for this study, every row's `url` resolves to a real object-file location, and the GUID placeholder format is consistent with the `dg.4DFC/` prefix.
+   1. Extract the indexd.tsv manifest from the Release Package in the `nci-cbiit-clinicaltrialdatacommons-metadata` bucket. Validate that every row carries a non-empty `acl` value and that the `acl` is uniform across all rows, the row count matches the file count for this study, every row's `url` resolves to a real object-file location, and the GUID placeholder format is consistent with the `dg.4DFC/` prefix.
 
    **External handoff**
    2. Upload the extracted indexd.tsv to the [DCF Google Drive folder](https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb) for indexing. Filename convention is preserved from the Release Package; do not rename.
@@ -60,23 +60,13 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    4. Link the CRINTAKE ticket back to this CTDC ticket as a Jira-to-Jira remote link.
    5. If a due date is communicated, notify both the NCI CRDC (Leidos) PM and the NCI DCFS PM as early as possible.
 
-   **Confirmation and verification**
-   6. Confirm NCI DCFS has received the manifest and acknowledged the CRINTAKE intake ticket.
-   7. Once indexing is complete (announced via CRINTAKE or by direct DCFS notification), spot-check minted GUIDs using the sample GUID in the Submission & Artifacts section. GUID spot-check success is the trigger to transition the ticket to Closed. The paired Data Loading Task runs in parallel and is **not** gated on this Closed transition — file downloads for the study resolve once the spot-check passes.
+   **Step count: 5 (1 pre-registration, 4 external handoff).**
 
-   **Step count: 7 (1 pre-registration, 4 external handoff, 2 confirmation and verification).**
+4. `### 🧪 **Verification**` — How CTDC confirms the registration worked, and the close trigger. Once CTDS/DCFS reports indexing complete (via CRINTAKE or direct notification), spot-check the minted GUIDs; a successful spot-check is the trigger to close the ticket. Bullet list (italic-labelled, em-dash separators — the rendering-safe pattern):
 
-4. `### 🧪 **Verification**` — How CTDC confirms the registration actually worked. Bullet list (italic-labelled, em-dash separators — this is the rendering-safe pattern verified on CTDC-2060):
-
-   - *Spot-check method* — Resolve a sample of GUIDs by hitting the IndexD resolution endpoint at `nci-crdc.datacommons.io/index/` with the GUID appended. The endpoint returns the full IndexD record (`did`, `urls`, `hashes`, `size`, `acl`, `authz`, `rev`, `baseid`).
-   - *Successful spot-check criteria* — The endpoint returns a non-error response; the `urls` field contains the expected S3 object-file location; the `acl` field carries the manifest's consent group value (matching what was validated in workflow step 1); the `size` and `hashes` values are non-empty.
+   - *How to spot-check* — Resolve a sample of GUIDs by hitting the IndexD resolution endpoint at `nci-crdc.datacommons.io/index/` with the GUID appended. A pass returns a non-error response with the full IndexD record (`did`, `urls`, `hashes`, `size`, `acl`, `authz`, `rev`, `baseid`): `urls` points to the expected S3 object-file location, `acl` is non-empty, and `size`/`hashes` are non-empty.
    - *How many GUIDs to spot-check* — At minimum, the first, middle, and last GUIDs in the manifest. If the study has more than 1,000 files, spot-check at least 5, including any GUIDs flagged by CTDS as edge cases.
-   - *If a spot-check fails* — Do not close this ticket. Reopen the CRINTAKE ticket with the specific GUIDs and resolution-endpoint responses; coordinate the fix with CTDS. Until the spot-check passes, file downloads for the study will not resolve even though the parallel load may already have completed. **Open the issue on the parent submission user story's Open Questions / Risks section** so it's tracked at the program level.
-
-5. `### 📝 **Notes**` — Bullet list. Optional content: terminology glossary, prior registration lessons learned, known constraints. If there's no meaningful note, omit this section entirely. Standard CTDC entries:
-
-   - *Terminology* — GUID is the Globally Unique Identifier (128-bit, IndexD-minted). DCF is the Data Commons Framework. DCFS is the NCI Data Commons Framework Services. CTDS is the UChicago Center for Translational Data Science (operators of IndexD). CRDC is the Cancer Research Data Commons.
-   - *Why CTDC-1907 is not the canonical reference* — CTDC-1907 covers the CMB TCIA submission, a different TCIA submission with different artifact paths and a different submission lineage. It is referenced for historical context only.
+   - *If a spot-check fails* — Do not close this ticket. Reopen the CRINTAKE ticket with the specific GUIDs and resolution-endpoint responses, coordinate the fix with CTDS, and surface the issue on the parent submission user story so it's tracked at the program level.
 
 **Sections omitted compared to v1**
 
@@ -85,7 +75,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - ❌ **🤝 Collaboration & Handoffs** — Removed in v2. Ownership stays implicit via the Jira assignee field + comment audit trail. Standalone ownership directory was epic-shaped.
 - ❌ **🔍 Open Questions / Risks** — Removed in v3. The principle is *tasks execute, user stories deliberate*. Program-level open questions and risks belong on the parent submission user story (CTDC-1805 for the NCTN-NCORP TCIA Images-Only submission, for example). The user story is where the team negotiates scope and tracks risk; Tasks should carry only what's needed to do the work. If a Task accumulates open questions, that's a signal the parent user story isn't fully baked.
 
-**Standing emoji set (5 entries)**
+**Standing emoji set (4 entries)**
 
 | Section | Emoji |
 |---|---|
@@ -93,7 +83,6 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 | Submission & Artifacts | 📦 *(shared with Data Loading Task)* |
 | Registration Workflow | 🚦 *(shared with Data Loading Task)* |
 | Verification | 🧪 *(shared with Data Loading Task; scoped to GUID resolution spot-check)* |
-| Notes | 📝 *(shared with Data Loading Task)* |
 
 **Required content rules**
 
@@ -112,7 +101,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Submission & Artifacts table is mandatory and complete at ticket creation.** All five rows present. Use PLACEHOLDER explicitly when a value is pending upstream — never silently omit a row.
 - **Spot-check method and acceptance criteria explicit in the Verification section.** Naming "spot-check the GUIDs" without a method or success criteria is a gap; the spot-check is the verified close trigger and needs to be reproducible by anyone reading the ticket.
 - **Rendering-safe authoring patterns** — section headers use `### **Title**` Markdown form (round-trips cleanly to `h3.` Jira-wiki); bullet lists with italic labels use `* *Label* — content` (italic-and-em-dash), NOT `- **Label:** content` (bold-and-colon, which the converter collapses to broken `**...:*` mismatched-asterisk damage); tables use Jira-wiki `||header||` syntax, NOT GitHub-flavored Markdown `|h|h|`. Verified on CTDC-2060 second push.
-- **Empty sections are omitted, not stubbed.** Unlike the Data Loading Task template, this template does not require "None at this time" placeholders for empty sections. If a section has no real content for this registration, leave it out — the structure stays clean and the remaining sections retain their order.
+- **All four sections are required.** There are no optional sections — every registration ticket carries Registration Summary, Submission & Artifacts, Registration Workflow, and Verification, in that order.
 
 **Writing-and-publishing workflow**
 
@@ -130,10 +119,9 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When to expand vs trim**
 
-- **Standard single-study registration** → use the template as written; expect 5 sections present.
+- **Standard single-study registration** → use the template as written; expect 4 sections present.
 - **Multi-manifest registration** (one study, multiple manifest files) → expand the Submission & Artifacts table with manifest-specific rows, or add a row per manifest; expand the workflow step 2 to enumerate each manifest by filename. Keep one ticket — the CRINTAKE intake is one unit of work.
-- **Re-registration after a file correction** → use the template as written, and use the 📝 Notes section to explain why the re-registration is needed and reference IndexD's `baseid` / `rev` versioning model.
-- **Tiny registration (under 50 files, no consent-group complexity)** → omit Notes entirely; the Workflow and Verification sections are sufficient.
+- **Re-registration after a file correction** → use the template as written; explain the reason for re-registration in a Jira comment and reference IndexD's `baseid` / `rev` versioning model.
 
 **When NOT to use this template**
 
@@ -153,11 +141,11 @@ The CTDC team has two primary functions: software development and data managemen
 
 **CTDC-2060** — *Index NCTN-NCORP TCIA Images-Only AHEP0731 Files* (drafted 2026-05-26; **aligned to v5 on 2026-06-04**, along with the 11 paired NCTN-NCORP Index tickets CTDC-2072–2092, even). The ticket carries:
 
-- 5 sections in the standard order (Registration Summary, Submission & Artifacts, Registration Workflow, Verification, Notes)
-- 5-row v5 Submission & Artifacts table (CRDC Submission ID, AWS Account ID, AWS S3 Bucket, Release Package, Sample GUID), carrying the study's real release-package directory and minted sample GUID
-- 7-step workflow grouped Pre-registration / External handoff / Confirmation and verification
+- 4 sections in the standard order (Registration Summary, Submission & Artifacts, Registration Workflow, Verification)
+- 5-row Submission & Artifacts table (CRDC Submission ID, AWS Account ID, AWS S3 Bucket, Release Package, Sample GUID), carrying the study's real release-package directory and minted sample GUID
+- 5-step workflow grouped Pre-registration / External handoff
 - `Relates` links to CTDC-1805 (program-level user story) and DHDM-143 (study-specific Data Hub tracker), set via Jira native Links panel — not duplicated in description
 - Parent Epic CTDC-1664 set via `customfield_12350`
 - Open questions and risks for the broader submission live on **CTDC-1805's Open Questions / Risks section**, not on CTDC-2060
 
-The retrofit recommendation that existed in v1 (against CTDC-1907) has been removed — CTDC-1907 is a different TCIA submission lineage (CMB, not Images-Only) and was never going to be the right canonical anchor for this template. The 📝 Notes section preserves the brief explanation for historical context only.
+The retrofit recommendation that existed in v1 (against CTDC-1907) has been removed — CTDC-1907 is a different TCIA submission lineage (CMB, not Images-Only) and was never going to be the right canonical anchor for this template. It is retained in this template's antipattern notes for historical context only.
