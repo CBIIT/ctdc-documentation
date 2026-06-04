@@ -151,10 +151,10 @@ The CTDC team has two primary functions: software development and data managemen
 
 **Canonical example**
 
-**CTDC-2060** — *Index NCTN-NCORP TCIA Images-Only AHEP0731 Files* (drafted 2026-05-26). Authored under the v3 shape and **pending re-alignment to the v5 Submission & Artifacts table** (see the version note above). As it currently stands the ticket carries:
+**CTDC-2060** — *Index NCTN-NCORP TCIA Images-Only AHEP0731 Files* (drafted 2026-05-26; **aligned to v5 on 2026-06-04**, along with the 11 paired NCTN-NCORP Index tickets CTDC-2072–2092, even). The ticket carries:
 
-- 5 sections in the v3 order (Registration Summary, Submission & Artifacts, Registration Workflow, Verification, Notes)
-- 5-row Submission & Artifacts table in the older shape (Object Files Location and Consent group / ACL rows still present, Example GUID not yet renamed) — pending the v5 revision
+- 5 sections in the standard order (Registration Summary, Submission & Artifacts, Registration Workflow, Verification, Notes)
+- 5-row v5 Submission & Artifacts table (CRDC Submission ID, AWS Account ID, AWS S3 Bucket, Release Package, Sample GUID), carrying the study's real release-package directory and minted sample GUID
 - 7-step workflow grouped Pre-registration / External handoff / Confirmation and verification
 - `Relates` links to CTDC-1805 (program-level user story) and DHDM-143 (study-specific Data Hub tracker), set via Jira native Links panel — not duplicated in description
 - Parent Epic CTDC-1664 set via `customfield_12350`
