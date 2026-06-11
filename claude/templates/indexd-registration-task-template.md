@@ -133,7 +133,7 @@ The CTDC team has two primary functions: software development and data managemen
 
 **Software development work**: does NOT use this template. Use the appropriate template from the software development family.
 
-**Other upstream artifact creation work**: partially overlaps. Megazip generation and metadata loading file creation are also upstream artifact work in the data management lane, but they are CTDC-internal operations, not external handoffs. Until those work patterns have their own template, file them as standalone Tasks under CTDC-1664 (CTDC Data Integration) with a free-form description and link them from the Data Loading Task via the native Jira mechanism. If a recurring pattern emerges, draft a template using this one as the closest sibling.
+**Other upstream artifact creation work**: partially overlaps, and some now has its own template. Megazip creation (bundling all of a study's object files into one downloadable archive, then indexing and loading it) uses the **Megazip Creation Task** template (Section 7i), built from this template and the Data Loading Task (Section 7e) as its closest siblings. Standalone metadata loading file creation that is not already part of a megazip or load task still has no dedicated template; file it as a standalone Task under CTDC-1664 (CTDC Data Integration) with a free-form description and link it from the Data Loading Task via the native Jira mechanism. If a recurring pattern emerges, draft a template using the closest sibling.
 
 **CRDC platform changes**: Fence, IndexD, Submission Portal upgrades owned by CRDC platform teams. Out of CTDC scope entirely; CTDC files dependency tickets if affected, but does not own the work.
 
