@@ -1,4 +1,4 @@
-### 7i. 📥 Data Submission User Story Template (Drafted v1)
+### 7j. 📥 Data Submission User Story Template (Drafted v1)
 
 > **Use this template for the parent user story of every CTDC study data submission** — the artifact the **CTDC Data Concierge** uses to shepherd a study's data into CTDC end to end. Canonical example: **[CTDC-1666](https://tracker.nci.nih.gov/browse/CTDC-1666)** (NCI-MATCH Arm Z1D). Working instance: **[CTDC-2110](https://tracker.nci.nih.gov/browse/CTDC-2110)** (Data Submission: Cancer Moonshot Biobank v6). This story is the **coordinating outline** for one study submission; it is **not** where any activity is executed. Data modeling (7g/7f), IndexD registration (7h), and data loading (7e) each get their own linked task, and term-level modeling detail lives in the study's CDE Request Workbook. This is the parent that every downstream data-management task for the submission links back to.
 
@@ -42,7 +42,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
    No execution detail belongs here — that lives on the linked tasks.
 
-4. `### 📅 **Submission Chronology**` — A "Current as of \{date\}" line followed by a dated event log. Maintained by the Data Concierge. `TBD` until events exist.
+4. `### 📅 **Submission Chronology**` — A "Current as of \<date\>" line followed by a dated event log. Maintained by the Data Concierge. `TBD` until events exist.
 
 5. `### 🔬 **Study Description**` — Prose describing the study/protocol. Study-level context; `TBD` until authored.
 
