@@ -878,6 +878,7 @@ Data management ticket templates live in the component library at **`claude/temp
 
 | Template | File | Use When |
 |---|---|---|
+| **Data Submission User Story** | [`data-submission-user-story-template.md`](./templates/data-submission-user-story-template.md) | The **parent user story** for a study's data submission (Section 7j) — the Data Concierge's coordinating outline over the whole lifecycle (submission, modeling, indexing, loading, verification). Carries study identity and aggregate scope; downstream modeling/indexing/loading tasks link back to it. |
 | **Data Loading Task** | [`data-loading-task-template.md`](./templates/data-loading-task-template.md) | Loading a CRDC submission's contents into CTDC's databases. Schema is stable; data is changing. |
 | **IndexD Registration Task** | [`indexd-registration-task-template.md`](./templates/indexd-registration-task-template.md) | Minting GUIDs for a submission's files via the external CTDS/DCFS handoff. Runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking) — file downloads for the study resolve once the GUIDs are minted and spot-checked. |
 | **Data Modeling for Study Submission** | [`data-modeling-study-submission-template.md`](./templates/data-modeling-study-submission-template.md) | An incoming **study submission** drives schema additions (new properties, enums, permissible values). Study-driven; records in that study's CDE Request Workbook (owned by the study's Data Concierge). |
@@ -952,6 +953,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
+| Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission — parent user story | ✅ Drafted v1 (2026-06-16) — Data Concierge POV; Submission Lifecycle outline coordinating linked modeling/indexing/loading at summary altitude; consolidated Study Identity (SRF, Submission ID, DHDM rows; single SharePoint Folder; no AWS bucket); aggregate-only Data Details; `Data Submission: <Study Name vN>` title convention reused verbatim by downstream tasks | CTDC-1666 (canonical); CTDC-2110 (CMB v6, working instance) |
 | User Story | Section 7a | ✅ Drafted v1 (2026-05-06) | CTDC-1691 (Upload Participant Set, child of CTDC-2042) |
 | Application Pages Epic | Section 7b-1 | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
 | Microservices Epic | Section 7b-2 | ✅ Drafted v1 (2026-05-29) | CTDC-1968 (CTDC Bento Data Retriever Service) |
