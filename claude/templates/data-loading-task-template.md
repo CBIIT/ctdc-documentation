@@ -91,7 +91,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **One Task per end-to-end load**: Dev through Prod, not one ticket per environment. The Testing Signoff table is the single source of truth for where the load is in the pipeline.
 - **A dedicated Jenkins data-loading job per tier.** Run the correct per-tier job (Dev, QA, Stage, Prod). The lower/upper-tiers split is a `ctdc-model` contribution concept and does **not** apply to data loading.
 - **Issue type is Task.** Do not use Story or Subtask.
-- **Title convention:** `Data Loading: <Study Name vN>` — reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section 7i) verbatim.
+- **Title convention:** `Data Loading: <Study Name vN>` — reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section 7j) verbatim.
 - **Parent Epic field set via `customfield_12350`.** Default parent CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
 - **`Relates` link to the parent submission user story is mandatory** (set via `jira_create_issue_link` after creation). The user story carries study identity and is the home for open questions / risks.
 - **`Relates` link to the study-specific Data Hub tracking ticket (DHDM-XXX) when one exists.**
