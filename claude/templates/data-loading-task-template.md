@@ -1,6 +1,6 @@
-### 7e. 📦 Data Loading Task Template (v8)
+### 7h. 📦 Data Loading Task Template (v8)
 
-> **Use this template for every CTDC data management task that loads a CRDC submission into CTDC (either a brand-new study or new data added to an existing study) and promotes it through Dev → QA → Stage → Prod.** Canonical examples: the CMB megazip metadata load (CTDC-1753 lineage) and the AHEP0731 load (CTDC-2063). This template covers the **loading-data** sub-function of the team's data management work. It is **not** for changes to the data model itself; schema changes use the **Data Modeling for Study Submission** template (Section 7g) or the **Data Model Update Task** template (Section 7f). It is also **not** for the paired IndexD registration that mints the file GUIDs this load consumes; that uses the **IndexD Registration Task** template (Section 7h). See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that loads a CRDC submission into CTDC (either a brand-new study or new data added to an existing study) and promotes it through Dev → QA → Stage → Prod.** Canonical examples: the CMB megazip metadata load (CTDC-1753 lineage) and the AHEP0731 load (CTDC-2063). This template covers the **loading-data** sub-function of the team's data management work. It is **not** for changes to the data model itself; schema changes use the **Data Modeling for Study Submission** template (Section 7f) or the **Data Model Update Task** template (Section 7j). It is also **not** for the paired IndexD registration that mints the file GUIDs this load consumes; that uses the **IndexD Registration Task** template (Section 7g). See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -8,8 +8,8 @@ The CTDC team has two primary functions: **software development** (the React fro
 
 Data management has two sub-functions:
 
-- **Loading data**: taking a CRDC submission's *contents* (study metadata, files, IndexD entries) into CTDC's databases. Tracked with **this** template (Section 7e) and its paired sibling, the IndexD Registration Task template (Section 7h).
-- **Modeling data**: changing the *shape* of what CTDC's databases can hold. Tracked with the Data Modeling for Study Submission template (Section 7g) or the Data Model Update Task template (Section 7f).
+- **Loading data**: taking a CRDC submission's *contents* (study metadata, files, IndexD entries) into CTDC's databases. Tracked with **this** template (Section 7h) and its paired sibling, the IndexD Registration Task template (Section 7g).
+- **Modeling data**: changing the *shape* of what CTDC's databases can hold. Tracked with the Data Modeling for Study Submission template (Section 7f) or the Data Model Update Task template (Section 7j).
 
 This template owns only the loading-data sub-function, tuned for loading into a stable schema with unchanged application code. If code is changing, it's the wrong template. If the schema is changing, that's a modeling Task that must land first.
 
@@ -86,12 +86,12 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Required content rules**
 
-- **Scope is loading-data work only.** Schema/model changes use a modeling template (7f/7g). IndexD registration uses the IndexD Registration Task template (7h). Software development uses the software development family. See "When NOT to use this template."
+- **Scope is loading-data work only.** Schema/model changes use a modeling template (7j/7f). IndexD registration uses the IndexD Registration Task template (7g). Software development uses the software development family. See "When NOT to use this template."
 - **No Acceptance Criteria, Open Questions / Risks, Verification Surfaces, Per-Environment Verification, or Notes sections.** Data loading is operational SOP work; the completion bar is the Testing Signoff table. AC and risks belong on the parent submission user story.
 - **One Task per end-to-end load**: Dev through Prod, not one ticket per environment. The Testing Signoff table is the single source of truth for where the load is in the pipeline.
 - **A dedicated Jenkins data-loading job per tier.** Run the correct per-tier job (Dev, QA, Stage, Prod). The lower/upper-tiers split is a `ctdc-model` contribution concept and does **not** apply to data loading.
 - **Issue type is Task.** Do not use Story or Subtask.
-- **Title convention:** `Data Loading: <Study Name vN>` — reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section 7j) verbatim.
+- **Title convention:** `Data Loading: <Study Name vN>` — reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section 7e) verbatim.
 - **Parent Epic field set via `customfield_12350`.** Default parent CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
 - **`Relates` link to the parent submission user story is mandatory** (set via `jira_create_issue_link` after creation). The user story carries study identity and is the home for open questions / risks.
 - **`Relates` link to the study-specific Data Hub tracking ticket (DHDM-XXX) when one exists.**
@@ -104,7 +104,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 **Writing-and-publishing workflow**
 
 1. Confirm the Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata`. The paired IndexD registration runs in parallel and need not be complete. Surface any open questions on the parent submission user story, not the Task.
-2. Confirm this is a data load, not a model update or software development. If the schema is changing, a modeling Task (7f/7g) lands first.
+2. Confirm this is a data load, not a model update or software development. If the schema is changing, a modeling Task (7j/7f) lands first.
 3. Identify the parent submission user story and the paired IndexD Registration Task; add both via native links after creation (`Relates`, never `Blocks`).
 4. Create via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, and the parent epic via `customfield_12350`. Add no label. Leave Unassigned.
 5. Push the full body via `jira_update_issue` (Markdown in; converts server-side).
@@ -115,13 +115,13 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When NOT to use this template**
 
-- **IndexD registration (minting GUIDs)** → IndexD Registration Task template (7h), the parallel sibling.
-- **Data modeling** → Data Modeling for Study Submission (7g) for study-driven changes, or Data Model Update Task (7f) for internally-driven changes.
+- **IndexD registration (minting GUIDs)** → IndexD Registration Task template (7g), the parallel sibling.
+- **Data modeling** → Data Modeling for Study Submission (7f) for study-driven changes, or Data Model Update Task (7j) for internally-driven changes.
 - **Software development** → software development template family.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
 - **Pure file-creation tickets** (making a megazip, generating a metadata loading file) → upstream artifact-creation tasks that feed this load; tracked separately.
 
-If a submission needs schema changes before it can load, that's a modeling Task (7f/7g) the load is blocked on; if it needs IndexD registration, that's the paired IndexD Registration Task (7h) running in parallel. Both are separate tickets carried by native Jira links.
+If a submission needs schema changes before it can load, that's a modeling Task (7j/7f) the load is blocked on; if it needs IndexD registration, that's the paired IndexD Registration Task (7g) running in parallel. Both are separate tickets carried by native Jira links.
 
 **Changelog**
 

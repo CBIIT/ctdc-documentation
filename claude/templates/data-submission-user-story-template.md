@@ -1,6 +1,6 @@
-### 7j. 📥 Data Submission User Story Template (Drafted v2)
+### 7e. 📥 Data Submission User Story Template (Drafted v2)
 
-> **Use this template for the parent user story of every CTDC study data submission** — the artifact the **CTDC Data Concierge** uses to shepherd a study's data into CTDC end to end. Canonical example: **[CTDC-1666](https://tracker.nci.nih.gov/browse/CTDC-1666)** (NCI-MATCH Arm Z1D). Working instance: **[CTDC-2110](https://tracker.nci.nih.gov/browse/CTDC-2110)** (Data Submission: Cancer Moonshot Biobank v6). This story is the **coordinating outline** for one study submission; it is **not** where any activity is executed. Data modeling (7g/7f), IndexD registration (7h), and data loading (7e) each get their own linked task, and term-level modeling detail lives in the study's CDE Request Workbook. This is the parent that every downstream data-management task for the submission links back to.
+> **Use this template for the parent user story of every CTDC study data submission** — the artifact the **CTDC Data Concierge** uses to shepherd a study's data into CTDC end to end. Canonical example: **[CTDC-1666](https://tracker.nci.nih.gov/browse/CTDC-1666)** (NCI-MATCH Arm Z1D). Working instance: **[CTDC-2110](https://tracker.nci.nih.gov/browse/CTDC-2110)** (Data Submission: Cancer Moonshot Biobank v6). This story is the **coordinating outline** for one study submission; it is **not** where any activity is executed. Data modeling (7f/7j), IndexD registration (7g), and data loading (7h) each get their own linked task, and term-level modeling detail lives in the study's CDE Request Workbook. This is the parent that every downstream data-management task for the submission links back to.
 
 **Why this template**
 
@@ -76,8 +76,8 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 **Linking conventions**
 
 - **Epic:** `customfield_12350` → the study-integration epic (**CTDC-1664**, CTDC Data Integration).
-- **Data Modeling task (7g/7f)** → `Supports` this story.
-- **IndexD Registration (7h) / Data Loading (7e) tasks** → `Supports` this story.
+- **Data Modeling task (7f/7j)** → `Supports` this story.
+- **IndexD Registration (7g) / Data Loading (7h) tasks** → `Supports` this story.
 - **Prior version's story** → `Relates` (version lineage).
 - **Data Hub Data Modeling (DHDM) tracking ticket** → `Related To`.
 

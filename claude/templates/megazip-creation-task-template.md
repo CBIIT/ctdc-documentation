@@ -1,6 +1,6 @@
 ### 7i. 🗜️ Megazip Creation Task Template (v1)
 
-> **Use this template for every CTDC data management task that creates a single megazip bundling all of a study's object files, registers it in CRDC IndexD, and loads its metadata through Dev → QA → Stage → Prod so users can download the whole study as one file.** The canonical example is **CTDC-2104** (Create, Index, and Load Megazip file for NCTN-NCORP AHEP0731 Image Files). This template covers the **CTDC-internal artifact-creation** work pattern within the data-management lane: unlike a Data Loading Task (Section 7e) or an IndexD Registration Task (Section 7h), the team creates the artifact, mints its GUID, and loads it itself, with no external CRDC submission and no external CTDS handoff. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that creates a single megazip bundling all of a study's object files, registers it in CRDC IndexD, and loads its metadata through Dev → QA → Stage → Prod so users can download the whole study as one file.** The canonical example is **CTDC-2104** (Create, Index, and Load Megazip file for NCTN-NCORP AHEP0731 Image Files). This template covers the **CTDC-internal artifact-creation** work pattern within the data-management lane: unlike a Data Loading Task (Section 7h) or an IndexD Registration Task (Section 7g), the team creates the artifact, mints its GUID, and loads it itself, with no external CRDC submission and no external CTDS handoff. See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -9,10 +9,10 @@ A megazip is a single `.zip` that bundles **all** of a study's object files into
 Creating and publishing a megazip is a superset of three operations the team already runs separately:
 
 - **Create**: a Prefect job reads the study's object-files directory and writes the megazip into that same directory, then a file-metadata loading file is authored for the CRDC Submission Portal CLI.
-- **Index**: the team mints a GUID for the megazip in-house (generate a UUID, prepend the `dg.4DFC/` prefix) and authors the `indexd.tsv` manifest for it. This is the key difference from a study-file IndexD Registration Task (Section 7h): there is no external CTDS/DCFS handoff and no CRINTAKE intake ticket; the megazip is a CTDC-internal object, so the team registers it directly.
-- **Load**: the megazip metadata is promoted through Dev → QA → Stage → Prod using the dedicated per-tier Jenkins data-loading jobs, exactly as a Data Loading Task (Section 7e) does, with a Testing Signoff table as the completion record.
+- **Index**: the team mints a GUID for the megazip in-house (generate a UUID, prepend the `dg.4DFC/` prefix) and authors the `indexd.tsv` manifest for it. This is the key difference from a study-file IndexD Registration Task (Section 7g): there is no external CTDS/DCFS handoff and no CRINTAKE intake ticket; the megazip is a CTDC-internal object, so the team registers it directly.
+- **Load**: the megazip metadata is promoted through Dev → QA → Stage → Prod using the dedicated per-tier Jenkins data-loading jobs, exactly as a Data Loading Task (Section 7h) does, with a Testing Signoff table as the completion record.
 
-Because it spans all three, this template carries **both** a 🧪 Verification section (the GUID spot-check, inherited from 7h) and a ✅ Testing Signoff section (the per-environment promotion record, inherited from 7e). It is the only data-management template that carries both.
+Because it spans all three, this template carries **both** a 🧪 Verification section (the GUID spot-check, inherited from 7g) and a ✅ Testing Signoff section (the per-environment promotion record, inherited from 7h). It is the only data-management template that carries both.
 
 **Tasks execute; user stories deliberate.** A Task carries only what the assignee needs to build, register, and load the megazip. Open questions, risks, ownership directories, and link inventories belong on the parent user story (the download-feature story), not on the Task. Jira's native Links panel carries every relationship, so the description never restates them.
 
@@ -95,7 +95,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Required content rules**
 
-- **Scope is megazip creation, in-house indexing, and loading only.** Loading an external CRDC submission's study contents uses the Data Loading Task template (Section 7e). Registering study files through the external CTDS handoff uses the IndexD Registration Task template (Section 7h). Schema/model changes use a modeling template (7f/7g). See "When NOT to use this template."
+- **Scope is megazip creation, in-house indexing, and loading only.** Loading an external CRDC submission's study contents uses the Data Loading Task template (Section 7h). Registering study files through the external CTDS handoff uses the IndexD Registration Task template (Section 7g). Schema/model changes use a modeling template (7j/7f). See "When NOT to use this template."
 - **The megazip is created in addition to the individual files.** Never describe it as replacing or moving them; the individual object files remain in the Object Files Directory.
 - **Megazip filename uses underscores** and is stored inside the Object Files Directory, alongside the individual files, not at the bucket root.
 - **The GUID is minted in-house**, with the `dg.4DFC/` prefix. There is no external CTDS/DCFS handoff and no CRINTAKE intake ticket for a megazip.
@@ -110,7 +110,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 **Writing-and-publishing workflow**
 
 1. Confirm the study's individual object files are present in the Object Files Directory and the Release Package exists in the metadata bucket.
-2. Confirm this is megazip work, not a plain study load (7e) or an external IndexD registration (7h).
+2. Confirm this is megazip work, not a plain study load (7h) or an external IndexD registration (7g).
 3. Identify the download-feature user story and any paired study Index and Load tasks; add them via native `Relates` links after creation (never `Blocks`).
 4. Create via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, and the parent epic via `customfield_12350`. Leave Unassigned.
 5. Push the full body via `jira_update_issue` (Markdown in; converts server-side).
@@ -121,9 +121,9 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When NOT to use this template**
 
-- **Loading an external CRDC submission's study contents** → Data Loading Task template (Section 7e).
-- **Registering study files via the external CTDS/DCFS handoff** → IndexD Registration Task template (Section 7h).
-- **Data modeling** → Data Modeling for Study Submission (Section 7g) for study-driven changes, or Data Model Update Task (Section 7f) for internally-driven changes.
+- **Loading an external CRDC submission's study contents** → Data Loading Task template (Section 7h).
+- **Registering study files via the external CTDS/DCFS handoff** → IndexD Registration Task template (Section 7g).
+- **Data modeling** → Data Modeling for Study Submission (Section 7f) for study-driven changes, or Data Model Update Task (Section 7j) for internally-driven changes.
 - **Software development** → software development template family.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
 
@@ -140,5 +140,7 @@ A megazip task is distinct from its siblings because it is CTDC-internal end to 
 - `Relates` links to the download-feature user story (CTDC-1909) and to the paired study Index and Load tasks (CTDC-2060, CTDC-2063), set via the Jira native Links panel, not duplicated in the description
 
 **Changelog**
+
+> *Numbering note: the template IDs in the Changelog entries below predate the 2026-06-16 process-order renumber of the data-management templates. The full old -> new mapping is recorded in [`README.md`](./README.md).*
 
 - **v1 (2026-06-11)**: First version. Built from the Data Loading Task (7e) and IndexD Registration Task (7h) templates as the closest siblings, with CTDC-2104 as the canonical example. Carries both Verification and Testing Signoff because a megazip is created, indexed, and loaded on one ticket. Colon/semicolon separators throughout; no em-dashes.
