@@ -400,7 +400,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    - **Parent Epic:** CTDC-XXXX — *Epic Name*
    - **Context:** *"Part of the Local Find feature — this story implements the Input Set entry point that lets users seed a cohort from a known list rather than from facet filters."*
 
-4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages) but trimmed. Out of Scope items should point to sibling stories or epics that cover excluded work when one exists.
+4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages epics) but trimmed. Out of Scope items should point to sibling stories or epics that cover excluded work when one exists.
 
 5. `### ✅ **Acceptance Criteria**` — Two sub-blocks, mirroring the epic AC pattern:
    - **Functional** — Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `**bold**` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
