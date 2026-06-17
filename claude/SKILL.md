@@ -896,7 +896,7 @@ Data management ticket templates live in the component library at **`claude/temp
 
 Every CTDC data submission generates multiple tickets — a user story for the submission as a whole, a modeling ticket for schema additions, eventually a loading ticket, possibly supporting tasks (documentation review, mapping work, anonymization options). The **parent user story carries study identity** (program, study name, dbGaP ID, submitter, chronology, document references, study description). Downstream tickets link back to the parent user story and **do not duplicate study identity** in their descriptions. This pattern is required for Data Modeling tickets (Section 7f of the template); apply it to Data Loading and any other downstream tickets the same way.
 
-See `claude/templates/README.md` for the full library overview and `claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
+See `claude/templates/README.md` for the full library overview, `claude/templates/data-submission-workflow.md` for the internal end-to-end Data Submission Process SOP (the process order and which artifact/template to create at each step), and `claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
 
 ---
 
