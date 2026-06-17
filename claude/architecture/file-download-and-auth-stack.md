@@ -3,9 +3,11 @@
 **Document Type:** Leadership Overview
 **Prepared by:** Gina Kuffel, Senior TPM, BACS/FNL
 **Date:** April 6, 2026
-**Version:** v1.5
+**Version:** v1.6
 **Project:** Clinical and Translational Data Commons (CTDC)
 **Ecosystem:** Cancer Research Data Commons (CRDC) | NCI/CBIIT
+
+> **Revision Note (v1.6):** Corrected graph-database references — the download-event audit trail is written to **Memgraph**, not Neo4j. CTDC's Neo4j → Memgraph migration is complete; the file service code retains the legacy `neo4j` filename and the `neo4j-driver` Bolt client (Memgraph is Bolt-compatible), but the database is Memgraph. This aligns the document with the repository-wide convention (SKILL.md §15d). Updated Sections 8a and 9.
 
 > **Revision Note (v1.5):** Corrected Login.gov framing throughout — Login.gov is not a separate login entry point or parallel IDP. Source code review of `crdc-ctdc-authn` confirms there is one login pathway (NIH/eRA Commons). After authentication, the backend classifies a user's session as `nih` or `login.gov` by inspecting the email domain returned from NIH. Login.gov is a federated identity option within NIH's login infrastructure; CTDC never communicates with Login.gov directly. Updated Sections 3, 8a, 9, 11, and document history.
 
@@ -155,7 +157,9 @@ Access permissions are stored in the user's session at login time and retrieved 
 
 **What the audit system does when active:**
 
-The `storeDownloadEvent` function (in `neo4j/neo4j-operations.js`) captures the following fields for each download event and writes them to a **Neo4j graph database** via the shared `bento-event-logging` module:
+The `storeDownloadEvent` function (in `neo4j/neo4j-operations.js`) captures the following fields for each download event and writes them to the **Memgraph graph database** via the shared `bento-event-logging` module. (The code retains the legacy `neo4j` filename and the `neo4j-driver` Bolt client from before the Neo4j → Memgraph migration; Memgraph is Bolt-compatible, so the database it connects to is Memgraph.)
+
+The fields captured are:
 
 | Field | Detail |
 |---|---|
@@ -167,7 +171,7 @@ The `storeDownloadEvent` function (in `neo4j/neo4j-operations.js`) captures the 
 | **File Format** | File type (e.g., BAM, FASTQ, VCF, PDF) |
 | **File Size** | Size of the downloaded file |
 
-Note that audit records are written to **Neo4j**, not MySQL. These are separate data stores: MySQL holds user sessions and ACLs; Neo4j holds the download event audit trail. Both must be operational for the full system to function as designed.
+Note that audit records are written to **Memgraph** (the graph database), not MySQL. These are separate data stores: MySQL holds user sessions and ACLs; Memgraph holds the download event audit trail. Both must be operational for the full system to function as designed.
 
 The function also handles the case where a user is not logged in — it records the download as attributed to an anonymous user rather than failing silently.
 
@@ -196,7 +200,7 @@ The timeout is configured as follows:
 - **There is no file size restriction on direct downloads in CTDC.** All registered file types — including large genomic and radiology files — are served through the same download pathway.
 - **There is one login entry point: NIH eRA Commons, brokered by CRDC Fence.** Login.gov is not a separate login option in the CTDC application — it is a federated identity mechanism within NIH's login infrastructure. After a user authenticates through NIH, the backend classifies the session as `nih` or `login.gov` based on email domain. Users without a valid `@nih.gov` or `@login.gov` email domain in their NIH profile cannot log in under the current configuration. Google is not an active identity provider in any environment.
 - **The backend does not perform its own ACL checks.** It delegates authentication decisions to the authentication service (`crdc-ctdc-authn`) via a cookie-forwarding pattern. All session and permission data lives in the auth service.
-- **Audit logging infrastructure exists but is currently disabled.** The `storeDownloadEvent` function is fully implemented and writes to Neo4j. It has been commented out at the call site and requires a deliberate engineering action to re-enable. This is a compliance gap.
+- **Audit logging infrastructure exists but is currently disabled.** The `storeDownloadEvent` function is fully implemented and writes to Memgraph. It has been commented out at the call site and requires a deliberate engineering action to re-enable. This is a compliance gap.
 - **Session timeout defaults to 30 minutes.** This can be overridden per environment via deployment configuration. The production value should be confirmed.
 
 ---
@@ -236,9 +240,10 @@ CTDC and ICDC share the same underlying file delivery service (`bento-files`) an
 | v1.3 | April 3, 2026 | Gina Kuffel, FNL | Resolved Open Items #1 and #3: audit logging fully characterized — `storeDownloadEvent` is implemented but commented out at call site in `routes/files.js`; session timeout default confirmed as 30 minutes from `config.js`, production value pending deployment config review. Updated Sections 5, 8, 9, 10. |
 | v1.4 | April 6, 2026 | Gina Kuffel, FNL | Corrected terminology throughout: Fence and IndexD are NCI CRDC infrastructure services, not external NIH services. Updated all references in Sections 1–5, 8–9, 11, and document history. |
 | v1.5 | April 6, 2026 | Gina Kuffel, FNL | Corrected Login.gov framing: Login.gov is not a separate login entry point. Source code review of `crdc-ctdc-authn` (`idps/index.js`, `services/nih-auth.js`) confirms one login pathway (NIH/eRA Commons); LOGIN_GOV traffic routes through `nihClient.login()`. Session classification as `nih` or `login.gov` is based on post-authentication email domain inspection. Updated Sections 3, 8a, 9, 11. |
+| v1.6 | June 17, 2026 | Gina Kuffel, FNL | Corrected graph-database references: the download-event audit trail writes to Memgraph, not Neo4j. Neo4j → Memgraph migration is complete; the file service code retains the legacy `neo4j` naming via the Bolt-compatible driver. Aligned with SKILL.md §15d. Updated Sections 8a, 9. |
 
 ---
 
 *CTDC is a project of the National Cancer Institute's Cancer Research Data Commons (CRDC) | Managed by BACS/FNL under NCI/CBIIT*
 *Prepared by Gina Kuffel, Senior TPM, BACS/FNL — April 2026*
-*v1.5 — Login.gov framing corrected; two engineering actions remain outstanding*
+*v1.6 — Graph database corrected to Memgraph; two engineering actions remain outstanding*
