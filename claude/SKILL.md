@@ -42,7 +42,7 @@ The **Clinical and Translational Data Commons (CTDC)** is part of the NCI's Canc
 - **Frontend:** React web application (Bento Framework)
 - **GitHub org:** CBIIT
 - **Canonical entry point:** `CBIIT/crdc-ctdc-starter-kit` — a meta-repo that pins all CTDC component repos as git submodules. This is the source of truth for which repos are part of the active CTDC system. See Section 17.
-- **Key repos (active):** `crdc-ctdc-ui`, `crdc-ctdc-backend`, `crdc-ctdc-files`, `crdc-ctdc-auth`, `crdc-ctdc-dataloader`, `crdc-ctdc-interoperation`, `bento-ctdc-static-content`, `ctdc-deployment`, `ctdc-model`, `ctdc-readMe-content`
+- **Key repos (active):** `crdc-ctdc-ui`, `crdc-ctdc-backend`, `crdc-ctdc-files`, `crdc-ctdc-authn`, `crdc-ctdc-dataloader`, `crdc-ctdc-interoperation`, `bento-ctdc-static-content`, `ctdc-deployment`, `ctdc-model`, `ctdc-readMe-content`
 - **Sister project:** Integrated Canine Data Commons (ICDC) — same ecosystem, separate Jira project
 - **Jira project key:** `CTDC`
 - **Jira board ID:** `641`
@@ -400,7 +400,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    - **Parent Epic:** CTDC-XXXX — *Epic Name*
    - **Context:** *"Part of the Local Find feature — this story implements the Input Set entry point that lets users seed a cohort from a known list rather than from facet filters."*
 
-4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages epics) but trimmed. Out of Scope items should point to sibling stories or epics that cover excluded work when one exists.
+4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages) but trimmed. Out of Scope items should point to sibling stories or epics that cover excluded work when one exists.
 
 5. `### ✅ **Acceptance Criteria**` — Two sub-blocks, mirroring the epic AC pattern:
    - **Functional** — Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `**bold**` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
@@ -651,7 +651,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 #### 7b-2. 🛠️ Microservices (Drafted)
 
-> **Use this template for every epic that scopes a CTDC backend microservice** — a service with its own deployment lifecycle, configuration, and contract, owned as a discrete operational unit rather than as a page (7b-1) or a cross-cutting frontend capability (7b-3). The canonical example is **CTDC-1968 (CTDC Bento Data Retriever Service)** — drafted 2026-05-29 as the model for this grouping. Future candidates: the file service (`crdc-ctdc-files`), the authn service (`crdc-ctdc-auth`), the backend GraphQL service (`crdc-ctdc-backend`), and the Interop service (`crdc-ctdc-interoperation`).
+> **Use this template for every epic that scopes a CTDC backend microservice** — a service with its own deployment lifecycle, configuration, and contract, owned as a discrete operational unit rather than as a page (7b-1) or a cross-cutting frontend capability (7b-3). The canonical example is **CTDC-1968 (CTDC Bento Data Retriever Service)** — drafted 2026-05-29 as the model for this grouping. Future candidates: the file service (`crdc-ctdc-files`), the authn service (`crdc-ctdc-authn`), the backend GraphQL service (`crdc-ctdc-backend`), and the Interop service (`crdc-ctdc-interoperation`).
 
 **Why this template**
 
@@ -874,6 +874,17 @@ When drafting this template, expected sections likely emphasize the data model d
 
 Data management ticket templates live in the component library at **`claude/templates/`**, not inline in this SKILL.md. The component library is the canonical location; this section is the entry-point pointer.
 
+> **Template numbering (7e–7j).** The data-management templates carry stable IDs that follow the data-submission process order (renumbered 2026-06-16). These IDs are referenced throughout this section and §9a; each template lives as its own file in `claude/templates/`:
+>
+> | ID | Template | File |
+> |---|---|---|
+> | **7e** | Data Submission User Story | `data-submission-user-story-template.md` |
+> | **7f** | Data Modeling for Study Submission | `data-modeling-study-submission-template.md` |
+> | **7g** | IndexD Registration Task | `indexd-registration-task-template.md` |
+> | **7h** | Data Loading Task | `data-loading-task-template.md` |
+> | **7i** | Megazip Creation Task | `megazip-creation-task-template.md` |
+> | **7j** | Data Model Update Task | `data-model-update-template.md` |
+
 **Templates available:**
 
 | Template | File | Use When |
@@ -883,6 +894,7 @@ Data management ticket templates live in the component library at **`claude/temp
 | **IndexD Registration Task** | [`indexd-registration-task-template.md`](./templates/indexd-registration-task-template.md) | Minting GUIDs for a submission's files via the external CTDS/DCFS handoff. Runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking) — file downloads for the study resolve once the GUIDs are minted and spot-checked. |
 | **Data Modeling for Study Submission** | [`data-modeling-study-submission-template.md`](./templates/data-modeling-study-submission-template.md) | An incoming **study submission** drives schema additions (new properties, enums, permissible values). Study-driven; records in that study's CDE Request Workbook (owned by the study's Data Concierge). |
 | **Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Model changes initiated by the **CTDC project itself** (application roadmap or data team) — the full range from a single additive optional property to a breaking multi-repo refactor. Internally/CTDC-driven; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner). |
+| **Megazip Creation Task** | [`megazip-creation-task-template.md`](./templates/megazip-creation-task-template.md) | All of a study's object files are bundled into one downloadable `.zip`, its GUID minted in-house, and the metadata loaded across all tiers — created once the study's data loading is complete. CTDC-internal artifact creation; no external CRDC submission or CTDS/DCFS handoff. |
 
 **Decision tree** (matches `claude/templates/README.md`):
 
@@ -890,7 +902,7 @@ Data management ticket templates live in the component library at **`claude/temp
 - *Are the files in the submission still pending IndexD GUID minting via the external CTDS/DCFS team?* (paired with a planned Data Loading Task — the two run in parallel) → **IndexD Registration Task**
 - *Is the schema changing because an incoming **study submission** needs new properties/enums/permissible values, with that study's CDE Request Workbook as the spec?* → **Data Modeling for Study Submission** — study-driven; records in the study's workbook
 - *Is the schema changing because the **CTDC project itself** decided to change it (application roadmap or data team), anywhere from a single additive optional property to a breaking multi-repo refactor?* → **Data Model Update Task** — internally/CTDC-driven; records in the internal CTDC workbook
-- *(Either way, the change always records in a CDE Request Workbook — the driver just decides which one. There is no "no workbook" path. 7j and 7f share one identical 7-section shape; pick by driver, then follow the matching template's context.)*
+- *(Either way, the change always records in a CDE Request Workbook — the driver just decides which one. There is no "no workbook" path. 7j and 7f share one identical 5-section shape; pick by driver, then follow the matching template's context.)*
 
 **Universal pattern for data submissions** (verified 2026-05-20 on CTDC-1666 ↔ CTDC-2051 and CTDC-1804 ↔ CTDC-1799):
 
@@ -968,11 +980,12 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | File | Sub-function | Status | Canonical Example |
 |---|---|---|---|---|
-| Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission — parent user story | ✅ Drafted v1 (2026-06-16) — Data Concierge POV; Submission Lifecycle outline coordinating linked modeling/indexing/loading at summary altitude; consolidated Study Identity (SRF, Submission ID, DHDM rows; single SharePoint Folder; no AWS bucket); aggregate-only Data Details; `Data Submission: <Study Name vN>` title convention reused verbatim by downstream tasks | CTDC-1666 (canonical); CTDC-2110 (CMB v6, working instance) |
-| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v7 (2026-06-03) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to 7g | CMB load (CTDC-1753 lineage); AHEP0731 load (CTDC-2063) |
-| IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v6 (2026-06-04) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label; v6 slimmed the task to 4 sections (one-sentence Registration Summary; Pre-registration + External handoff workflow only — the Confirmation-and-verification phase folded into the Verification section; no Notes section), building on the v5 Submission & Artifacts table that mirrors the Data Loading Task | CTDC-2060 (AHEP0731 Images-Only — canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
+| Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission — parent user story | ✅ Drafted v2 (2026-06-16) — Data Concierge POV; 6-section shape (Study Submission Details · POC Requirements · Submission Lifecycle · Submission Chronology · Study Description · Data Details); Submission Lifecycle outline coordinating linked modeling/indexing/loading at summary altitude; consolidated Study Submission Details (SRF, Submission ID, DHDM rows; single SharePoint Folder; no AWS bucket); aggregate-only Data Details; `Data Submission: <Study Name vN>` title convention reused verbatim by downstream tasks | CTDC-1666 (canonical); CTDC-2110 (CMB v6, working instance) |
+| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v8 (2026-06-11) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); v8 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to 7g | CMB load (CTDC-1753 lineage); AHEP0731 load (CTDC-2063) |
+| IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v7 (2026-06-11) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label; v6 slimmed the task to 4 sections (one-sentence Registration Summary; Pre-registration + External handoff workflow only — the Confirmation-and-verification phase folded into the Verification section; no Notes section), building on the v5 Submission & Artifacts table that mirrors the Data Loading Task; v7 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change | CTDC-2060 (AHEP0731 Images-Only — canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
 | Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v7 (2026-06-04) — trimmed to a 5-section shape (Modeling Summary · CDE Request Workbook · DM Federal Lead & SME Review · Steps to Completion · Verification Surfaces); Notes removed; example aligned to finalized CTDC-2051 / CTDC-2068; Steps to Completion is a 4-step actionable spine; Verification Surfaces stated as confirmation actions across the two Data Model Navigator instances (CRDC Submission Portal + CTDC); milestone tracker — no specifics, no counts | CTDC-2051 ↔ CTDC-1666 (retrofitted to v7); CTDC-1799 ↔ CTDC-1804 (pending retrofit) |
 | Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — internally / CTDC-driven | ✅ Drafted v11 (2026-06-04) — all internally-driven model changes, any SemVer level (additive through breaking); trimmed to a 5-section shape identical to 7f (v7), Notes removed, example aligned to finalized CTDC-2068; Steps to Completion is a 4-step actionable spine; milestone tracker — no specifics, no counts; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner); DM Federal Lead & SME Review (ServiceNow ticket + DHDM Jira Issue) gates prod | CTDC-2068 (Program curation properties — canonical pilot) |
+| Megazip Creation Task | `claude/templates/megazip-creation-task-template.md` | CTDC-internal artifact creation (megazip) | ✅ Drafted v1 (2026-06-11) — bundles all of a study's object files into one downloadable `.zip`, mints its GUID in-house (`dg.4DFC/`), and loads it across Dev/QA/Stage/Prod; 5-section shape (Summary · Submission & Artifacts · Workflow · Verification · Testing Signoff); the only data-management template carrying both a GUID spot-check and a per-tier Testing Signoff; created once all study loading is complete | CTDC-2104 (Create, Index, and Load Megazip for AHEP0731 Image Files) |
 
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
@@ -1565,7 +1578,7 @@ The single source of truth for which repos are part of the active CTDC system is
 | **Frontend** | `CBIIT/crdc-ctdc-ui` | `main` | React web application — see all earlier sections referencing frontend code |
 | **Backend** | `CBIIT/crdc-ctdc-backend` | `master` | GraphQL backend — see Section 15 |
 | **File service** | `CBIIT/crdc-ctdc-files` | (verify before assuming) | File delivery service |
-| **Auth service** | `CBIIT/crdc-ctdc-auth` | (verify before assuming) | Authentication service |
+| **Auth service** | `CBIIT/crdc-ctdc-authn` | (verify before assuming) | Authentication service (renamed from `crdc-ctdc-auth`; the old name still resolves via GitHub redirect) |
 | **Data loader (CTDC-specific)** | `CBIIT/crdc-ctdc-dataloader` | (verify before assuming) | CTDC-specific data ingestion |
 | **Data loader (shared ICDC base)** | `CBIIT/icdc-dataloader` | (verify before assuming) | Shared loader code |
 | **Interoperation** | `CBIIT/crdc-ctdc-interoperation` | (verify before assuming) | Cross-CRDC interoperation |
@@ -1574,7 +1587,7 @@ The single source of truth for which repos are part of the active CTDC system is
 | **Data model** | `CBIIT/ctdc-model` | `prod` | Graph model — see Section 16 |
 | **ReadMe / help content** | `CBIIT/ctdc-readMe-content` | `prod` | User-facing help content |
 
-> **Important:** verify branch names against the `.gitmodules` file or each repo's GitHub default before assuming. The frontend uses `main`, the backend uses `master`, the data model uses `prod` — they are not consistent across components.
+> **Important:** verify branch names against the `.gitmodules` file or each repo's GitHub default before assuming. The frontend uses `main`, the backend uses `master`, the data model uses `prod` — they are not consistent across components. Also note that a renamed repo keeps resolving under its old name via GitHub's redirect, so `.gitmodules` will not reveal a rename: the auth service is still pinned there as `crdc-ctdc-auth`, but the live repo is now `crdc-ctdc-authn`. Confirm the current repo name on GitHub, not just the submodule pin.
 
 ### 17c. Historical / Deprecated Repos (DO NOT use as a source of truth)
 
