@@ -71,6 +71,7 @@ Recurring per-cadence workflows (per-sprint, per-release, per-meeting, per-quart
 |---|---|---|---|---|
 | **Post-Meeting Sprint Recap** | [`post-meeting-sprint-recap-workflow.md`](./post-meeting-sprint-recap-workflow.md) | Once per sprint, immediately after Review & Retro | ✅ Drafted v1 (2026-05-15) | Sprint 25 recap (2026-04-24), Sprint 26 recap (2026-05-15) |
 | **CSP Quarterly Report** | [`csp-quarterly-report-workflow.md`](./csp-quarterly-report-workflow.md) | Once per quarter, aligned to BACS/FNL reporting period | ✅ Drafted v1 (2026-05-22) | Nov 2025 – Jan 2026 CSP (drafted 2026-03-02); Mar 2026 – May 2026 CSP (drafted 2026-05-22) |
+| **Data Submission Process (Internal)** | [`data-submission-workflow.md`](./data-submission-workflow.md) | Reference — per active data submission | ✅ Drafted v1 (2026-06-17) — internal/technical process order and the per-step Jira artifact + template (7e–7i) mapping; companion to the submitter-facing Active Data Submission SOP (not cross-linked) | Epic CTDC-1664; working instance CTDC-2110 (CMB v6) |
 
 ---
 
