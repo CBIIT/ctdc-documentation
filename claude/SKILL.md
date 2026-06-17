@@ -919,16 +919,16 @@ See `claude/templates/README.md` for the full library overview, `claude/template
 | Name | Role | Username | Account Key | Slack ID |
 |---|---|---|---|---|
 | Gina Kuffel | Senior TPM | `kuffelgr` | `JIRAUSER57501` | `U025MCK7MD3` |
+| Stephanie Singleton | Co-TPM | `singletonss` | `JIRAUSER62602` | `U073X1J8FM2` |
 | Yizhen Chen | Tech Lead / Full Stack | `cheny39` | `cheny39` | `UJ59LJYU9` |
 | Nahom Tesfatsion | Frontend Engineer | `tesfatsionnh` | `JIRAUSER56020` | `U01TUNBB02K` |
 | Adam Davenport | Backend Engineer | `davenportaw` | *(not confirmed)* | `U06GM3BFWLU` |
 | Eric Miller | Backend Engineer | `millerer` | `JIRAUSER60101` | `U03SEJFGU7L` |
-| Nathan Huang | Frontend Engineer (DMN focus) | `huangn4` | `JIRAUSER65560` | `U07LB6W2RMH` |
+| Nathan Huang | Frontend Engineer  | `huangn4` | `JIRAUSER65560` | `U07LB6W2RMH` |
 | Valentina Epishina | QA Engineer | `epishinavv` | `JIRAUSER58300` | `U02PMPFHBRN` |
 | Patrick Breads | Data Engineer | `breadsp2` | `JIRAUSER55423` | *(not confirmed)* |
-| Stephanie Singleton | Data Concierge | `singletonss` | `JIRAUSER62602` | `U073X1J8FM2` |
-| Charles Ngu | DevOps / Deployments | `nguca` | `JIRAUSER61006` | `U04L21QJGNM` |
-| Michael Fleming | Pipeline Engineer | `flemingme` | `flemingme` | *(not confirmed)* |
+| Charles Ngu | DevOps Engineer | `nguca` | `JIRAUSER61006` | `U04L21QJGNM` |
+| Michael Fleming | DevOps Engineer | `flemingme` | `flemingme` | *(not confirmed)* |
 
 ### Cross-Team Contacts
 
