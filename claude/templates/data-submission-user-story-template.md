@@ -1,4 +1,4 @@
-### 7j. 📥 Data Submission User Story Template (Drafted v1)
+### 7j. 📥 Data Submission User Story Template (Drafted v2)
 
 > **Use this template for the parent user story of every CTDC study data submission** — the artifact the **CTDC Data Concierge** uses to shepherd a study's data into CTDC end to end. Canonical example: **[CTDC-1666](https://tracker.nci.nih.gov/browse/CTDC-1666)** (NCI-MATCH Arm Z1D). Working instance: **[CTDC-2110](https://tracker.nci.nih.gov/browse/CTDC-2110)** (Data Submission: Cancer Moonshot Biobank v6). This story is the **coordinating outline** for one study submission; it is **not** where any activity is executed. Data modeling (7g/7f), IndexD registration (7h), and data loading (7e) each get their own linked task, and term-level modeling detail lives in the study's CDE Request Workbook. This is the parent that every downstream data-management task for the submission links back to.
 
@@ -22,7 +22,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 - *(narrative)* — One paragraph, Data Concierge POV. Example: *"As the CTDC Data Concierge, I shepherd a study's data submission from end to end — guiding the submitter through the CRDC Submission Portal, supporting data validation, coordinating any required data modeling, obtaining the Release Package, and ensuring the data is indexed, loaded, and verified in CTDC — so that the study is correctly integrated and its files are downloadable in Production."*
 
-1. `### 🧬 **Study Identity**` — A two-column table; the at-a-glance identity plus all working links (folders, DH ticket, CDE Workbook) **consolidated here** (no separate references section). Rows, in order: Program, Program Short Name, Study Name, Study Status in CTDC, dbGaP ID, dbGaP Link, Associated Publications, CRDC Data Submission Request Date, Submission Request Form (SRF), Submission ID, Submitter / Submission Team, CTDC Data Concierge, Data Hub Data Modeling Ticket (DHDM), SharePoint Folder, CDE Request Workbook. **No AWS bucket row** — that is loading-only and lives on the Data Loading task. Notes: **Submission ID** is ascribed by the Submission Portal (`TBD` until submitted); **SharePoint Folder** is the single folder for the submission; **Data Hub Data Modeling Ticket (DHDM)** is the same ticket referenced in the modeling task's DM Federal Lead & SME Review section. Use `NA` where a field genuinely doesn't apply (e.g., Program for a study with no parent program) and `TBD` where it is pending.
+1. `### 🧬 **Study Submission Details**` — A two-column table; the submission's identity and all working links (SharePoint folder, DHDM ticket, CDE Workbook) **consolidated here** (no separate references section), with rows ordered to follow the submission process from SRF approval onward. Rows, in order: Submission Request Form (SRF), CRDC Data Submission Request Date, CTDC Data Concierge, SharePoint Folder, Program, Program Short Name, Study Name, Submitter / Submission Team, CDE Request Workbook, Data Hub Data Modeling Ticket (DHDM), Submission ID, dbGaP ID, dbGaP Link, Study Status in CTDC. **No AWS bucket row** — that is loading-only and lives on the Data Loading task. Notes: **Submission Request Form (SRF)** approval is the trigger for the whole submission — the Concierge is assigned and the SharePoint folder created at approval; **CRDC Data Submission Request Date** is known when the SRF is submitted; **SharePoint Folder** is the single folder for the submission; **CDE Request Workbook** must be fully completed before the DHDM ticket is submitted; **Data Hub Data Modeling Ticket (DHDM)** is the same ticket referenced in the modeling task's DM Federal Lead & SME Review section; **dbGaP ID / dbGaP Link** are required before the DataHub portal submission begins; **Submission ID** is ascribed by the Submission Portal when the submission is created — which can be months after SRF approval (`TBD` until then). Use `NA` where a field genuinely doesn't apply (e.g., Program for a study with no parent program) and `TBD` where it is pending.
 
 2. `### 📋 **POC Requirements**` — One line pointing to the CTDC Active Data Submission SOP.
 
@@ -52,7 +52,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 | Section | Emoji |
 |---|---|
-| Study Identity | 🧬 |
+| Study Submission Details | 🧬 |
 | POC Requirements | 📋 |
 | Submission Lifecycle | 🚦 |
 | Submission Chronology | 📅 |
@@ -69,7 +69,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 - **The Submission Lifecycle is an outline, not a procedure** — summary altitude, with linked-task pointers for modeling, indexing, and loading.
 - **No node/property/PV/term/count specifics anywhere** — Data Details is aggregate only; everything finer lives in the CDE Request Workbook.
 - **No AWS bucket / Release Package location on the story** — loading-only, lives on the Data Loading task.
-- **Links consolidated into Study Identity** — no separate Document & Folder References section.
+- **Links consolidated into Study Submission Details** — no separate Document & Folder References section.
 - **`NA` for genuinely-inapplicable fields, `TBD` for pending ones.**
 - **Rendering-safe authoring**: section headers use `### **Title**` Markdown (round-trips to `h3.`); author in Markdown and let the converter produce Jira-wiki; use Jira-wiki `||header||` table syntax. Escape every curly brace as `\{...\}`. In SharePoint/GitHub URLs, percent-encode `(` / `)` as `%28` / `%29` and `_` as `%5F` so the wiki renderer cannot break the link.
 
@@ -95,5 +95,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 5. Add the native links above as the modeling/indexing/loading tasks and the DHDM ticket come into being.
 
 **Changelog**
+
+- **v2 (2026-06-16)** — Renamed the opening section **Study Identity → Study Submission Details** and reordered its rows to follow the submission process from SRF approval onward: SRF → Request Date → Data Concierge → SharePoint Folder → Program → Program Short Name → Study Name → Submitter/Submission Team → CDE Request Workbook → DHDM → Submission ID → dbGaP ID → dbGaP Link → Study Status in CTDC. Removed the **Associated Publications** row (captured in the submission itself, not the story). Added process-gating notes (SRF approval triggers Concierge assignment + SharePoint folder creation; CDE Workbook completed before the DHDM ticket; dbGaP IDs required before the DataHub portal submission; Submission ID created at portal submission). Emoji set and the "Links consolidated" rule updated to the new section name. 15 rows → 14.
 
 - **v1 (2026-06-16)** — Initial draft. Promotes the CTDC-1666 gold-standard shape into a reusable template. Establishes: Data Concierge POV; the 🚦 Submission Lifecycle outline that coordinates linked modeling/indexing/loading at summary altitude; link-consolidated Study Identity (no separate references section; SRF, Submission ID, DHDM rows added; the two SharePoint folder rows consolidated to one; AWS bucket row removed as loading-only); aggregate-only Data Details; the submission-vs-model-change "related but distinct activities" framing; and the `Data Submission: <Study Name vN>` title convention that defines the canonical study token reused verbatim by all downstream tasks. Canonical example CTDC-1666; working instance CTDC-2110 (Data Submission: Cancer Moonshot Biobank v6).
