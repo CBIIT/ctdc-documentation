@@ -12,9 +12,9 @@ The template below resolves this with three commitments:
 2. **A short Design Summary** so the designer can read the ticket in five seconds and know what they're designing, without opening the parent user story.
 3. **Concrete deliverables**, not implicit ones. The designer produces specific, named artifacts (mockups, prototypes, redlines, accessibility annotations) that are checkable on the way to "done."
 
-The emoji set borrows shared anchors from the user story and epic templates (🎯 🔗 🗺️ 📝) so a reader scanning a design task next to its sibling user story sees consistent visual structure. The unique additions are 🎨 (Design Scope), 📐 (Design Deliverables), 🧩 (Design System & Standards), and ✅ (Definition of Done — same emoji as story AC, deliberately, to mark "this is the completion bar").
+The emoji set borrows shared anchors from the user story and epic templates (🎯 🔗) so a reader scanning a design task next to its sibling user story sees consistent visual structure. The unique additions are 🎨 (Design Scope), 📐 (Design Deliverables), 🧩 (Design System & Standards), and ✅ (Definition of Done — same emoji as story AC, deliberately, to mark "this is the completion bar").
 
-**Section order (8 sections, exactly this sequence)**
+**Section order (7 sections, exactly this sequence)**
 
 Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header — same rule as every other CTDC template.
 
@@ -57,9 +57,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    - [ ] Figma URL added to the linked user story
    - [ ] Date of completion noted in this ticket (Section 6)
 
-8. `### 📝 **Notes**` — Bullet list. Optional content: prior art references, screenshots of the current state if redesigning, links to upstream Bento designs, terminology translations (e.g., Bento "Case" → CTDC "Participant"), known constraints from previous design rounds. If there's no meaningful note, write "None at this time."
-
-**Standing emoji set (8 entries)**
+**Standing emoji set (7 entries)**
 
 | Section | Emoji |
 |---|---|
@@ -70,7 +68,6 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 | Design System & Standards | 🧩 |
 | Figma File | 🖼️ *(unique to design task)* |
 | Definition of Done | ✅ |
-| Notes | 📝 |
 
 **Required content rules (Design Task specific — universal rules in 7b-shared also apply)**
 
@@ -95,7 +92,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **When to expand vs trim**
 
-- **Single-surface design with no parallel siblings** → keep all 8 sections; Links and Notes may legitimately be "None at this time" but stay as headers.
+- **Single-surface design with no parallel siblings** → keep all 7 sections; Links may legitimately be "None at this time" but stays as a header.
 - **Cross-feature design that touches many surfaces** → expand Design Scope and Design Deliverables; consider whether the work is large enough to warrant splitting into multiple design tasks (one per major surface) rather than one mega-task.
 - **Design QA / Final Review style task** (verifying an already-built feature against design) → this template is overkill. Use a free-form Task with a checklist of the QA points to verify, plus a Figma comparison reference.
 - **Pure copy / typography / icon-only change** → this template is overkill. A short Task description with the before/after content and the affected surface is enough.
