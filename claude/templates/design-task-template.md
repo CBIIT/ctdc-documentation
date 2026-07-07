@@ -12,19 +12,15 @@ The template below resolves this with three commitments:
 2. **A short Design Summary** so the designer can read the ticket in five seconds and know what they're designing, without opening the parent user story.
 3. **Concrete deliverables**, not implicit ones. The designer produces specific, named artifacts (mockups, prototypes, redlines, accessibility annotations) that are checkable on the way to "done."
 
-The emoji set borrows shared anchors from the user story and epic templates (🎯 🔗 🗺️ 🤝 📝) so a reader scanning a design task next to its sibling user story sees consistent visual structure. The unique additions are 🎨 (Design Scope), 📐 (Design Deliverables), 🧩 (Design System & Standards), 🔍 (Open Design Questions), and ✅ (Definition of Done — same emoji as story AC, deliberately, to mark "this is the completion bar").
+The emoji set borrows shared anchors from the user story and epic templates (🎯 🔗 🗺️ 📝) so a reader scanning a design task next to its sibling user story sees consistent visual structure. The unique additions are 🎨 (Design Scope), 📐 (Design Deliverables), 🧩 (Design System & Standards), and ✅ (Definition of Done — same emoji as story AC, deliberately, to mark "this is the completion bar").
 
-**Section order (10 sections, exactly this sequence)**
+**Section order (8 sections, exactly this sequence)**
 
 Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header — same rule as every other CTDC template.
 
 1. `### 🎯 **Design Summary**` — Two to three sentences. What's being designed, on which surface, for which user need. Example: *"Design the sidebar autocomplete search box for Local Find on the Explore Dashboard. The search box lets researchers type a partial Participant ID and select from autocomplete suggestions, populating the dashboard with a single-Participant cohort."*
 
-2. `### 🔗 **Linked Work**` — Bullet list of every related ticket. Required entries:
-   - **Parent Epic:** CTDC-XXXX — *Epic Name*
-   - **User Story:** CTDC-XXXX — *Story Name* (the story whose AC the design must enable)
-   - **Sibling design task(s):** CTDC-XXXX — *(if any related design work is happening in parallel; cross-link for visual consistency)*
-   - **Upstream design reference:** *(if the feature builds on an upstream package like a Bento component, link to the upstream design source — e.g., the Bento Reference Implementation)*
+2. `### 🔗 **Links**` — Bullet list of reference materials relevant to the design: implementations in other CRDC data commons (e.g., CCDI, ICDC), external websites, documentation, design references, and mockup or image links. Each bullet is a labeled link — say what it is, then give the URL. Wrap any URL containing underscores in backtick monospace so it isn't misread as italics. If there are none at ticket creation, state "None at this time".
 
 3. `### 🎨 **Design Scope**` — Bullet list of surfaces, screens, components, and states the designer is responsible for. Be specific about state coverage — empty / loading / error / success / disabled / hover / focus / active. State coverage is where design tickets most often come back incomplete, so naming it explicitly here protects the deliverable.
 
@@ -52,15 +48,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    At ticket creation time, leave these blank — the designer fills them in. The "Date Completed" field is the trigger for moving the ticket to Ready for Review.
 
-7. `### 🔍 **Open Design Questions**` — Bullet list of decisions the designer needs from the PO, eng lead, or upstream team before completing the design. Each bullet is one question. Resolve these in the ticket comments, not in side conversations, so the audit trail lives with the design. If there are none at ticket creation, state "None at this time" — questions added later become comments, not edits to this section.
-
-8. `### 🤝 **Collaboration & Reviews**` — Bullet list of the review touchpoints required before handoff. The standard CTDC set:
-   - Mid-design checkpoint review with PO and frontend tech lead
-   - Pre-handoff design review with frontend engineer who will implement
-   - Accessibility review with QA before handoff sign-off
-   - Upstream consult with the Bento Core team if upstream package designs need extension *(only when applicable)*
-
-9. `### ✅ **Definition of Done**` — Designer's completion checklist. **Not** the user story's acceptance criteria — those belong on the story. The standard CTDC set:
+7. `### ✅ **Definition of Done**` — Designer's completion checklist. **Not** the user story's acceptance criteria — those belong on the story. The standard CTDC set:
    - [ ] All Figma mockups published in the shared CTDC Figma workspace
    - [ ] Interactive prototype reviewed and approved by PO
    - [ ] Accessibility annotations complete (focus order, ARIA, keyboard nav, screen reader)
@@ -69,30 +57,28 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    - [ ] Figma URL added to the linked user story
    - [ ] Date of completion noted in this ticket (Section 6)
 
-10. `### 📝 **Notes**` — Bullet list. Optional content: prior art references, screenshots of the current state if redesigning, links to upstream Bento designs, terminology translations (e.g., Bento "Case" → CTDC "Participant"), known constraints from previous design rounds. If there's no meaningful note, write "None at this time."
+8. `### 📝 **Notes**` — Bullet list. Optional content: prior art references, screenshots of the current state if redesigning, links to upstream Bento designs, terminology translations (e.g., Bento "Case" → CTDC "Participant"), known constraints from previous design rounds. If there's no meaningful note, write "None at this time."
 
-**Standing emoji set (10 entries)**
+**Standing emoji set (8 entries)**
 
 | Section | Emoji |
 |---|---|
 | Design Summary | 🎯 |
-| Linked Work | 🔗 |
+| Links | 🔗 |
 | Design Scope | 🎨 *(unique to design task)* |
 | Design Deliverables | 📐 *(unique to design task)* |
 | Design System & Standards | 🧩 |
 | Figma File | 🖼️ *(unique to design task)* |
-| Open Design Questions | 🔍 *(unique to design task)* |
-| Collaboration & Reviews | 🤝 *(unique to design task)* |
 | Definition of Done | ✅ |
 | Notes | 📝 |
 
 **Required content rules (Design Task specific — universal rules in 7b-shared also apply)**
 
-- **No Acceptance Criteria section.** AC belongs on the parent user story. The design task has Definition of Done instead — these are different artifacts and should not be conflated. If a designer ever needs to know "what does the system have to do," the answer is *open the linked user story* — that's why Linked Work is the second section.
-- **One design task per user story.** Granularity matches the user story scope. If a single user story has multiple visual surfaces, they all live in one design task. If two user stories share visual surfaces (like the Local Find sidebar), each story gets its own design task and the two are cross-linked under Linked Work for visual consistency.
+- **No Acceptance Criteria section.** AC belongs on the parent user story. The design task has Definition of Done instead — these are different artifacts and should not be conflated. If a designer ever needs to know "what does the system have to do," the answer is *open the linked user story*, reachable directly from the ticket's Jira links (the Epic Link field and the Relates link to the story).
+- **One design task per user story.** Granularity matches the user story scope. If a single user story has multiple visual surfaces, they all live in one design task. If two user stories share visual surfaces (like the Local Find sidebar), each story gets its own design task and the two are cross-linked via a Relates issue link for visual consistency.
 - **Issue type is Task** on this tracker. Confirmed via existing CTDC design tasks (CTDC-2038 Update Design for the Participant Details page; CTDC-2039 Update Design for Explore Dashboard table). Do not use Story or Subtask.
 - **Parent Epic field set on the ticket itself**, not just named in the description. Use `customfield_12350` per Section 10. This makes the design task discoverable from the epic's child issues panel.
-- **Sibling design tasks cross-linked via "Relates" issue link** when two stories share visual surfaces. The Linked Work section names them in prose; the formal Jira issue link makes them navigable from each ticket. See Section 10 for issue link conventions.
+- **Sibling design tasks cross-linked via "Relates" issue link** when two stories share visual surfaces. The formal Jira issue link makes them navigable from each ticket. See Section 10 for issue link conventions.
 - **Figma URL is required before the ticket can move to Ready for Review.** Empty Figma fields after work has visibly progressed are a signal something is wrong — either the design lives elsewhere (a process gap) or the work hasn't actually been done.
 - **Designer is the assignee.** Hannah Stogsdill (`stogsdillhh`) owns CTDC design work. Assign on creation; do not leave unassigned for triage unless the user explicitly requests it.
 - **Curly braces escaped as `\{...\}`** anywhere they appear in description text — same rule as every other Jira description on this tracker.
@@ -105,11 +91,11 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 4. Add a "Relates" issue link between the design task and its parent user story.
 5. If a sibling design task exists for a sibling user story, add a "Relates" link between the two design tasks as well.
 6. Verify the rendered description with a UI screenshot from the user — wiki source is unreliable as a render preview (per 7b-shared).
-7. Add the design task's Jira key to the parent user story's Linked Work section (or Notes section, if the story uses an older template).
+7. Add the design task's Jira key to the parent user story's Notes section (or wherever that story's template captures related links).
 
 **When to expand vs trim**
 
-- **Single-surface design with no parallel siblings** → keep all 10 sections; Open Design Questions and Notes may legitimately be "None at this time" but stay as headers.
+- **Single-surface design with no parallel siblings** → keep all 8 sections; Links and Notes may legitimately be "None at this time" but stay as headers.
 - **Cross-feature design that touches many surfaces** → expand Design Scope and Design Deliverables; consider whether the work is large enough to warrant splitting into multiple design tasks (one per major surface) rather than one mega-task.
 - **Design QA / Final Review style task** (verifying an already-built feature against design) → this template is overkill. Use a free-form Task with a checklist of the QA points to verify, plus a Figma comparison reference.
 - **Pure copy / typography / icon-only change** → this template is overkill. A short Task description with the before/after content and the affected surface is enough.
