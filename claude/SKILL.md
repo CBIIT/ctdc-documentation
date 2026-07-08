@@ -896,7 +896,7 @@ Data management ticket templates live in the component library at **`claude/temp
 | **Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Model changes initiated by the **CTDC project itself** (application roadmap or data team) — the full range from a single additive optional property to a breaking multi-repo refactor. Internally/CTDC-driven; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner). |
 | **Megazip Creation Task** | [`megazip-creation-task-template.md`](./templates/megazip-creation-task-template.md) | All of a study's object files are bundled into one downloadable `.zip`, its GUID minted in-house, and the metadata loaded across all tiers — created once the study's data loading is complete. CTDC-internal artifact creation; no external CRDC submission or CTDS/DCFS handoff. |
 
-**Decision tree** (matches `claude/templates/README.md`):
+**Decision tree** (matches `claude/README.md`):
 
 - *Is new data being loaded into the existing schema?* → **Data Loading Task**
 - *Are the files in the submission still pending IndexD GUID minting via the external CTDS/DCFS team?* (paired with a planned Data Loading Task — the two run in parallel) → **IndexD Registration Task**
@@ -908,7 +908,7 @@ Data management ticket templates live in the component library at **`claude/temp
 
 Every CTDC data submission generates multiple tickets — a user story for the submission as a whole, a modeling ticket for schema additions, eventually a loading ticket, possibly supporting tasks (documentation review, mapping work, anonymization options). The **parent user story carries study identity** (program, study name, dbGaP ID, submitter, chronology, document references, study description). Downstream tickets link back to the parent user story and **do not duplicate study identity** in their descriptions. This pattern is required for Data Modeling tickets (Section 7f of the template); apply it to Data Loading and any other downstream tickets the same way.
 
-See `claude/templates/README.md` for the full library overview, `claude/templates/data-submission-workflow.md` for the internal end-to-end Data Submission Process SOP (the process order and which artifact/template to create at each step), and `claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
+See `claude/README.md` for the full library overview, `claude/workflows/data-submission-workflow.md` for the internal end-to-end Data Submission Process SOP (the process order and which artifact/template to create at each step), and `claude/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
 
 ---
 
@@ -1030,7 +1030,7 @@ The CTDC-1922 (Programs Page) rewrite went through three render-failure debuggin
 
 Seven methodology lessons from the same-day iteration of the Data Modeling for Study Submission template (v1 → v2 → v3) and the retrofit of CTDC-1799 / CTDC-1804 to match the canonical CTDC-2051 / CTDC-1666 pair. Lessons cover template authorship discipline (when canonical examples are upstream of template files, when not to import sections from sibling templates), the "source of truth is a structural rule" principle, the parent-user-story pattern as a CTDC-wide convention, and clean-restore as a valid recovery move when a pattern drifts.
 
-Full record: [`claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md`](./templates/lessons-learned/2026-05-20-data-modeling-templates.md)
+Full record: [`claude/lessons-learned/2026-05-20-data-modeling-templates.md`](./lessons-learned/2026-05-20-data-modeling-templates.md)
 
 The most universal rule from the session, worth keeping in mind on every CTDC drafting task: **The canonical example is upstream of the template. When in doubt, pull the approved example fresh from its source and match it exactly.**
 
