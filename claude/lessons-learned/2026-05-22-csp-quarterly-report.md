@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-22
 **Session:** Drafting the March 2026 – May 2026 CSP
-**Related workflow file:** [`../csp-quarterly-report-workflow.md`](../csp-quarterly-report-workflow.md)
+**Related workflow file:** [`../workflows/csp-quarterly-report-workflow.md`](../workflows/csp-quarterly-report-workflow.md)
 **Related prior CSP:** November 2025 – January 2026 (drafted 2026-03-02)
 
 ---
@@ -190,6 +190,6 @@ The SOW language for Task 1.3 explicitly includes "robust security protocol upda
 
 ## Cross-references
 
-- Workflow file: [`../csp-quarterly-report-workflow.md`](../csp-quarterly-report-workflow.md)
-- Sibling workflow: [`../post-meeting-sprint-recap-workflow.md`](../post-meeting-sprint-recap-workflow.md) — both produce stakeholder artifacts; CSP differs in cadence (quarterly vs per-sprint) and audience (federal vs team)
+- Workflow file: [`../workflows/csp-quarterly-report-workflow.md`](../workflows/csp-quarterly-report-workflow.md)
+- Sibling workflow: [`../workflows/post-meeting-sprint-recap-workflow.md`](../workflows/post-meeting-sprint-recap-workflow.md) — both produce stakeholder artifacts; CSP differs in cadence (quarterly vs per-sprint) and audience (federal vs team)
 - SKILL.md Section 6b — Verify Before You Count
