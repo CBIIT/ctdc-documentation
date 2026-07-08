@@ -9,7 +9,7 @@
 ## What we shipped
 
 1. **`claude/templates/indexd-registration-task-template.md`** (32,405 bytes, 9-section recommended structure) — the first template in the data-management lane that formalizes an *upstream artifact creation* work pattern, distinct from the *end-to-end load* pattern owned by `data-loading-task-template.md`.
-2. **`claude/templates/README.md`** updated — extended the "Two Functions" decision tree, added the new row to the Data management inventory, added the IndexD branch to the "How Claude Should Use This Folder" decision tree, and appended chronology.
+2. **`claude/README.md`** updated — extended the "Two Functions" decision tree, added the new row to the Data management inventory, added the IndexD branch to the "How Claude Should Use This Folder" decision tree, and appended chronology.
 3. **`claude/SKILL.md`** updated — Section 7d (Data Management Templates entry-point) and Section 9a (Template Status Tracker).
 4. **This lessons-learned file.**
 
@@ -104,4 +104,4 @@ This section did real work too. Without it, the template would have buried "exte
 - **External intake board:** `https://tracker.nci.nih.gov/projects/CRINTAKE/`
 - **DCF Google Drive folder for manifest upload:** `https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`
 - **Public IndexD resolution endpoint (verification):** `https://nci-crdc.datacommons.io/index/<guid>`
-- **Prior lessons-learned file (data modeling templates):** `claude/templates/lessons-learned/2026-05-20-data-modeling-templates.md`
+- **Prior lessons-learned file (data modeling templates):** `claude/lessons-learned/2026-05-20-data-modeling-templates.md`
