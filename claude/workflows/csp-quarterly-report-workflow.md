@@ -182,7 +182,7 @@ These are not style preferences; they are **factual integrity** rules. Violating
 - SKILL.md Section 6b — "Verify Before You Count" (the tally-script rule this workflow inherits)
 - SKILL.md Section 12 — Sprint cadence workflows
 - `claude/workflows/post-meeting-sprint-recap-workflow.md` — sibling workflow, also produces stakeholder artifacts; CSP differs in cadence (quarterly vs per-sprint) and audience (federal vs team)
-- `claude/workflows/lessons-learned/2026-05-22-csp-quarterly-report.md` — session lessons from the Mar–May 2026 CSP drafting
+- `claude/lessons-learned/2026-05-22-csp-quarterly-report.md` — session lessons from the Mar–May 2026 CSP drafting
 - Prior CSP `.docx` files in SharePoint (Nov 2025 – Jan 2026; Mar 2026 – May 2026) — the canonical format references
 
 ---
