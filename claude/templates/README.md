@@ -38,6 +38,7 @@ Application pages updating when new data is loaded is the application working as
 | Template | File | Status | Canonical Examples |
 |---|---|---|---|
 | **Design Task** | [`design-task-template.md`](./design-task-template.md) | ✅ Drafted v1 (2026-05-06) | CTDC-2044, CTDC-2045 |
+| **Release Ticket Templates** | [`release-ticket-templates.md`](./release-ticket-templates.md) | ✅ Drafted v1 (2026-07-08) — the three tickets cloned every software release (Final Design QA epic, Stage deploy task, Prod deploy task); house-style bodies, deploy tasks parented to the standing epic CTDC-2007; companion to the Software Release Playbook | Templates CTDC-2135 (FDQA epic), CTDC-2136 (Stage), CTDC-2137 (Prod); live CTDC-2130 / CTDC-2128 / CTDC-2129 |
 
 ### Data management lane
 
