@@ -168,7 +168,7 @@ The TPM is the single authorization pivot; no untested build jumps a tier.
 |---|---|---|
 | **Team Charter** | SharePoint (Build, Deploy & Release Process) | The rules (top authority) |
 | **This playbook** | `claude/templates/software-release-playbook.md` | The runbook (process) |
-| **Release ticket templates** | `claude/templates/release-ticket-templates.md` | Clone-source spec for the recurring release tickets |
+| **Release ticket templates** | `claude/workflows/release-ticket-templates.md` | Clone-source spec for the recurring release tickets |
 | **Release Roadmap deck** | `.pptx`, produced at kickoff | The **schedule**: freeze dates + sprint plan |
 | **Release Dashboard** | Cloned per release from `CTDC_Release_Dashboard_MASTER.xlsx` | The per-release **instrument** |
 | **Per-RC Slack channel** | `#ctdc-<year>-q<N>-release` | RC coordination, build announcements, and **bug reporting/triage while a RC is being prepared** |
