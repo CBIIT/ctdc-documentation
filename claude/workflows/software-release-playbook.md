@@ -72,7 +72,7 @@ In short: **beta = the many internal builds we test on dev/qa; gamma = the one b
 
 ## 🎟️ Canonical Release Tickets (clone each release)
 
-Three Jira tickets recur every release and **must be formatted identically each time**. Each has a canonical **template ticket** in Jira (labeled `template`) — clone it, don't hand-copy. Full spec: [`release-ticket-templates.md`](./release-ticket-templates.md).
+Three Jira tickets recur every release and **must be formatted identically each time**. Each has a canonical **template ticket** in Jira (labeled `template`) — clone it, don't hand-copy. Full spec: [`release-ticket-templates.md`](../templates/release-ticket-templates.md).
 
 | Purpose | Clone from (template) | Type | Summary pattern | Parent / Epic | Default assignee | Label |
 |---|---|---|---|---|---|---|

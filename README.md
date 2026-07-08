@@ -7,7 +7,10 @@ This repository contains documentation, operational guides, and AI workflow know
 | Path | Description |
 |------|-------------|
 | `claude/SKILL.md` | Sprint Command Center skill file — SOPs, JQL recipes, ticket & epic templates, stakeholder doc standards, Slack/deck standards, and operational context for Claude AI workflows |
-| `claude/templates/` | Data-management ticket template component library (data loading, IndexD registration, data modeling) with its own README and lessons-learned records |
+| `claude/README.md` | Component-library index — the ticket-template and workflow-SOP inventories and how to use them |
+| `claude/templates/` | Ticket-template component library — how to format each Jira artifact (design, data submission/modeling/loading/indexing, release tickets) |
+| `claude/workflows/` | Process SOPs and runbooks — what to do per cadence (sprint recap, CSP quarterly report, data submission process, software release playbook) |
+| `claude/lessons-learned/` | Dated methodology notes captured while drafting templates and workflows |
 | `claude/architecture/` | Technical architecture reference `.md` files — the source of truth distilled into leadership `.docx` overviews stored in SharePoint |
 | `epic-summaries/` | Leadership-facing epic summary `.docx` deliverables, versioned per epic, with a Registered Epics index |
 
