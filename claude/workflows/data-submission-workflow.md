@@ -8,6 +8,7 @@
 |---|---|---|
 | Data Submission **User Story** — the umbrella | **7e** | 1 per study submission / version |
 | **Data Modeling** task | **7f** | 1 |
+| **dbGaP Validation** task — consent-group gate before indexing/loading | **7k** | 1 per study submission / version |
 | **IndexD Registration** task | **7g** | 1 |
 | **Data Loading** task | **7h** | 1 per load event |
 | **Megazip** task — only if study files should download as one bundle | **7i** | as needed |
@@ -23,14 +24,16 @@ The User Story title sets the canonical `<Study Name vN>` token; every task reus
 5. **dbGaP IDs in hand** — required gate before the DataHub portal submission can begin.
 6. **Submission created in the Portal** — the Submission ID is assigned (can be months after SRF approval). Submit and release the data.
 7. **Released** — the Release Package lands in the Submission Portal's AWS bucket; hand it off to engineering.
-8. **Indexing** — ▶ **Create the IndexD Registration task (7g).** Carries the `Data-Concierge` label; links `Supports` the story. Runs **in parallel** with loading — link the two with `Relates`, never `Blocks`.
-9. **Loading** — ▶ **Create a Data Loading task (7h).** No label; links `Supports` the story. One Jenkins job per tier: Dev → QA → Stage → Prod. Every later reload is its own new loading task.
-10. **Verify** — confirm the study renders in Production and its files download.
-11. **Megazip** (only if the study's object files should download as one bundle) — once **all** loading is complete, ▶ **create the Megazip task (7i).**
+8. **dbGaP validation** — ▶ **Create the dbGaP Validation task (7k).** Carries the `Data-Concierge` label; links `Supports` the story. Run the established `dbgap_validatation_prod` Prefect deployment (Prefect Cloud `crdc-workspace`, `FNLCRDCPrefectCurators` account) with the CRDC Submission ID as `submission_id` and `check_consent_group` toggled on; attach the results screenshot and resolve any consent-group / ACL mismatches. This **gates** indexing and loading — it `Blocks` both until the validation run is clean.
+9. **Indexing** — ▶ **Create the IndexD Registration task (7g).** Carries the `Data-Concierge` label; links `Supports` the story. Runs **in parallel** with loading — link the two with `Relates`, never `Blocks`.
+10. **Loading** — ▶ **Create a Data Loading task (7h).** No label; links `Supports` the story. One Jenkins job per tier: Dev → QA → Stage → Prod. Every later reload is its own new loading task.
+11. **Verify** — confirm the study renders in Production and its files download.
+12. **Megazip** (only if the study's object files should download as one bundle) — once **all** loading is complete, ▶ **create the Megazip task (7i).**
 
 ## Standing rules
 
 - **Tasks execute; the story deliberates.** Open questions, risks, and handoffs live on the User Story, never on child tasks.
+- **dbGaP validation gates indexing and loading** — the release is not handed to engineering for indexing/loading until the `dbgap_validatation_prod` consent-group check passes; the validation task `Blocks` both (7g, 7h).
 - **Indexing never blocks loading** — they run in parallel (`Relates`).
 - **Reloads are always a new Data Loading task** — never folded into a modeling ticket.
 - **Scope is active data submissions only.** Model changes the CTDC project itself initiates (Data Model Update, 7j) are a different workflow, out of scope here.
