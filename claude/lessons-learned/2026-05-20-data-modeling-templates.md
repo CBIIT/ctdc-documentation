@@ -118,3 +118,18 @@ These seven lessons are mostly about **template authorship discipline** — they
 The most universal of the seven, worth keeping in mind on every CTDC drafting task:
 
 > **The canonical example is upstream of the template. When in doubt, pull the approved example fresh from its source and match it exactly.**
+
+---
+
+## Addendum — 2026-07-20: canonical examples drove a template re-sync (Lessons 1 & 4 in action)
+
+**What happened.** The TPM edited **CTDC-2051** (the 7f canonical example) directly in Jira — renaming the Section 3 review artifact from "ServiceNow Ticket" (filed by the DM Fed Lead) to the **caDSR II Help Desk Request Form** (filed by the Data Concierge, with the DM Federal Lead added as a *watcher* on the caDSR ticket), and expanding **Steps to Completion** from the lean 4-step spine to the fuller workflow the team actually follows (caDSR filing detail with a 1:1 Short-Description-to-Jira-title rule, SI-team curation of the workbook, PR links in comments, move to Ready for QA, and don't-close-until-the-submission-is-complete-in-the-Submission-Portal). Pulling the sibling canonical **CTDC-2068** fresh (per Lesson 4) confirmed the *same* convention had already landed there for internally-driven work, with context-appropriate conditional watcher logic. Both template files (7f v8, 7j v13) were stale against their own canonical examples.
+
+**What we did.** Re-synced the template files to the tickets, not the other way around: **7f → v9**, **7j → v14** (lockstep), plus the two template-table rows in `SKILL.md` and this note. The "caDSR Help Desk" and "ServiceNow" names refer to the same underlying system — caDSR's Help Desk runs on ServiceNow — so the change is a rename-to-how-the-team-refers-to-it plus a genuine ownership shift (Data Concierge files it, not the DM Fed Lead).
+
+**Reinforced lessons.**
+
+- **Lesson 1 held.** The canonical ticket is upstream; when 2051/2068 drifted ahead of the template files, the *files* were the ones that were wrong. We matched the files to the tickets.
+- **Lesson 4 held.** Before touching the sibling template (7j), we pulled its own canonical example (CTDC-2068) fresh rather than assuming 2051's exact edits applied — and it paid off, because 7j's watcher logic is conditional (Fed Lead on the Jira issue when no CDEs/PVs change, on the caDSR ticket when they do) in a way 7f's is not.
+- **A note on the "spine, not a procedure" rule.** The expanded Steps to Completion pushes closer to procedure than the earlier lean spine, but it stays within the "no specifics / no term enumeration" rule — the steps describe the *workflow*, never the *terms*, which still live only in the CDE Request Workbook (Lesson 3 intact).
+- **Still pending:** CTDC-1799 ↔ CTDC-1804 remains the un-retrofitted 7f sibling pair; it should be brought to the v9 shape the next time it's touched.
