@@ -963,6 +963,25 @@ See `claude/README.md` for the full library overview, `claude/workflows/data-sub
 
 Tracks the status of every CTDC ticket template — software-development lane and data-management lane. Each future session that drafts a new template or iterates an existing one fills in that row.
 
+**Canonical Example Index** — the single reference ticket (or pair) each template was built from, at a glance. The `canonical-example` Jira label marks these tickets in the tracker itself; this table and the label are kept in agreement.
+
+| Template | Canonical Jira ticket(s) |
+|---|---|
+| 7a · User Story | CTDC-1691 |
+| 7b-1 · Application Pages Epic | CTDC-2025 |
+| 7b-2 · Microservices Epic | CTDC-1968 |
+| 7b-3 · Features Epic | CTDC-2042 |
+| 7b-4 / 7b-5 / 7b-6 / 7b-7 · Products / Infrastructure / Security / Data Epics | TBD |
+| 7c · Bug Format | n/a |
+| Design Task | CTDC-2044 |
+| 7e · Data Submission User Story | CTDC-1666 *(working instance: CTDC-2110)* |
+| 7f · Data Modeling for Study Submission | CTDC-2051 *(parent user story CTDC-1666)* |
+| 7g · IndexD Registration Task | CTDC-2060 |
+| 7h · Data Loading Task | CTDC-2063 |
+| 7i · Megazip Creation Task | CTDC-2104 |
+| 7j · Data Model Update Task | CTDC-2068 |
+| 7k · dbGaP Validation Task | CTDC-2141 |
+
 **Software development lane**
 
 | Template | Section / File | Status | Canonical Example |
@@ -976,14 +995,14 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Security Epic | Section 7b-6 | 🚧 TBD | TBD |
 | Data Epic | Section 7b-7 | 🚧 TBD | TBD |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
-| Design Task | `claude/templates/design-task-template.md` | ✅ Drafted v2 (2026-07-07) — slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044, CTDC-2045 |
+| Design Task | `claude/templates/design-task-template.md` | ✅ Drafted v2 (2026-07-07) — slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
 
 **Data management lane** — templates live in the component library at `claude/templates/`; see also Section 7d.
 
 | Template | File | Sub-function | Status | Canonical Example |
 |---|---|---|---|---|
 | Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission — parent user story | ✅ Drafted v2 (2026-06-16) — Data Concierge POV; 6-section shape (Study Submission Details · POC Requirements · Submission Lifecycle · Submission Chronology · Study Description · Data Details); Submission Lifecycle outline coordinating linked modeling/indexing/loading at summary altitude; consolidated Study Submission Details (SRF, Submission ID, DHDM rows; single SharePoint Folder; no AWS bucket); aggregate-only Data Details; `Data Submission: <Study Name vN>` title convention reused verbatim by downstream tasks | CTDC-1666 (canonical); CTDC-2110 (CMB v6, working instance) |
-| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v8 (2026-06-11) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); v8 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to 7g | CMB load (CTDC-1753 lineage); AHEP0731 load (CTDC-2063) |
+| Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v8 (2026-06-11) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); v8 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to 7g | AHEP0731 load (CTDC-2063) |
 | IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v7 (2026-06-11) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label; v6 slimmed the task to 4 sections (one-sentence Registration Summary; Pre-registration + External handoff workflow only — the Confirmation-and-verification phase folded into the Verification section; no Notes section), building on the v5 Submission & Artifacts table that mirrors the Data Loading Task; v7 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change | CTDC-2060 (AHEP0731 Images-Only — canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
 | Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v10 (2026-07-21) — 5-section shape (Modeling Summary · CDE Request Workbook · DM Federal Lead & SME Review · Steps to Completion · Verification Surfaces); re-synced to finalized CTDC-2051 (labeled `canonical-example`): Section 3 row 3 is the **caDSR II Help Desk Request Form** (owner: Data Concierge), replacing the earlier "ServiceNow Ticket / DM Fed Lead"; conditional watcher rule (DM Fed Lead watches the caDSR ticket when one is filed, the CTDC Jira ticket only when none is required; both TPMs added to the caDSR ticket); Steps to Completion expanded to the 11-step canonical workflow (TPM verification gate, multiple caDSR tickets per node, SI curation, Slack #data-modeling PR review, QA send-back); milestone tracker — no specifics, no counts | CTDC-2051 ↔ CTDC-1666 (canonical, drove v10); CTDC-1799 ↔ CTDC-1804 (pending retrofit to v10) |
 | Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — internally / CTDC-driven | ✅ Drafted v14 (2026-07-20) — all internally-driven model changes, any SemVer level (additive through breaking); 5-section shape identical to 7f (v10); re-synced to finalized CTDC-2068 in lockstep with 7f: Section 3 row 3 is now the **caDSR II Help Desk Request Form** (owner: Data Concierge), replacing "ServiceNow Ticket / DM Fed Lead"; Steps to Completion expanded to the fuller canonical workflow with conditional watcher logic (DM Fed Lead added on the Jira issue when no CDEs/PVs change, on the caDSR ticket when they do); milestone tracker — no specifics, no counts; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner); DM Federal Lead & SME Review (caDSR II Help Desk Request Form + DHDM Jira Issue) gates prod | CTDC-2068 (Program curation properties — canonical pilot) |
