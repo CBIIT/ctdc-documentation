@@ -1,6 +1,6 @@
 ### 7d. 🎨 Design Task Template (Drafted)
 
-> **Use this template for every CTDC design task.** The canonical examples are **CTDC-2044 (Design — Local Find single-ID autocomplete)** and **CTDC-2045 (Design — Local Find multi-ID Input Set modal)** — both drafted 2026-05-06 as the first applications of this template, parented to epic CTDC-2042 and linked to user stories CTDC-2043 and CTDC-1691 respectively. Future design work should follow the same shape.
+> **Use this template for every CTDC design task.** The canonical example is **CTDC-2044 (Design — Local Find single-ID autocomplete)** — drafted 2026-05-06 as the first application of this template, parented to epic CTDC-2042 and linked to user story CTDC-2043. (Its sibling CTDC-2045, the multi-ID Input Set modal design, was drafted the same day and follows the same shape, but CTDC-2044 is the single canonical reference.) Future design work should follow the same shape.
 
 **Why this template**
 
