@@ -870,7 +870,7 @@ When drafting this template, expected sections likely emphasize the data model d
 
 ---
 
-### 7d. 📚 Data Management Templates (Component Library)
+### 📚 Data Management Templates (Component Library)
 
 Data management ticket templates live in the component library at **`claude/templates/`**, not inline in this SKILL.md. The component library is the canonical location; this section is the entry-point pointer.
 
@@ -973,7 +973,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | 7b-3 · Features Epic | CTDC-2042 |
 | 7b-4 / 7b-5 / 7b-6 / 7b-7 · Products / Infrastructure / Security / Data Epics | TBD |
 | 7c · Bug Format | n/a |
-| Design Task | CTDC-2044 |
+| 7d · Design Task | CTDC-2044 |
 | 7e · Data Submission User Story | CTDC-1666 *(working instance: CTDC-2110)* |
 | 7f · Data Modeling for Study Submission | CTDC-2051 *(parent user story CTDC-1666)* |
 | 7g · IndexD Registration Task | CTDC-2060 |
@@ -995,9 +995,9 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Security Epic | Section 7b-6 | 🚧 TBD | TBD |
 | Data Epic | Section 7b-7 | 🚧 TBD | TBD |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
-| Design Task | `claude/templates/design-task-template.md` | ✅ Drafted v2 (2026-07-07) — slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
+| Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v2 (2026-07-07) — slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
 
-**Data management lane** — templates live in the component library at `claude/templates/`; see also Section 7d.
+**Data management lane** — templates live in the component library at `claude/templates/`; see also the Data Management Templates (Component Library) section.
 
 | Template | File | Sub-function | Status | Canonical Example |
 |---|---|---|---|---|
