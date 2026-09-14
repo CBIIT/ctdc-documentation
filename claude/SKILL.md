@@ -396,7 +396,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 2. `### 👤 **User Story**`: The classic As-a / I-want / So-that, written as flowing prose. One paragraph, not three bullet lines. Example: *"As an end user with a known list of Participant IDs relevant to my research, I want to paste or upload that list directly into CTDC so that I can seed a cohort without having to rebuild it from scratch using filters."*
 
-3. `### 🗺️ **Scope**`: Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as 7b-1 (Application Pages epics) but trimmed. Out of Scope items describe the excluded work in words; do not cite the Jira key of the story or epic that covers it (add a `Relates` link instead).
+3. `### 🗺️ **Scope**`: Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as the 7b epic template. Out of Scope items describe the excluded work in words; do not cite the Jira key of the story or epic that covers it (add a `Relates` link instead).
 
 4. `### ✅ **Acceptance Criteria**`: Two sub-blocks, mirroring the epic AC pattern:
    - **Functional**: Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `**bold**` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
@@ -447,40 +447,63 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Story is a pure documentation update or copy change with no code path** → Testing Requirements may legitimately be light (manual QA only, no Unit or Integration sub-blocks needed). State so explicitly with "None at this time" under the empty sub-blocks rather than dropping them.
 - **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the Bug Format pattern adapted for spikes, or write a free-form Task description with explicit "deliverables" rather than "acceptance criteria."
 
-### 7b. 🏛️ Epic Templates by Grouping
+### 7b. 🏛️ Epic Template (Lean v2)
 
-CTDC epics fall into seven groupings, each with its own template tuned to that grouping's actual concerns. Section **7b-shared** holds the universal rules that apply to **every** template. Sections **7b-1** through **7b-7** hold the per-grouping templates. Two templates are currently drafted (7b-1 Application Pages and 7b-3 Features); the other five are stubs to be drafted in focused sessions with a real CTDC example epic in hand.
+> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security, data). The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
+>
+> **v2 (2026-09-14): one five-section template replaces the per-grouping templates.** The v1 templates (7b-1 Application Pages at 15 sections, 7b-2 Microservices at 20, 7b-3 Features at 18, and the 7b-4 through 7b-7 stubs) produced 3,000-word epic bodies that nobody read in Jira. Per Gina's direction the standard is now what the Agile Alliance actually prescribes: an epic is "a large user story that cannot be delivered as defined within a single iteration," and "there is no standard form to represent epics" beyond the user-story format or a short phrase. Everything the v1 templates carried beyond that (Upstream Provenance, Surface Area, Stakeholders, Key Definitions, Composition, Dependencies, Assumptions, Constraints, Risks, User Impact, Components Breakdown, Documentation & Compliance) now lives in one of three places: a child story, a Jira comment, or the leadership `.docx` epic summary (Section 5). The seven groupings survive only as a classification aid for deciding what to verify before drafting (see 7b-shared, "Verification & ground truth"); they no longer select a template.
 
-**The seven groupings:**
+**Why this template**
 
-1. **Application Pages** (7b-1) — User-facing pages and surfaces in the CTDC web application (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details).
-2. **Microservices** (7b-2) — Backend services with their own API contract, deployment, and lifecycle (e.g., the file service, the authn service, the backend GraphQL service).
-3. **Features** (7b-3) — Cross-cutting capabilities that span multiple pages or services (e.g., Local Find, file download flows, manifest export, search).
-4. **Products** (7b-4) — Standalone deliverables consumed by external systems or end users (e.g., the megazip artifact, the CTDC application as a whole).
-5. **Infrastructure** (7b-5) — Deployment, CI/CD, environments, cloud topology, observability (e.g., Jenkins migration, environment provisioning).
-6. **Security** (7b-6) — Authn / authz / audit / compliance / vulnerability response (e.g., RAS-enabled file download, session timeout configuration, audit log gaps).
-7. **Data** (7b-7) — Data model, ingestion, releases, indexes (e.g., CMB v5 release, Memgraph schema changes, OpenSearch index updates).
+An epic is a container over its child stories, not a design document. The body needs to do four things: say who wants what and why, describe the mechanism in one breath, draw the scope line, and state how we know it is done. Anything longer either duplicates the children or goes stale. The target is **under 600 words**; if content does not fit, it belongs in a child story, a comment, or the epic summary `.docx`.
 
-**When an epic could fit more than one grouping**, choose by **primary engineering ownership**:
-- Backend Engineering → Microservices
-- DevOps / Platform → Infrastructure
-- Federal InfoSec / FedRAMP → Security
-- Data Engineering / Stewards → Data
-- Frontend Engineering → Application Pages or Features (Application Pages if it scopes a single page; Features if it spans many)
+**Section order (5 sections, exactly this sequence)**
 
-If the choice still isn't clear, default to the grouping whose template most closely matches the epic's actual content. The grouping label is a navigation aid for stakeholders, not a gatekeeping classification.
+Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header.
 
-**Feature vs Product disambiguation when an upstream package is involved.** This is a recurring decision because CTDC consumes several upstream Bento Core npm packages (`@bento-core/local-find`, `@bento-core/cart`, `@bento-core/authentication`, `@bento-core/header`, `@bento-core/footer`, `@bento-core/facet-filter`, `@bento-core/paginated-table`, and others). The decision rule:
+1. `### 🎯 **Epic Statement**`: The classic As a / I want / So that, written as one flowing paragraph. Name the user role, the capability, and the outcome. Example (CTDC-1802): *"As a cancer researcher who has gathered files in the CTDC Cart, I want to export them directly into a project on the Seven Bridges Cancer Genomics Cloud so that I can analyze CTDC data in the cloud without downloading files to my own machine or hand-building a manifest."*
+2. `### 🧬 **Description**`: Two short paragraphs. (a) How it works: the surface(s) it lives on with the route, the services and data stores involved (Memgraph, never Neo4j; OpenSearch when relevant), and where authorization is enforced. (b) What this epic's phase delivers (design, frontend, backend, DevOps, defect fixes) and the release it shipped in or targets. Ground (a) in the canonical repo and the live UI, not in ticket titles.
+3. `### 🗺️ **Scope**`: Two sub-blocks, **In Scope** and **Out of Scope**, about five bullets each. Out of Scope names adjacent or excluded work in prose (never by ticket key) and ends with the bullet that future enhancements will be scoped as a new phase epic.
+4. `### ✅ **Acceptance Criteria**`: A numbered list of five to eight items, each a single observable behavior QA can pass or fail on Dev, QA, Stage, and Prod. The quality bar (WCAG 2.1 AA, design system conformance, automated test coverage for user-facing work; contract stability, test coverage, observability, and cross-environment parity for backend work) is one item, not a sub-block.
+5. `### 📝 **Notes**`: Two or three bullets at most: the phase statement (complete and the release it shipped in, or what closes it), and the canonical repos with branch. An upstream Bento package goes here when one is involved. Nothing else.
 
-- If CTDC consumes an upstream package built by another team (e.g., the Bento Core team) and CTDC's work is **integrating, adapting, and operating** that capability within CTDC, the CTDC epic is a **Feature** epic. Document the upstream origin in the dedicated `📦 Upstream Provenance` section of the Features template (7b-3). The upstream team may have a Product epic in their own project tracking the package itself; that is not CTDC's concern.
-- Reserve **Product** epics (7b-4) for cases where CTDC is the primary builder of a deliverable consumed by external systems (e.g., the megazip artifact, the CTDC application as a whole as a deliverable to NCI, manifest format spec as a versioned product).
-- The **audience for CTDC's epic** is CTDC's engineering team and CTDC's stakeholders — not the upstream maintainers. That audience perspective is what makes Local Find a Feature, not a Product, in CTDC's Jira project.
+**Standing emoji set (5 entries)**
+
+| Section | Emoji |
+|---|---|
+| Epic Statement | 🎯 |
+| Description | 🧬 |
+| Scope | 🗺️ |
+| Acceptance Criteria | ✅ |
+| Notes | 📝 |
+
+**Required content rules (universal rules in 7b-shared also apply)**
+
+- **Under 600 words.** Count before pushing. CTDC-1802 is 559.
+- **No ticket keys in the body** (7b-shared, "Cross-ticket references"). Related work is named in prose; Jira links are for parent/child only.
+- **Grounded before drafting.** Verify the live UI with Playwright for anything user-facing, and read the canonical repo (confirmed via `CBIIT/crdc-ctdc-starter-kit/.gitmodules`, Section 17) for the mechanism in the Description. The child tickets' summaries are not a substitute.
+- **Memgraph, never Neo4j; OpenSearch named when relevant; FAIR stated where it falls naturally** (usually the Epic Statement's "so that").
+- **Underscored identifiers in backticks** (`drs_uri`, `REACT_APP_INTEROP_SERVICE_URL`) so the wiki converter renders them as monospace instead of opening italic spans.
+- **Curly braces escaped as `\{...\}`** anywhere they appear.
+- **Not evergreen.** The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
+
+**Writing-and-publishing workflow**
+
+1. **Verify** the hosting surface (Playwright) and the canonical repo before drafting.
+2. **Draft** all 5 sections in Markdown, applying the rules above. Check the word count.
+3. **Push** via `jira_update_issue` with the `description` field (for a new epic, `jira_create_issue` with a one-line placeholder first, then update). Set `priority` to Major in the same call; never touch `labels` unless deliberately changing them.
+4. **Verify the render with a UI screenshot** from the user; wiki source is not a render preview.
+5. **Close the epic** (transition `Close`, resolution `Completed`) with a short comment naming the release once every child ticket is Closed.
+
+**Migration of v1 epics**
+
+Existing epics written to the v1 templates (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details, Local Find, Bento Data Retriever, Data Integration, Internal Data Modeling, and others) are left as-is until each is next edited, then condensed to v2. No sweep. When condensing, move anything worth keeping into the epic summary `.docx` or a comment before cutting it from the body.
 
 ---
 
 #### 7b-shared. Universal Epic Conventions
 
-These rules apply to **every** epic template, regardless of grouping. Each per-grouping section (7b-1 through 7b-7) inherits these without restating them.
+These rules apply to every CTDC epic. The lean template in 7b-lean inherits them without restating them.
 
 **Authorship & affiliation**
 - Preparer: Gina Kuffel, Senior Technical Project Manager
@@ -507,8 +530,7 @@ These rules apply to **every** epic template, regardless of grouping. Each per-g
 - This supersedes the earlier "cross-epic linkage" rule that asked Out of Scope, Dependencies, and Notes to cite sibling epic keys. Epics written before 2026-09-14 still carry inline keys; strip them the next time each one is edited rather than in a sweep.
 
 **Quality bar**
-- WCAG 2.1 AA accessibility, design system conformance, performance baselines under realistic data volumes, and automated test coverage appear as Performance & Quality acceptance criteria in every user-facing epic.
-- For non-user-facing epics (microservices, infrastructure, security, data), the equivalent quality bar is named in that grouping's template.
+- User-facing epics fold WCAG 2.1 AA, design system conformance, and automated test coverage into a single Acceptance Criteria item. Backend or infrastructure epics use the equivalent service bar (contract stability, test coverage, observability, secrets handling, cross-environment parity) in one item. The bar is stated once, not expanded into its own section.
 
 **Verification & ground truth**
 - **For Application Pages and Features:** verify the live UI with Playwright (`browser_navigate` + `browser_snapshot`) before drafting. Ground In Scope claims in what the page actually renders.
@@ -532,7 +554,7 @@ These rules apply to **every** epic template, regardless of grouping. Each per-g
 - Section headers: `### {emoji} **{Title}**` (h3, emoji + bold).
 - Bullets are flush-left; no indented `-` bullets with bold labels.
 - Use `**bold**` for emphasis (matched delimiters).
-- **Glossary entries are flush-left bullets with matched-asterisk bold: `- **Term:**` (matched `**...**`), not `  - **Term:*` (indented, mismatched `**...:*`).** The MCP's Markdown→Jira-wiki converter reads the six-space indent as a level-two bullet and the mismatched closing single asterisk as italic-underline, producing broken garbage in the rendered Key Definitions section. The flush-left, matched-asterisk pattern is the canonical authoring form for every glossary entry across every grouping (7b-1 through 7b-7) and for User Story Notes glossaries. Verified on CTDC-1922, 2026-05-11. Some older epics (e.g., CTDC-2040) use the broken pattern — treat that as a known inconsistency, not a template you should copy.
+- **Glossary entries are flush-left bullets with matched-asterisk bold: `- **Term:**` (matched `**...**`), not `  - **Term:*` (indented, mismatched `**...:*`).** The MCP's Markdown→Jira-wiki converter reads the six-space indent as a level-two bullet and the mismatched closing single asterisk as italic-underline, producing broken garbage in the rendered Key Definitions section. The flush-left, matched-asterisk pattern is the canonical authoring form for any glossary-style bullet in a Jira body (the lean epic template has no glossary section; this applies to stories and comments that use one). Verified on CTDC-1922, 2026-05-11. Some older epics (e.g., CTDC-2040) use the broken pattern — treat that as a known inconsistency, not a template you should copy.
 - Inline route templates: plain text without backticks, but **escape every curly brace as `\{` and `\}`** (e.g., `#/study/\{study_code\}`). See "MCP write notes" below for why this is required. Backticks are fine for single-token names like `participantById` or `customfield_12350`.
 - **Curly-brace rule (universal).** Anywhere curly braces appear in description text — URLs with path parameters, scope items naming a variable, acceptance criteria, glossary entries, notes, anywhere — escape them with backslashes: `\{program_short_name\}`, not `{program_short_name}`. The only exception is text inside a fenced code block, where the renderer treats content as literal. The Markdown source you author with backslash-escapes will round-trip into Jira-wiki as `\{...\}` and render in the UI as literal `{...}` with no parser-state corruption.
 
@@ -562,9 +584,9 @@ This was the verified root cause of the CTDC-2040 (Program Details Page) render 
 - **Plus signs (`+`) get silently mangled.** The wiki renderer interprets `+` as inserted-text markup. A comment that says "Memgraph + OpenSearch" will render as "Memgraph  OpenSearch" with the `+` stripped. **Fix:** use plain English connectives like "and" or "plus" in comment bodies, or escape with a backslash if the literal `+` is essential. Verified on CTDC-1658 closure comment, 2026-05-06.
 - **Curly braces have the same macro-syntax issue as descriptions.** Apply the same `\{...\}` escaping rule.
 
-**Risk format**
+**Risk format (when a risk table is needed at all)**
 
-Risks render as a three-column **table**, not a bullet list. Across the data-related epics, the table format reads better than prose-style "Risk: / Mitigation:" bullets — it gives the eye a clean three-column scan and looks more polished in stakeholder-facing rendering. Per-grouping templates may define their own risk format if their content genuinely needs prose, but the default is the table.
+The lean epic template (7b-lean) has no Risks section: risks belong in the `.docx` epic summary (Section 5) or in a comment. When a table is needed anywhere in a Jira body, it renders as a three-column **table**, not a bullet list.
 
 **Format (Jira wiki table syntax — passes through Markdown unchanged):**
 
@@ -576,268 +598,6 @@ Risks render as a three-column **table**, not a bullet list. Across the data-rel
 ```
 
 **Why Jira-wiki tables in a Markdown document?** The MCP's Markdown→Jira-wiki conversion does not handle GitHub-flavored Markdown tables (`| h | h |` / `|---|---|`) reliably for this MCP server's converter. Jira-wiki table syntax (`||h||` for headers and `|c|` for cells) passes through the converter unchanged and lands as a native Jira table. This is the one intentional exception to the "always author in Markdown" rule above. Verified on CTDC-1960, 2026-04-30 — the risk table was the only section that rendered correctly across all three pushes regardless of the surrounding Markdown/Jira-wiki confusion.
-
----
-
-#### 7b-1. 🏛️ Application Pages (Drafted)
-
-> **Use this template for every epic that scopes a CTDC application page or major user-facing surface.** The canonical examples are Home (CTDC-2025), Programs (CTDC-1922), Explore Dashboard (CTDC-1803), Study (CTDC-1645), Study Details (CTDC-1650), Participant Details (CTDC-1644), Cart (CTDC-1074), Static Pages (CTDC-1015), and Program Details (CTDC-2040).
-
-**Why this template**
-
-These epics scope the delivery of a page or surface. Each one is Open while its child work is in flight and is Closed (resolution `Completed`) once that work has shipped; later enhancements to the same page are scoped as a new phase epic (see 7b-shared, "Epic posture defaults"). The structure makes them readable to engineers, PMs, and federal stakeholders without a Jira learning curve, and the section emojis act as visual anchors when scanning a long description.
-
-**Section order (15 sections, exactly this sequence)**
-
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header — that absence is itself a signal.
-
-1. `### 🎯 **Epic Summary**` — One paragraph: what the epic delivers, the live URL, who consumes it, and a closing sentence that states what this epic's phase covers (e.g., initial delivery, a named enhancement phase) and that later work will be scoped as a new phase epic.
-2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific page/surface does, what data it surfaces, and where the data comes from (Memgraph + OpenSearch).
-3. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the page must achieve.
-4. `### 🗺️ **Scope**` — Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. In Scope items must be verifiable against the live page (use Playwright to ground claims). Out of Scope items name the excluded work in prose (e.g., *"Cart manifest creation and download"*), never by ticket key (see 7b-shared, "Cross-ticket references").
-5. `### 👥 **Stakeholders**` — Bullet list of the standard stakeholder set: Product Owner, Senior TPM (FNL/BACS), NCI/CBIIT Federal Program Leadership, UX/UI Designer, Frontend Engineering Team (ESI), Backend/API Engineering Team (ESI), Data Engineering Team, Data Stewards, QA/Testers. Adjust only if a role is genuinely irrelevant.
-6. `### 📖 **Key Definitions / Concepts**` — Glossary of terms specific to the page or surface. Always include **Memgraph** with the parenthetical *"replaces the historical Neo4j references"* and **OpenSearch** when either is involved.
-7. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered list) and **Performance & Quality** (numbered list). Functional criteria must be verifiable on Dev/QA/Stage/Prod. Performance & Quality must include WCAG 2.1 AA, design system conformance, performance baselines under realistic data volumes, and automated test coverage.
-8. `### 🔗 **Dependencies**` — Bullet list of upstream systems, services, and related capabilities (named in prose, not by key) this page relies on. Always name Memgraph + OpenSearch when the page reads CTDC graph data, and the relevant GraphQL resolver families.
-9. `### 💭 **Assumptions**` — Bullet list of working assumptions (data model evolves backward-compatibly, content ownership, throughput envelope, etc.).
-10. `### 🚧 **Constraints**` — Bullet list of non-negotiables: security/privacy/Section 508, controlled-access protections, performance under growth, external link freshness if applicable.
-11. `### ⚠️ **Risks & Mitigations**` — Three-column table per the universal "Risk format" convention in 7b-shared. Columns: Risk | Impact | Mitigation. Cover at least: data drift, performance regression, scope creep from data-model changes, and surface-specific risks (link rot, session-state regression, etc.).
-12. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the page back to CTDC's FAIR mission and the researcher's actual experience. This is the section that survives in stakeholder summaries.
-13. `### 🧩 **Components / Features Breakdown**` — Four sub-blocks, each with a bold sub-heading and bullet list: **UI Components**, **Backend / Data**, **Integration**, **Testing**.
-14. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment, accessibility conformance review cadence, and any cross-epic integration documentation requirements.
-15. `### 📝 **Notes**` — Bullet list. Always include: (a) the phase statement: what this epic delivered (or is delivering), that it closes when its child work is done, and that follow-on work goes to a new phase epic, (b) the related application pages named in prose (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details) as relevant, without ticket keys, and (c) any stack-wide dependency named in prose (e.g., the RAS-enabled file download initiative) when relevant.
-
-**Standing emoji set (use these, not substitutes)**
-
-| Section | Emoji | Section | Emoji |
-|---|---|---|---|
-| Epic Summary | 🎯 | Dependencies | 🔗 |
-| Context & Background | 🧬 | Assumptions | 💭 |
-| Goal / Objectives | 🏁 | Constraints | 🚧 |
-| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
-| Stakeholders | 👥 | User Impact | 🌟 |
-| Key Definitions | 📖 | Components Breakdown | 🧩 |
-| Acceptance Criteria | ✅ | Documentation & Compliance | 📋 |
-| | | Notes | 📝 |
-
-**Required content rules (Application Pages specific — universal rules in 7b-shared also apply)**
-
-- **Live URL named in Epic Summary.** Use the production URL (e.g., `https://clinical.datacommons.cancer.gov/#/studies`). For pages that don't yet exist in production, state explicitly that the page is forward-looking and note what entry point the page will have when delivered.
-- **Live UI verified before drafting.** Use Playwright (`browser_navigate` + `browser_snapshot`) on the production URL. If the route 404s because the page is forward-looking, verify the *adjacent* page that will provide the entry point (e.g., the Explore Dashboard's Participants tab for a future Participant Details page) and explicitly note the future-state stance in the epic.
-- **No ticket keys in the body.** Out of Scope, Dependencies, and Notes name related pages and initiatives in prose only (see 7b-shared, "Cross-ticket references").
-- **WCAG 2.1 AA + design system + performance baselines + automated tests** appear in Performance & Quality, every time.
-- **Curly braces escaped as `\{...\}`** anywhere they appear in description text. URLs with path parameters, scope items naming a variable, acceptance criteria — all of them. See 7b-shared "Markdown conventions" and "MCP write notes."
-- **Glossary entries (Key Definitions / Concepts) are flush-left bullets with matched-asterisk bold: `- **Term:**`** — not the indented `  - **Term:*` pattern with mismatched closing asterisk. The latter pattern appears in some older epics (CTDC-2040 among them) but renders as broken italic-underline garbage on the production Jira UI. See 7b-shared "Markdown conventions." Verified on CTDC-1922, 2026-05-11.
-- **Risks render as a three-column Jira-wiki table per 7b-shared "Risk format" (`||Risk||Impact||Mitigation||`), NOT as a bullet list.** Some canonical examples for this grouping (e.g., CTDC-2040) currently use a bullet list with mismatched-asterisk bold — treat that as a known inconsistency and follow the 7b-shared rule for any new or rewritten Application Pages epic. The table form gives the reader a clean three-column scan and avoids the mismatched-asterisk rendering bug. Verified on CTDC-1922, 2026-05-11.
-
-**Writing-and-publishing workflow**
-
-1. **Verify the live page** with Playwright before drafting. Note the actual route, headers, tabs, widgets, table columns, and external links.
-2. **Draft the description** in Markdown with all 15 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule.
-3. **Push the description via the MCP** (`jira_update_issue` with the `description` field).
-4. **Set non-description fields via the MCP** in the same call: `priority` to Major, plus any other fields you intend to set. Never include `labels` unless deliberately changing them.
-5. **Verify the rendered description with a UI screenshot** from the user. The wiki source is unreliable as a render preview.
-6. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — that's the most likely cause. If the source is clean and the render is still broken, fall back to UI paste.
-7. **Close the epic** (transition `Close`, resolution `Completed`) once every child ticket is Closed, with a short closing comment. Do not leave delivered epics Open.
-
----
-
-#### 7b-2. 🛠️ Microservices (Drafted)
-
-> **Use this template for every epic that scopes a CTDC backend microservice** — a service with its own deployment lifecycle, configuration, and contract, owned as a discrete operational unit rather than as a page (7b-1) or a cross-cutting frontend capability (7b-3). The canonical example is **CTDC-1968 (CTDC Bento Data Retriever Service)** — drafted 2026-05-29 as the model for this grouping. Future candidates: the file service (`crdc-ctdc-files`), the authn service (`crdc-ctdc-authn`), the backend GraphQL service (`crdc-ctdc-backend`), and the Interop service (`crdc-ctdc-interoperation`).
-
-**Why this template**
-
-Microservices are **discrete backend services** — they have their own deployment topology, their own configuration and secrets, their own operational lifecycle, and a contract with their consumers that is not a rendered UI. Like Application Pages and Features epics, a microservice epic scopes one phase of work (typically the initial stand-up) and is Closed with resolution `Completed` when that work ships; later configuration changes, contract additions, or operational work are scoped as a new phase epic (see 7b-shared, "Epic posture defaults"). The structure inherits the 7b-shared backbone and most of the 7b-1/7b-3 sections, but differs in four places that capture concerns a page or a frontend feature simply does not have:
-
-1. **Service Interface & API Contract** replaces the single-URL / Surface Area framing — a service is defined by what it consumes and what it exposes, and (critically for CTDC) the "contract" is often an OpenSearch document shape or a GraphQL schema slice rather than an HTTP endpoint.
-2. **Service Boundaries & Interactions** is the microservice analog of 7b-3's Composition — the highest-leverage section for a service, naming what the service owns versus the adjacent services it must *not* absorb (CTDC's Interop/Data-Retriever decouple is the textbook case).
-3. **Deployment Topology & Environments** is first-class — runtime (ECS/container), per-environment configuration and secrets, and scheduling/triggering behavior are core to a service in a way they never are for a page.
-4. **Observability & Operations** is first-class — health, structured logging, alerting, external-dependency availability, and (for scheduled services) silent-failure monitoring are part of the deliverable, not an afterthought.
-
-**Section order (20 sections, exactly this sequence)**
-
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header.
-
-1. `### 🎯 **Epic Summary**` — One paragraph: what the service delivers, what it consumes and exposes (not a single URL), who consumes it, and a closing sentence stating what this epic's phase covers and that later work goes to a new phase epic.
-2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific service does, what need it serves, how it sits in the stack, and what data stores it reads/writes (OpenSearch and/or Memgraph — *replaces the historical Neo4j references* — named explicitly).
-3. `### 📦 **Upstream Provenance**` — Origin and ownership story. Same three-part shape as 7b-3: (a) who built the service and where the code lives, (b) bug-fix routing — which seam goes to CTDC config/deployment vs. the upstream engine repo, (c) project-history note. For services that are entirely CTDC-original, state that explicitly and make this a single paragraph naming CTDC as the sole owner.
-4. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the service must achieve.
-5. `### 🔌 **Service Interface & API Contract**` — The microservice analog of Surface Area. Three sub-parts: **Inputs the service consumes** (external/internal sources, with the entity/match key when relevant), **Output the service produces** (the consumer-facing contract — name it precisely: HTTP API, GraphQL schema slice, *or* the OpenSearch document shape the frontend reads), and **Operational interface** (how it is invoked — request/response service, CLI, scheduled job — with the relevant flags/endpoints). Be explicit when the consumer reads a data store rather than calling the service directly: in that case the **document shape is the contract** that must stay versioned and back-compatible.
-6. `### 🧭 **Service Boundaries & Interactions**` — Bullet list. What the service owns, and the explicit negative-space boundaries against adjacent services that look related but are not this service's responsibility. Each boundary names the adjacent service in prose (never by ticket key). Always end with the hard "does not" list (does not authenticate, does not mint GUIDs, does not touch the graph, etc.) — this is the section that stops responsibility creep.
-7. `### 🗺️ **Scope**` — **Three sub-blocks** (same as 7b-3): **In Scope**, **Out of Scope**, **Adjacent Services (Not This Service)**. Out of Scope items name the excluded work in prose. Adjacent Services names services that look similar but are different, by service name and repo when one exists, never by ticket key. Engine/upstream changes belong in Out of Scope when the service is instanced from an upstream engine.
-8. `### 🌐 **Deployment Topology & Environments**` — Bullet list: environments (Dev/QA/Stage/Prod), runtime (container/ECS, persistent vs. scheduled), scheduling/triggering behavior, configuration and secrets handling (env-var injection, never committed), and a **"Current deployment state"** line stating what is provisioned vs. not-yet (verified against `.gitmodules`/deployed config on a specific date).
-9. `### 👥 **Stakeholders**` — Standard set, tuned for a backend service: Product Owner, Senior TPM (FNL/BACS), NCI/CBIIT Federal Program Leadership, Backend/API Engineering (ESI), DevOps/Platform (ESI), Data Engineering, Frontend Engineering (as downstream consumer when applicable), QA/Testers, plus any upstream engine maintainers.
-10. `### 📖 **Key Definitions / Concepts**` — Glossary specific to the service. Always include **OpenSearch** and/or **Memgraph** (with the *"replaces the historical Neo4j references"* parenthetical) when either is involved, plus service-specific terms (modes, output structures, source types, runtime platform).
-11. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered, verifiable on each environment) and a **Service Quality Bar** (numbered — the non-user-facing analog of Performance & Quality). The Service Quality Bar replaces WCAG/design-system items with: contract stability/back-compatibility, automated test coverage (unit + integration/contract), observability in place, service-to-service security (secrets, least-privilege), performance under realistic volume, and cross-environment parity.
-12. `### 📈 **Observability & Operations**` — Bullet list: run status & logging, completion/failure alerting, external-dependency availability handling, scheduled-job monitoring (silent-failure detection for non-request-driven services), and retry/failure semantics that protect existing data on a failed run.
-13. `### 🔗 **Dependencies**` — Bullet list: the upstream engine repo (with branch), external APIs, the data store(s) it reads/writes (name the index/schema location in `crdc-ctdc-backend` when relevant), DevOps/ECS, the consuming page or feature (named in prose), and the starter-kit meta-repo when the service touches multiple components.
-14. `### 💭 **Assumptions**` — Bullet list: external-API stability, match-key sufficiency, config-only (no engine change) where applicable, data-volume envelope, acceptable refresh cadence.
-15. `### 🚧 **Constraints**` — Bullet list of non-negotiables: service-to-service security/secrets, external-dependency availability, cross-environment parity, data freshness, and the engine/config ownership boundary.
-16. `### ⚠️ **Risks & Mitigations**` — Three-column Jira-wiki table per the universal "Risk format" convention. Cover at least: external-dependency change/outage, wrong storage/contract target, stale data from missed runs, config drift across environments, upstream engine breaking change, and boundary/scope re-coupling.
-17. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the service back to CTDC's FAIR mission and the researcher's actual experience — even for a backend service, name the experience the end user ultimately feels (the page/feature this service powers).
-18. `### 🧩 **Components / Service Breakdown**` — **Five sub-blocks**, each a bold sub-heading + bullets: **Service / API**, **Data Fetch & Integration** (or the service's core processing concern), **Storage & Persistence** (name the store; this is where a resolved storage-target decision lives), **Deployment / Infra**, **Testing**.
-19. `### 📋 **Documentation & Compliance**` — Bullet list: operations runbook, config reference, consumer-contract documentation, data-dictionary alignment for stored data, and security review cadence.
-20. `### 📝 **Notes**` — Bullet list. Always include: (a) the phase statement (what this epic delivered, that it closes when child work is done, and that follow-on work goes to a new phase epic), (b) any resolved decision that was previously an open question (with a pointer to where the evidence lives), (c) the upstream engine and the CTDC-owns-config-only note when applicable, (d) closed predecessor tickets compressed to one sentence each, (e) related services and the consuming page or feature named in prose without ticket keys, (f) the canonical-repo reminder.
-
-**Standing emoji set (18 entries — 7b-1 backbone, the 📦 addition shared with 7b-3, plus three microservice-specific 🔌 🧭 📈)**
-
-| Section | Emoji | Section | Emoji |
-|---|---|---|---|
-| Epic Summary | 🎯 | Key Definitions | 📖 |
-| Context & Background | 🧬 | Acceptance Criteria | ✅ |
-| Upstream Provenance | 📦 *(shared w/ 7b-3)* | Observability & Operations | 📈 *(new)* |
-| Goal / Objectives | 🏁 | Dependencies | 🔗 |
-| Service Interface & API Contract | 🔌 *(new)* | Assumptions | 💭 |
-| Service Boundaries & Interactions | 🧭 *(new)* | Constraints | 🚧 |
-| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
-| Deployment Topology & Environments | 🌐 | User Impact | 🌟 |
-| Stakeholders | 👥 | Components / Service Breakdown | 🧩 |
-| | | Documentation & Compliance | 📋 |
-| | | Notes | 📝 |
-
-**Required content rules (Microservices specific — universal rules in 7b-shared also apply)**
-
-- **The contract is named precisely in Service Interface.** A CTDC microservice's consumer-facing contract is frequently *not* an HTTP API — it is an OpenSearch document shape or a GraphQL schema slice the frontend reads. State which it is. When the consumer reads a store rather than calling the service, say so explicitly and treat the **document/index shape as the versioned contract**.
-- **Service Boundaries populated with negative space.** Naming the adjacent services the service must NOT absorb is the highest-leverage section for a microservice epic (CTDC's Interop ↔ Data-Retriever decouple is the canonical case). Always include the hard "does not" list.
-- **Deployment Topology verified before drafting.** Confirm environments, runtime (ECS/container), and scheduling against deployed config — and whether a CTDC instance/repo exists yet (check the starter-kit `.gitmodules`). State the "Current deployment state" with a verification date.
-- **Verify against the source repo, not imagination.** Per 7b-shared "Verification & ground truth," read the actual engine/service repo (README, project structure, writers/fetchers) before describing the interface, components, or storage target. Confirm the canonical repo via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` first; an upstream engine repo (e.g., `crdc-icdc-data-retriever`) may legitimately not be pinned in the CTDC starter-kit if CTDC only instances it via config.
-- **Storage/contract target is resolved with evidence, not left vague.** If the source epic carried an "OpenSearch vs Memgraph" style open question, resolve it by reading the code (which writer exists?) and citing precedent tickets — record the resolution and its evidence in Components → Storage & Persistence and in Notes. Do not invent a closure; ground it.
-- **Service Quality Bar, not WCAG.** User-facing P&Q items (WCAG, design system) do not apply to a backend service. Replace them with contract stability, test coverage, observability, service-to-service security, performance under realistic volume, and cross-environment parity. (When the service *is* directly user-facing, fold in the relevant user-facing items as well.)
-- **Memgraph never Neo4j; OpenSearch named explicitly; FAIR mission stated** — per 7b-shared. Even a backend service ties back to FAIR in User Impact via the surface it powers.
-- **Curly braces escaped as `\{...\}`** anywhere they appear — including env-var substitution syntax like `$\{VAR:-fallback\}`, which is common in service configs and will otherwise corrupt the render.
-
-**Writing-and-publishing workflow**
-
-1. **Verify the canonical repo first** via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` (Section 17). Then **read the actual service/engine repo** — README, project structure, the writer/fetcher/config modules — so the Interface, Components, and storage-target claims are grounded, not inferred.
-2. **Confirm deployment topology and current state** — environments, runtime, scheduling, and whether a CTDC instance exists yet. Note the verification date.
-3. **Resolve any storage/contract open question** by reading the code (which writers/schemas exist) and citing precedent tickets; record the resolution with evidence.
-4. **Draft the description** in Markdown with all 20 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule (watch for `$\{...\}` config syntax).
-5. **Push the description via the MCP** in two steps: `jira_create_issue` with a placeholder description, then immediately `jira_update_issue` with the full Markdown body (for an existing epic, a single `jira_update_issue` is fine). Set `priority` to Major and `customfield_12351` (Epic Name) as needed. Never include `labels` unless deliberately changing them.
-6. **Verify the rendered description with a UI screenshot** from the user. Wiki source is unreliable as a render preview.
-7. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — most likely the `$\{...\}` config syntax. If the source is clean and the render is still broken, fall back to UI paste.
-8. **Update the 9a Template Status Tracker** row for Microservices when a new one is added, and **close the epic** (transition `Close`, resolution `Completed`) once every child ticket is Closed.
-
----
-
-#### 7b-3. 🔄 Features (Drafted)
-
-> **Use this template for every epic that scopes a CTDC cross-cutting capability** — a feature that lives on multiple surfaces or spans multiple services, owned end-to-end as a single capability rather than as page-specific or service-specific work. The canonical example is **CTDC-2042 (CTDC Local Find — Participant)**. Future candidates: file download flows that span Explore + Cart + Participant Details, manifest export integration with downstream tools, global header search, and similar cross-cutting capabilities consumed across multiple Application Pages.
-
-**Why this template**
-
-Features are **cross-cutting capabilities** — they live on multiple pages, often call multiple services, and compose with other features. Like Application Pages epics, a feature epic scopes one phase of work (typically the initial delivery) and is Closed with resolution `Completed` when that work ships; later enhancements, integrations, or hardening are scoped as a new phase epic (see 7b-shared, "Epic posture defaults"). The canonical closed example is CTDC-1802 (Export to the Cancer Genomics Cloud), closed 2026-09-14. The structure differs from Application Pages in five places:
-
-1. **Surface Area** replaces the single-URL framing — features live on many pages, not one
-2. **Upstream Provenance** is first-class — many CTDC features are built on Bento Core npm packages, and that provenance shapes scope, bug-fix routing, and version pinning
-3. **Verification** is multi-surface plus code-level — Playwright on every hosting surface, plus code-level verification of the cross-cutting wiring (Redux state, GraphQL filter composition, etc.)
-4. **Adjacent Capabilities** under Scope distinguishes the feature from features that look similar but are different — the highest-leverage section for stopping scope creep
-5. **Composition** is first-class — features compose with other features (intersection, additive, exclusion) and that composition needs explicit rules
-
-**Section order (18 sections, exactly this sequence)**
-
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly (e.g., "None at this time") rather than dropping the header.
-
-1. `### 🎯 **Epic Summary**` — One paragraph: what the feature delivers, the surfaces it lives on (not a single URL), who consumes it, and a closing sentence stating what this epic's phase covers (e.g., initial delivery, released in a named version) and that later work goes to a new phase epic.
-2. `### 🧬 **Context & Background**` — Two paragraphs: (a) what CTDC is and its FAIR mission within CRDC, (b) what this specific feature does, what user need it serves, where it integrates into the user journey, and how it's implemented at a high level (Bento Framework foundation if applicable, Memgraph + OpenSearch backing if applicable).
-3. `### 📦 **Upstream Provenance**` — Origin and ownership story for the feature. Three required sub-paragraphs when an upstream package is involved: (a) who built the capability and where it's delivered as a package, (b) bug-fix routing — which seam goes to CTDC integration code vs. upstream package code, (c) any project-history note (e.g., "this targets the post-2023-reboot codebase, not the historical X"). For features that are entirely CTDC-original (no upstream package), state that explicitly and make the section a single paragraph naming CTDC as the sole owner.
-4. `### 🏁 **Goal / Objectives**` — Bullet list of 3–5 concrete objectives the feature must achieve.
-5. `### 🗺️ **Scope**` — **Three sub-blocks** (one more than 7b-1): **In Scope**, **Out of Scope**, **Adjacent Capabilities (Not This Feature)**. The third sub-block names features that look similar but are different (e.g., for Local Find: "Global header search," "Cart selection," "Manifest export"); each adjacent capability is named in prose, never by ticket key.
-6. `### 🌐 **Surface Area**` — Bullet list of every page/route that hosts the feature, with the entry point on each. Plus a "Current deployment state" paragraph naming what's wired vs. what's not yet rendered (verified against the live system on a specific date).
-7. `### 👥 **Stakeholders**` — Same standard set as 7b-1, with the addition of any upstream team (e.g., "Bento Core Team" for features built on `@bento-core/*` packages).
-8. `### 📖 **Key Definitions / Concepts**` — Glossary of terms specific to this feature. Always include **Memgraph** (with the parenthetical *"replaces the historical Neo4j references"*) and **OpenSearch** when either is involved.
-9. `### ✅ **Success Metrics / Acceptance Criteria**` — Two sub-blocks: **Functional** (numbered list, verifiable on every hosting surface across Dev/QA/Stage/Prod) and **Performance & Quality** (numbered list including WCAG 2.1 AA, design system conformance, performance baselines, and automated test coverage on every hosting surface).
-10. `### 🧱 **Composition**` — Bullet list. Every feature composes with at least one other feature or composes with itself across surfaces. Make the composition rules explicit: which features it intersects with, unions with, or excludes. Each composition rule is one bullet with a one-sentence explanation. Always end with the negative-space rules ("Does not compose with X") that prevent scope creep.
-11. `### 🔗 **Dependencies**` — Bullet list of upstream systems, services, related capabilities (named in prose, not by key), and pages this feature is hosted on. Always name Memgraph + OpenSearch when the feature reads CTDC graph data; name relevant GraphQL resolver families; name the Bento Framework package if the feature is built on one (e.g., `@bento-core/local-find`); name the canonical starter-kit meta-repo (`CBIIT/crdc-ctdc-starter-kit`) if the feature touches multiple components.
-12. `### 💭 **Assumptions**` — Bullet list of working assumptions (index parity, package API stability, data volume envelope, etc.).
-13. `### 🚧 **Constraints**` — Bullet list of non-negotiables: security/privacy/Section 508, controlled-access protections, performance under growth, **cross-surface consistency** (the feature must behave identically on every surface that hosts it).
-14. `### ⚠️ **Risks & Mitigations**` — Three-column table per the universal "Risk format" convention. Cover at least: data drift, performance regression at scale, cross-surface inconsistency, scope creep from adjacent capabilities, upstream package breaking changes (if applicable), and feature-specific risks.
-15. `### 🌟 **User Impact**` — Single short paragraph (3–5 sentences) tying the feature back to CTDC's FAIR mission and the researcher's actual experience.
-16. `### 🧩 **Components / Features Breakdown**` — **Five sub-blocks** (one more than 7b-1): **UI Components** (every component on every hosting surface), **State Management** (Redux slices, reducer wiring, persistence behavior), **Backend / Data** (resolvers, OpenSearch indexes, GraphQL schema fields), **Integration** (how the feature wires into hosting surfaces and composes with other features), **Testing** (test coverage strategy across surfaces).
-17. `### 📋 **Documentation & Compliance**` — Bullet list: user-facing help content, data dictionary alignment if data-model fields are involved, accessibility conformance review cadence, and cross-surface integration documentation requirements.
-18. `### 📝 **Notes**` — Bullet list. Always include: (a) the phase statement: what this epic delivered, that it is complete (or closes when its child work is done), and that follow-on work goes to a new phase epic, (b) related features and the hosting pages named in prose without ticket keys, (c) any Bento Framework package the feature builds on, (d) the Bento parent epic if applicable, (e) closed predecessor epics (compressed to one sentence; longer historical context belongs in 📦 Upstream Provenance, not Notes).
-
-**Standing emoji set (16 entries — same as 7b-1 plus three additions)**
-
-| Section | Emoji | Section | Emoji |
-|---|---|---|---|
-| Epic Summary | 🎯 | Composition | 🧱 *(new vs 7b-1)* |
-| Context & Background | 🧬 | Dependencies | 🔗 |
-| Upstream Provenance | 📦 *(new vs 7b-1)* | Assumptions | 💭 |
-| Goal / Objectives | 🏁 | Constraints | 🚧 |
-| Scope | 🗺️ | Risks & Mitigations | ⚠️ |
-| Surface Area | 🌐 *(new vs 7b-1)* | User Impact | 🌟 |
-| Stakeholders | 👥 | Components Breakdown | 🧩 |
-| Key Definitions | 📖 | Documentation & Compliance | 📋 |
-| Acceptance Criteria | ✅ | Notes | 📝 |
-
-**Required content rules (Features specific — universal rules in 7b-shared also apply)**
-
-- **Surface Area named in Epic Summary** — list the hosting pages/routes, not a single URL.
-- **Every hosting surface verified before drafting** — use Playwright (`browser_navigate` + `browser_snapshot`) on every page that hosts the feature. If the feature has UI components (search box, modal, query bar chip), each component is verified on each surface where it appears.
-- **Code-level verification of cross-cutting wiring** — for features that span FE + BE, verify the integration code as well: Redux store registration, reducer wiring, controller-level filter composition, GraphQL schema field definitions, OpenSearch index mappings.
-- **Verify the canonical repo before reading code.** Per 7b-shared "Verification & ground truth," confirm via `CBIIT/crdc-ctdc-starter-kit/.gitmodules` that the repo you're reading is the project-canonical one, not a historical/abandoned variant. See Section 17.
-- **Upstream Provenance populated** — every feature epic states whether the capability is upstream-built (and which package), CTDC-original, or hybrid. Bug-fix routing is explicitly named.
-- **Adjacent Capabilities sub-block populated** — naming the features that look similar but are different is the single highest-leverage section for stopping scope creep.
-- **Composition section populated** — every feature composes with at least one other feature (facet filtering, cart, manifest export) or composes with itself across surfaces. Make the composition rules explicit, including the negative-space rules.
-- **No ticket keys in the body** — Out of Scope, Adjacent Capabilities, Dependencies, and Notes name related features, hosting pages, and initiatives in prose only (see 7b-shared, "Cross-ticket references").
-- **WCAG 2.1 AA + design system + performance baselines + automated tests on every surface** appear in Performance & Quality.
-- **Curly braces escaped as `\{...\}`** anywhere they appear.
-
-**Writing-and-publishing workflow**
-
-1. **Verify every hosting surface** with Playwright before drafting. Note the actual entry points on each page, the components that appear on each surface, and any cross-surface state. If the feature is forward-looking (UI not yet rendered), state that explicitly in Surface Area's "Current deployment state" paragraph.
-2. **Verify cross-cutting wiring at the code level** in the canonical starter-kit-pinned repos. Check Redux store, reducers, controllers, GraphQL schema, OpenSearch indexes, and any Bento package imports. Do not assume the recently-updated repo is the canonical one — confirm via `.gitmodules`.
-3. **Draft the description** in Markdown with all 18 sections in order, applying the section emojis and content rules above. Apply the universal Markdown conventions from 7b-shared, including the curly-brace escaping rule.
-4. **Push the description via the MCP** in two steps: first `jira_create_issue` with a placeholder description (the `description` field is required at create time on this tracker — a one-line placeholder is fine), then immediately `jira_update_issue` with the full Markdown description. This separates the create-time validation pass from the wiki-conversion pass and produces the cleanest render.
-5. **Set non-description fields via the MCP** in the update call: `priority` to Major, `customfield_12351` (Epic Name) to the epic title, plus any labels you intend to carry over. Never include `labels` unless deliberately changing them.
-6. **Verify the rendered description with a UI screenshot** from the user. The wiki source is unreliable as a render preview.
-7. **If rendering is broken**, first re-check the Markdown source for any unescaped `{...}` — that's the most likely cause. If the source is clean and the render is still broken, fall back to UI paste.
-8. **Close the epic** (transition `Close`, resolution `Completed`) once every child ticket is Closed, with a short closing comment naming the release the feature shipped in.
-
-**Closed-predecessor cleanup pattern**
-
-When a new Features epic supersedes one or more older epics that are no longer coherent (terminology drift, architectural drift, abandoned codebase), the cleanup pattern is:
-
-1. Create the new epic and verify its render before touching predecessors.
-2. Re-parent any still-active child stories to the new epic via `customfield_12350` (Epic Link).
-3. Close stale child tickets (e.g., test stories authored against an abandoned codebase) with `Won't Fix` resolution and a comment pointing to the new epic and the active replacement story.
-4. Close predecessor epics with a comment that explicitly names: the new epic key, the architectural/terminology drift that justified the close, and a statement that closed children remain parented to the predecessor as historical record. This avoids losing 2022-era bug-fix history while keeping the active scope coherent.
-5. Verified pattern from CTDC-2042 (Local Find) creation 2026-05-06: predecessors CTDC-722 and CTDC-761 closed; stale test stories CTDC-826/827/828 closed; CTDC-1658 closed as Duplicate; active story CTDC-1691 re-parented.
-
----
-
-#### 7b-4. 📦 Products (Stub — Template TBD)
-
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC product epic as the model. Candidate examples: the megazip ZIP artifact (CTDC-1924 / CTDC-1926 lineage), the CTDC application as a whole, manifest format spec as a versioned product. Until this template is drafted, product epics should follow the 7b-shared universal conventions.
-
-When drafting this template, expected sections likely emphasize the product contract with external consumers, versioning policy, backward compatibility, the consumer support obligation, and the difference between product evolution and product maintenance.
-
-**Note on Feature vs Product disambiguation:** Features that consume an upstream package (e.g., Local Find consuming `@bento-core/local-find`) are 7b-3 Features in CTDC's Jira project, not 7b-4 Products. The upstream team's perspective on the package is irrelevant to CTDC's classification. See the disambiguation paragraph in Section 7b above.
-
----
-
-#### 7b-5. 🚧 Infrastructure (Stub — Template TBD)
-
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC infrastructure epic as the model. Candidate examples: Jenkins migration work, environment provisioning, deployment topology changes, observability rollouts. Until this template is drafted, infrastructure epics should follow the 7b-shared universal conventions.
-
-When drafting this template, expected sections likely emphasize environments (Dev/QA/Stage/Prod), deployment pipelines, runtime topology, observability/alerting, rollback strategy, and the difference between landed infrastructure and ongoing infrastructure operations.
-
----
-
-#### 7b-6. 🔒 Security (Stub — Template TBD)
-
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC security epic as the model. Candidate examples: RAS-enabled file download (CTDC-1764), session timeout configuration, audit log gap remediation, FedRAMP control implementations. Until this template is drafted, security epics should follow the 7b-shared universal conventions.
-
-When drafting this template, expected sections likely emphasize threat model, authn/authz boundaries, audit logging requirements, controlled-access protections, compliance citations (NIST, FedRAMP, Section 508), and verification through penetration testing or compliance review.
-
----
-
-#### 7b-7. 🧬 Data (Stub — Template TBD)
-
-> **Template not yet defined.** To be drafted in a focused session with a real CTDC data epic as the model. Candidate examples: CMB v5 release (CTDC-1753), Memgraph schema changes, OpenSearch index updates, data dictionary additions. Until this template is drafted, data epics should follow the 7b-shared universal conventions.
-
-When drafting this template, expected sections likely emphasize the data model delta, ingestion path, validation against the data dictionary, downstream consumer impact (which pages/features rely on the data), release cadence, and the difference between data releases and software releases (which CTDC tracks separately).
 
 ---
 
@@ -962,7 +722,7 @@ See `claude/README.md` for the full library overview, `claude/workflows/data-sub
 - When a new epic summary is published, update the **Registered Epics** table in `epic-summaries/README.md`
 - When a new architecture leadership `.docx` is published, note it in Section 5f and update the source `.md` header if applicable
 - Update the team roster (Section 8) when team membership changes; confirm Slack IDs and Jira account keys when a new member is added
-- When a per-grouping epic template (7b-1 through 7b-7) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here AND consider a normalization pass across all existing epics in that grouping so they stay consistent
+- When the epic template (7b) evolves — new sections, emoji changes, content rules, or new gotchas — update the template here; existing epics are condensed as they are next edited, never in a sweep
 - When a new active CTDC repo is added to (or an old one removed from) the starter-kit `.gitmodules` file, update Section 17 to keep the canonical-repo list in sync
 
 ### 9a. Template Status Tracker
@@ -974,10 +734,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Template | Canonical Jira ticket(s) |
 |---|---|
 | 7a · User Story | CTDC-1691 |
-| 7b-1 · Application Pages Epic | CTDC-2025 |
-| 7b-2 · Microservices Epic | CTDC-1968 |
-| 7b-3 · Features Epic | CTDC-2042 |
-| 7b-4 / 7b-5 / 7b-6 / 7b-7 · Products / Infrastructure / Security / Data Epics | TBD |
+| 7b · Epic (lean v2, all groupings) | CTDC-1802 |
 | 7c · Bug Format | n/a |
 | 7d · Design Task | CTDC-2044 |
 | DO-STORY · Data Submission User Story | CTDC-1666 *(working instance: CTDC-2110)* |
@@ -993,13 +750,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
 | User Story | Section 7a | ✅ Drafted v2 (2026-09-04) — slimmed from 7 to 5 sections; removed Parent Epic & Context and Notes (now carried by the Epic Link field, native Jira links, and comments); aligned with ICDC's `user-story-template.md` (canonical ICDC-4244) | CTDC-1691 (Upload Participant Set, child of CTDC-2042 — still carries the v1 7-section body; new stories use v2) |
-| Application Pages Epic | Section 7b-1 | ✅ Drafted v1 | CTDC-2025 (Home — gold standard) |
-| Microservices Epic | Section 7b-2 | ✅ Drafted v1 (2026-05-29) | CTDC-1968 (CTDC Bento Data Retriever Service) |
-| Features Epic | Section 7b-3 | ✅ Drafted v1 | CTDC-2042 (Local Find — Participant) |
-| Products Epic | Section 7b-4 | 🚧 TBD | TBD |
-| Infrastructure Epic | Section 7b-5 | 🚧 TBD | TBD |
-| Security Epic | Section 7b-6 | 🚧 TBD | TBD |
-| Data Epic | Section 7b-7 | 🚧 TBD | TBD |
+| Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). v1 epics are condensed as next edited | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v3 (2026-09-04): no Jira ticket keys in the body (Links holds external references only), colons instead of em dashes in labeled bullets. v2 (2026-07-07) slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
 
@@ -1080,7 +831,8 @@ Method notes worth repeating:
 
 - **Ground the description in code, not ticket titles.** The child ticket summaries said "Export to CGC button" and "Redirection to SBG-CGC"; the actual mechanism (frontend builds a DRS-URI manifest from `filesInList`, posts it to the Interoperation service, which writes to S3 and returns a CloudFront signed URL, then the browser opens CGC's DRS CSV import-redirect) only became clear from `crdc-ctdc-ui` and `crdc-ctdc-interoperation`. That mechanism is what explains why a DevOps secrets ticket and a "manifest imported but files did not" bug both belong to the same epic.
 - **Wrap underscored identifiers in backticks in prose** (`drs_uri`, `SIGNED_URL_EXPIRY_SECONDS`, `REACT_APP_INTEROP_SERVICE_URL`). The Markdown-to-wiki converter turns them into `{{monospace}}`, which sidesteps the bare-underscore italic-span hazard.
-- **Code review surfaces risks the tickets never mention.** The Interoperation endpoint's error path returns a "signed URL" built from an error string instead of a 4xx/5xx, so the frontend can open CGC with a broken URL. That went into the risk table; a fix would be a bug under a new phase epic, not the closed one.
+- **Code review surfaces risks the tickets never mention.** The Interoperation endpoint's error path returns a "signed URL" built from an error string instead of a 4xx/5xx, so the frontend can open CGC with a broken URL. That was recorded in the first (long-form) draft's risk table and is preserved in the ticket history; a fix would be a bug under a new phase epic, not the closed one.
+- **The long-form templates were retired the same day.** The first CTDC-1802 draft followed the 18-section Features template and came out at 3,424 words. Gina's reaction ("it is sooooo long") led to the v2 lean template in 7b: the same epic at 559 words and five sections, which is what the Agile Alliance definition of an epic actually calls for. Lesson: template length should be set by who reads the ticket in Jira, not by how much is knowable about the feature. Depth belongs in the `.docx` epic summary.
 
 ---
 
