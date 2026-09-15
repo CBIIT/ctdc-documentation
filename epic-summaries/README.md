@@ -2,6 +2,18 @@
 
 This folder contains **leadership and stakeholder summary documents** for significant CTDC epics. These documents are produced when a Jira epic is too technical or too granular to share directly with NCI leadership, program officers, or external stakeholders.
 
+## 🧭 When a Summary Is Written
+
+Summaries are written **on request, for an audience outside the engineering team**, not as a mirror of Jira. Most epics never get one, and that is the expected state. The rule:
+
+| Epic type | Summary? | What it contains |
+|---|---|---|
+| Feature epic that leadership or an external partner needs to understand | Yes, when asked | All template sections, including a point-in-time Work Breakdown and Progress Summary, versioned at milestones |
+| Evergreen epic (Internal Data Modeling, Submission Data Modeling, Data Integration, and similar standing containers) | Only if leadership needs the purpose and scope explained | The stable sections only: Executive Summary, Scope & Objectives, Glossary, Diagrams. No Work Breakdown or Progress Summary; a **Current Status** section points at Jira and the engineering dashboard as the live source |
+| Everything else | No | Jira is the record |
+
+The reasoning: Executive Summary, Scope, and Glossary change only when scope changes, which is exactly when a new major `.docx` version is warranted. Work Breakdown and Progress are Jira snapshots that go stale within a sprint, which is acceptable for a feature epic that closes in a few months and misleading for an evergreen container. Keeping evergreen summaries to the stable sections means they are re-versioned rarely and never disagree with Jira.
+
 ---
 
 ## 📋 Epic Summaries Index
