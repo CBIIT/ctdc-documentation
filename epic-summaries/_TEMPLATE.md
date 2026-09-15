@@ -2,6 +2,8 @@
 
 > **Usage:** Copy this file into the appropriate `CTDC-XXXX-short-name/` subfolder. Fill in all `{{PLACEHOLDER}}` values. Claude uses this template to generate the `.docx` output.
 
+> **Two variants.** A **feature epic** summary uses every section below. An **evergreen epic** summary (a standing container such as Internal Data Modeling, Submission Data Modeling, or Data Integration) uses only the stable sections: keep 1 (Cover), 2 (Executive Summary), 3 (Scope & Objectives), the Glossary, 7 (Diagrams & Visuals), and Document History; **omit 4 (Work Breakdown), 5 (Progress Summary), 6 (Risks & Blockers), and 8 (Next Steps)**, and add the short **Current Status** section (4a below) in their place, pointing at Jira and the CTDC engineering dashboard as the live source. See `README.md`, "When a Summary Is Written," for the rule and the reasoning.
+
 ---
 
 ## METADATA (not printed — for version tracking)
@@ -80,6 +82,12 @@ Jira Link:      https://tracker.nci.nih.gov/browse/{{JIRA_EPIC_KEY}}
 | Ticket | Issue | Impact | Mitigation |
 |---|---|---|---|
 | {{KEY}} | {{RISK_DESC}} | {{IMPACT}} | {{MITIGATION}} |
+
+---
+
+## 4a. CURRENT STATUS (evergreen epics only; replaces sections 4, 5, 6, and 8)
+
+This is an evergreen epic, so this document does not carry a point-in-time work breakdown or progress figures; they would be out of date within a sprint. Current child tasks, their status, and story points are always available in Jira under epic {{JIRA_EPIC_KEY}}, and at the summary level on the CTDC engineering dashboard.
 
 ---
 

@@ -123,10 +123,10 @@ All documents in this folder follow these standards:
 ## 🤖 How Claude Generates These Docs
 
 1. Pull the epic and all child tickets from Jira using `jira_search` with JQL
-2. Populate the `_TEMPLATE.md` content fields and commit to GitHub as `CTDC-XXXX-summary.md`
+2. Populate the `_TEMPLATE.md` content fields (feature epics: all sections; evergreen epics: stable sections plus Current Status, per "When a Summary Is Written" above) and commit to GitHub as `CTDC-XXXX-summary.md`
 3. Generate a `.docx` using the `docx` npm package (US Letter, Arial, NCI/FNL branding)
 4. Validate the `.docx`
-5. Commit `.docx` to the appropriate `CTDC-XXXX-short-name/` subfolder
+5. Commit `.docx` to the appropriate `CTDC-XXXX-short-name/` subfolder **with plain git from a local clone**: the GitHub MCP connector stores binary files as base64 text, which produces an unreadable `.docx`
 6. Upload `.docx` to SharePoint → **CTDC Epic Summaries** folder
 7. Update this README's index table and Registered Epics table
 
