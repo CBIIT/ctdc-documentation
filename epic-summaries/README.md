@@ -9,6 +9,8 @@ This folder contains **leadership and stakeholder summary documents** for signif
 | Epic Key | Epic Name | Date Added |
 |---|---|---|
 | [CTDC-1764](CTDC-1764-ras-object-file-download/) | Bento Core: RAS-Enabled Object File Download | April 6, 2026 |
+| [CTDC-1801](CTDC-1801-internal-data-modeling/) | CTDC Internal Data Modeling | September 15, 2026 |
+| [CTDC-2217](CTDC-2217-submission-data-modeling/) | CTDC Submission Data Modeling | September 15, 2026 |
 
 ---
 
@@ -123,3 +125,5 @@ All documents in this folder follow these standards:
 | Epic Key | Name | Folder | `.md` Source | Latest `.docx` |
 |---|---|---|---|---|
 | CTDC-1764 | Bento Core: RAS-Enabled Object File Download | `CTDC-1764-ras-object-file-download/` | `CTDC-1764-summary.md` | v1.0 (April 6, 2026) |
+| CTDC-1801 | CTDC Internal Data Modeling | `CTDC-1801-internal-data-modeling/` | `CTDC-1801-summary.md` | v1.0 (September 15, 2026) |
+| CTDC-2217 | CTDC Submission Data Modeling | `CTDC-2217-submission-data-modeling/` | `CTDC-2217-summary.md` | v1.0 (September 15, 2026) |
