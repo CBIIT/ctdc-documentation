@@ -1,4 +1,4 @@
-### DO-DBGAP. 🧬 dbGaP Validation Task Template (v1)
+### DO-DBGAP. 🧬 dbGaP Validation Task Template (v2)
 
 > **Use this template for every CTDC data management task that validates a released study submission against dbGaP before it is indexed or loaded: running the established `dbgap_validatation_prod` Prefect deployment to confirm the submission's consent group / ACL values reconcile with the consent groups registered in dbGaP.** The canonical example is **CTDC-2141** (*dbGaP Validation: <Study Name vN>*), drafted 2026-07-09 as the first ticket of this pattern. This template covers a node in the data-submission workflow that sits **after the study is released in the CRDC Submission Portal (workflow step 7) and before the paired IndexD Registration (Section DO-INDEX) and Data Loading (Section DO-LOAD) tasks run**: a consent-group gate. It is **not** the IndexD registration that mints file GUIDs (DO-INDEX), and **not** the load that promotes the submission through Jenkins (DO-LOAD); it is the validation that gates both. See "When NOT to use this template" at the end.
 
@@ -18,7 +18,7 @@ The validation is **internal automation, not an external handoff and not a Jenki
 - **`check_consent_group` parameter**: the boolean toggle that turns on consent group / ACL reconciliation against dbGaP. **Always toggled on** for this gate; it is the check the whole task exists to run.
 - **Release Package**: the per-release directory in the CTDC metadata S3 bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`), created when the study is released from the CRDC Submission Portal. Holds the metadata loading TSVs and the `indexd.tsv` manifest whose `acl` column carries each file's consent group.
 - **dbGaP accession (phsXXXXXX)**: the study's registration in dbGaP; defines the authorized consent groups the released package's ACLs must match. It lives on the parent submission user story; the validation task repeats it only as the validation anchor.
-- **Paired downstream tasks**: the **IndexD Registration Task (DO-INDEX)** and the **Data Loading Task (DO-LOAD)**. This validation gates both: a failing run holds the handoff to engineering.
+- **Paired downstream tasks**: the **IndexD Registration Task (DO-INDEX)** and the **Data Loading Task (DO-LOAD)**. This validation is the consent-group gate for both as a matter of process: a failing run holds the handoff to engineering. In Jira the three tasks are linked with `Relates`, not `Blocks` (see Required content rules).
 
 **Section order (4 sections, exactly this sequence)**
 
@@ -74,16 +74,16 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **No Open Questions / Risks section.** Open questions and risks live on the parent submission user story, not on this Task.
 - **One Task per released submission / version.** Reuse the `<Study Name vN>` token; a reload under a new release is its own new validation task, paired with its own loading task.
 - **Issue type is Task** on this tracker, matching CTDC-2141. Do not use Story or Subtask.
-- **Title convention:** `dbGaP Validation: <Study Name vN>`: reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section DO-STORY) verbatim.
+- **Title convention:** `PREFECT dbGaP Validation: <Study Name vN>`: reuse the exact `<Study Name vN>` token from the parent Data Submission user story title (Section DO-STORY) verbatim (for example, `PREFECT dbGaP Validation: NCTN - AREN0532`, CTDC-2218).
 - **Parent Epic field set via `customfield_12350`.** Default parent is CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
 - **`Data-Concierge` label is mandatory.** The validation is performed by the Data Concierge, so the task carries the `Data-Concierge` label, set at creation via the `labels` field: the same posture as the IndexD Registration (Index) task.
 - **Leave the ticket Unassigned at creation** per standing team convention. Data management tasks do not require the Developer field.
 - **`Relates` link to the parent submission user story is mandatory** (set via `jira_create_issue_link` after creation), and to the study-specific Data Hub tracker (DHDM-XXX) when one exists. The user story is the canonical record of study identity and the home for open questions / risks.
-- **`Blocks` links to the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks.** This validation is a true upstream gate: indexing and loading should not proceed until the consent-group check passes, so it **blocks** both. This is the one intentional exception to the team's usual "prefer `Relates`" posture: that posture governs the IndexD-to-Loading pair, which run in parallel with each other; it does not govern this gate. Pass the validation task as the blocking (inward) issue. If the downstream tasks do not exist yet at validation-ticket creation time, add the `Blocks` links as soon as they do.
+- **`Relates` links to the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks, never `Blocks`.** The team's standing posture is that data-operations tasks in a submission family are linked with `Relates`, and this task is no exception: indexing and validation do not block the loading task in Jira terms, and the consent-group gate is enforced by the Data Concierge's process (do not hand off until the run is clean; see Verification), not by a Jira link. `Blocks` links are reserved for true tooling dependencies where one ticket cannot be worked at all until another closes. If the paired tasks do not exist yet at validation-ticket creation time, add the `Relates` links as soon as they do.
 - **Submission & Artifacts table is mandatory and complete at ticket creation.** All six rows present. Use PLACEHOLDER explicitly when a value is pending upstream (typically the Release Package directory, which does not exist until release), never silently omit a row.
 - **Results screenshot is mandatory evidence.** The flow-run results screenshot (workflow step 5) must be attached to the task; a free-text "validation passed" note is not sufficient. The screenshot is the reproducible record behind the close trigger.
 - **Two-step create:** `jira_create_issue` (issue_type `Task`, short placeholder description, parent epic via `customfield_12350` in `additional_fields`, `Data-Concierge` in `labels`, Unassigned) then `jira_update_issue` with the full Markdown body. Same pattern as DO-INDEX/DO-LOAD.
-- **Rendering-safe authoring patterns**: section headers use `### **Title**` Markdown form (round-trips to `h3.`); italic-label bullets use `* *Label*: content` (italic label, colon separator), NOT `- **Label:** content`; tables use Jira-wiki `||header||` syntax, NOT GitHub-flavored `|h|h|`. Confirm the render with a UI screenshot; wiki source is not a reliable preview.
+- **Rendering-safe authoring patterns**: section headers use `### **Title**` Markdown form (round-trips to `h3.`); italic-label bullets use `* *Label*: content` (italic label, colon separator), NOT `- **Label:** content`; tables use Jira-wiki `||header||` syntax, NOT GitHub-flavored `|h|h|`; numbered workflow steps use Markdown `1.` ordered-list form (round-trips to wiki `#` items), NOT a leading wiki `#`, which the Markdown converter turns into an `h1.` heading. Confirm the render with a UI screenshot; wiki source is not a reliable preview.
 - **All four sections are required**, in order: Validation Summary, Submission & Artifacts, Validation Workflow, Verification.
 
 **Writing-and-publishing workflow**
@@ -91,10 +91,10 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 1. Confirm the study has been **released** in the CRDC Submission Portal and its Release Package directory exists in `nci-cbiit-clinicaltrialdatacommons-metadata`. Validation before release is premature; the Release Package is the thing being validated. Surface any open questions on the parent submission user story, not on the Task.
 2. Confirm this is dbGaP consent-group validation, not indexing (DO-INDEX), loading (DO-LOAD), or modeling (DO-MODEL/DO-INTMODEL).
 3. Identify the parent submission user story (Section DO-STORY) and the study-specific Data Hub tracker (DHDM-XXX); both go on the ticket via `Relates` links after creation.
-4. Identify the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks (or note they will follow); this validation `Blocks` both.
+4. Identify the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks (or note they will follow); this validation `Relates` to both.
 5. Create the validation task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, the parent epic via `customfield_12350` in `additional_fields` (default: CTDC-1664), and the `Data-Concierge` label via the `labels` field. Leave Unassigned.
 6. Push the full description in a second call via `jira_update_issue` with the full Markdown body.
-7. Add the `Relates` links (parent user story, DHDM tracker) and the `Blocks` links (paired IndexD and Loading tasks) via `jira_create_issue_link`.
+7. Add the `Relates` links (parent user story, DHDM tracker, paired IndexD and Loading tasks) via `jira_create_issue_link`.
 8. Run the deployment per the Validation Workflow, attach the results screenshot, and remediate any mismatch.
 9. Verify the rendered description with a UI screenshot.
 10. After a clean run with the screenshot attached (Verification section), transition the ticket to Closed with resolution `Fixed`. **A clean validation run plus attached screenshot is the close trigger.**
@@ -115,8 +115,9 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - 6-row Submission & Artifacts table (CRDC Submission ID, AWS Account ID, AWS S3 Bucket, Release Package, dbGaP Accession, Prefect Deployment)
 - 6-step workflow grouped Run the Prefect job / Record and remediate
 - Parent Epic CTDC-1664 set via `customfield_12350`; `Data-Concierge` label; Unassigned
-- Per-study `Relates` links (parent user story, DHDM tracker) and `Blocks` links (paired IndexD Registration and Data Loading tasks) added at instantiation time
+- Per-study `Relates` links (parent user story, DHDM tracker, paired IndexD Registration and Data Loading tasks) added at instantiation time
 
 **Changelog**
 
+- **v2 (2026-09-16)**: Link posture changed from `Blocks` to `Relates` for the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks. Indexing and validation do not block loading in Jira terms; the consent-group gate is a process rule carried by the Verification section, not a Jira dependency. Aligns the template with the CTDC-2142 and CTDC-2218 instances. Title convention on the tracker is `PREFECT dbGaP Validation: <Study Name vN>`.
 - **v1 (2026-07-09)**: Initial template. Establishes the dbGaP validation gate between "Released" (workflow step 7) and the paired IndexD Registration (DO-INDEX) / Data Loading (DO-LOAD) tasks, run via the established `dbgap_validatation_prod` Prefect deployment with `check_consent_group` toggled on. Canonical example CTDC-2141.
