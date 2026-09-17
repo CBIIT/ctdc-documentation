@@ -98,6 +98,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **`Relates` link to the paired IndexD Registration Task** when one exists: the two run in parallel; do **not** use `Blocks`. The non-blocking relationship is conveyed by the link, not restated in the body.
 - **The Data Loading task carries no label**: the load is performed by engineering; the `Data-Concierge` label belongs to the paired IndexD Registration (Index) task.
 - **Leave the ticket Unassigned at creation** per standing convention. Data loading tasks do not require the Developer field.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **Submission & Artifacts table is mandatory and complete**: all four rows present. The two constant rows (AWS Account ID, AWS S3 Bucket) are hardcoded; use PLACEHOLDER for the Submission ID or the Release Package directory when pending upstream.
 - **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); italic-label bullets as `* *Label*: content`, not `- **Label:**`; Jira-wiki `||header||` tables. Push Markdown via `jira_update_issue` (two-step create-then-update) and confirm the render with a UI screenshot; wiki source is not a reliable preview.
 
@@ -108,10 +109,11 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 3. Identify the parent submission user story and the paired IndexD Registration Task; add both via native links after creation (`Relates`, never `Blocks`).
 4. Create via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, and the parent epic via `customfield_12350`. Add no label. Leave Unassigned.
 5. Push the full body via `jira_update_issue` (Markdown in; converts server-side).
-6. Add the `Relates` links (parent user story, DHDM tracker, paired IndexD task).
-7. Verify the rendered description with a UI screenshot.
-8. As each environment completes, the tester adds date + initials to Testing Signoff.
-9. **Prod signoff is the close trigger**: once the Prod row is filled in, transition to Closed.
+6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+7. Add the `Relates` links (parent user story, DHDM tracker, paired IndexD task).
+8. Verify the rendered description with a UI screenshot.
+9. As each environment completes, the tester adds date + initials to Testing Signoff.
+10. **Prod signoff is the close trigger**: once the Prod row is filled in, transition to Closed.
 
 **When NOT to use this template**
 
@@ -125,6 +127,7 @@ If a submission needs schema changes before it can load, that's a modeling Task 
 
 **Changelog**
 
+- **2026-09-17 sprint rule** (no version bump): every ticket from this template goes into the standing `CTDC Data Related` sprint (board 641, id 8612) at creation, per the TPM on 2026-09-17. Applies to the whole DO-* family.
 - **v8 (2026-06-11)**: Replaced em-dash separators throughout with colons for label lead-ins and semicolons/commas for clause joins; the rendering-safe bullet convention is now `* *Label*: content` (italic label, colon separator). No structural or content changes.
 - **v7 (2026-06-03)**: Slimmed to four sections (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff). Removed Verification Surfaces, Per-Environment Verification, and Notes; dropped the Pre-load workflow phase. **Corrected the long-standing two-tier-pipeline error:** data loading runs a dedicated Jenkins job per tier (Dev/QA/Stage/Prod); the lower/upper grouping is the `ctdc-model` contribution flow, not data loading. Trimmed Submission & Artifacts to four rows: split the constant AWS Account ID and S3 Bucket into their own rows, reduced Release Package to the directory name only, and removed Object Files Location (handled by GUID minting), Study (acronym + version) (in the title), Metadata loading file (many, inside the Release Package), and Target model version (model work is a modeling Task). Load Summary no longer carries a study version, surface enumeration, or model mention.
 - **v6 (2026-06-01)**: Paired IndexD task linked with `Relates` and run in parallel (not blocking); artifacts row `Release Package` (was `Release Package Location`); Data Loading task carries no label while the paired Index task carries `Data-Concierge`.
