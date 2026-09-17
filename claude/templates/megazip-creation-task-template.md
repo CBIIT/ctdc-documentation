@@ -1,155 +1,122 @@
-### DO-ZIP. 🗜️ Megazip Creation Task Template (v2)
+### DO-ZIP. 🗜️ Megazip Creation Task Template (v3)
 
-> **Use this template for every CTDC data management task that creates a single megazip bundling all of a study's object files, registers it in CRDC IndexD, and loads its metadata through Dev → QA → Stage → Prod so users can download the whole study as one file.** The canonical example is **CTDC-2104** (Create, Index, and Load Megazip file for NCTN-NCORP AHEP0731 Image Files). This template covers the **CTDC-created artifact** work pattern within the data-management lane: unlike a Data Loading Task (Section DO-LOAD) or an IndexD Registration Task (Section DO-INDEX), the team *creates* the artifact (a Prefect job bundles the study's files) and *self-mints* its GUID (a UUID with the `dg.4DFC/` prefix) rather than receiving one the CRDC Submission Portal assigned — but it still hands the manifest off to CTDS for indexing through the standard DCF Google Drive + CRINTAKE path, and loads it itself through the per-tier Jenkins jobs. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that bundles a released study's object files into one megazip per data file type, self-mints a GUID for each, hands the manifest to CTDS for indexing, and loads the megazips through Dev → QA → Stage → Prod so each file type downloads as one file from the Study Details page.** Canonical examples are **CTDC-2220** (AHOD0831) and **CTDC-2221** (S0819), the first tickets on the v3 shape; **CTDC-2104** (AHEP0731) is the v2 ancestor. This step always runs **after** the study's dbGaP Validation (DO-DBGAP) and IndexD Registration (DO-INDEX) tasks, so the release package is already known from those linked tickets. See "When NOT to use this template" at the end.
 
 **Why this template**
 
-A megazip is a single `.zip` that bundles **all** of a study's object files into one downloadable artifact, created **in addition to** the individual files (the individual files stay in the bucket; the megazip is an extra object). It exists so a user can download an entire study in one click from the Study Details page, the download-button feature tracked on its user story (CTDC-1909 lineage).
+A megazip is a single `.zip` bundling all of a study's object files **of one data file type**, created **in addition to** the individual files (which stay in the bucket). A study with more than one `data_file_type` in its release package gets one megazip per type, all on one ticket. The megazip exists so a user can download a whole file type for a study in one click from the Study Details page.
 
-Creating and publishing a megazip is a superset of three operations the team already runs separately:
+The work is three operations the team already runs separately, on one ticket: **Create** (a Prefect job writes each megazip into the study's object-files directory), **Index** (the team self-mints a `dg.4DFC/` GUID per megazip, authors one `indexd.tsv`, and hands it to CTDS through the standard DCF Google Drive + CRINTAKE path), and **Load** (the per-tier Jenkins data-loading jobs promote the megazip metadata Dev → QA → Stage → Prod, recorded in a Testing Signoff table).
 
-- **Create**: a Prefect job reads the study's object-files directory and writes the megazip into that same directory, then a file-metadata loading file is authored for the CRDC Submission Portal CLI.
-- **Index**: the team **self-mints** a GUID for the megazip (generate a UUID, prepend the `dg.4DFC/` prefix) and **authors** the `indexd.tsv` manifest for it, then hands that manifest off to the external CTDS/DCFS team through the **same DCF Google Drive + CRINTAKE path every CTDC file uses** (Section DO-INDEX). The difference from a study-file IndexD Registration Task is narrow: for a normal submission the CRDC Submission Portal assigns the GUIDs and the `indexd.tsv` is *extracted* from the Release Package, whereas for a megazip the team *generates* the GUID itself and *authors* the manifest. The handoff — upload to DCF Google Drive, file a CRINTAKE intake ticket, spot-check the resolved GUID — is identical.
-- **Load**: the megazip metadata is promoted through Dev → QA → Stage → Prod using the dedicated per-tier Jenkins data-loading jobs, exactly as a Data Loading Task (Section DO-LOAD) does, with a Testing Signoff table as the completion record.
+**Design principle (v3): the ticket carries only what the assignee needs to type.** Earlier versions repeated program-level context, constants nobody uses (the AWS account ID), and cross-references to sibling tickets. People stopped reading them. A v3 ticket is short enough to read top to bottom, and the one step people get wrong (finding the object-files directory, which lives in a different bucket from the release package) is spelled out with an example. Open questions and risks stay on the parent submission user story.
 
-Because it spans all three, this template carries **both** a 🧪 Verification section (the GUID spot-check, inherited from DO-INDEX) and a ✅ Testing Signoff section (the per-environment promotion record, inherited from DO-LOAD). It is the only data-management template that carries both.
+**The two buckets (read once before drafting)**
 
-**Tasks execute; user stories deliberate.** A Task carries only what the assignee needs to build, register, and load the megazip. Open questions, risks, ownership directories, and link inventories belong on the parent user story (the download-feature story), not on the Task. Jira's native Links panel carries every relationship, so the description never restates them.
+- **Release package**: lives in the **metadata bucket** `nci-cbiit-clinicaltrialdatacommons-metadata`, in a directory named `<timestamp>-<submission-id>/`. It holds `file.tsv` (metadata, including the `data_file_type` column) and `indexd.tsv` (the manifest whose `urls` column points at the real files). The directory is created when the study is released from the CRDC Submission Portal and is recorded on the study's DO-DBGAP ticket (and usually its DO-INDEX ticket); **copy it from there rather than asking**.
+- **Object files**: live in the **data bucket** `nci-crdc-data-bucket-prod`, in a directory named by a UUID. The directory is **not** written anywhere except inside `indexd.tsv`: each `urls` value looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`, and the directory is the segment after the bucket name. The megazips are written into this same directory, next to the individual files.
+- **Megazip filename**: `<study>_<data_file_type>.zip`, spaces replaced by underscores, **no program prefix** (`AHOD0831_Radiology_Images.zip`, not `NCTN_AHOD0831_...`). `<study>` is the study short name from the parent user story; `<data_file_type>` is the value from `file.tsv`.
+- **IndexD**: GUIDs are self-minted (UUID + `dg.4DFC/`), one per megazip; the manifest is authored by the team and handed off through the DCF Google Drive folder (`https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`) and a CRINTAKE ticket (`tracker.nci.nih.gov/projects/CRINTAKE/`), exactly like every other CTDC file. Spot-check at `https://nci-crdc.datacommons.io/index/<GUID>`.
+- **Loading**: one file-metadata loading file covering every megazip, run through the dedicated Jenkins data-loading job per tier (Dev, QA, Stage, Prod).
 
-**Pipeline & store anatomy (read once before drafting)**
+**Section order (4 sections, exactly this sequence)**
 
-- **Creator**: a Prefect job builds the megazip. The individual object files are the input and must remain in place; the megazip is written alongside them in the same object-files directory.
-- **Object-files bucket and directory**: the megazip is stored **inside** the study's object-files directory in the CRDC prod data bucket (typically `nci-crdc-data-bucket-prod`), next to the individual files, not at the bucket root.
-- **Megazip filename**: use underscores, not spaces or other separators (e.g., `NCTN_AHEP0731_Radiology_Images.zip`). Name it for the study and its data type.
-- **IndexD**: the megazip's GUID is **self-minted** in-house (a UUID with the `dg.4DFC/` prefix) and recorded in an `indexd.tsv` manifest **authored by the team** — this is the one megazip-specific step, since a normal submission's GUIDs are assigned by the CRDC Submission Portal instead. The manifest is then handed off to CTDS for indexing through the **DCF Google Drive folder and a CRINTAKE intake ticket, exactly like any CTDC file** (Section DO-INDEX). The same centralized CRDC IndexD service resolves it; there is no Dev/QA/Stage/Prod separation for the registration itself.
-- **DCF Google Drive**: the drop-off point for the `indexd.tsv`; CTDS/DCFS monitors it for new manifests. Folder: `https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`.
-- **CRINTAKE Jira board**: `tracker.nci.nih.gov/projects/CRINTAKE/`. The external team's intake queue; filing a ticket there tells CTDS the manifest is ready.
-- **Loading pipeline**: **Jenkins, with a dedicated data-loading job for each of the four tiers (Dev, QA, Stage, Prod).** There is no lower/upper-tier grouping for data loading: that two-tier split belongs to the `ctdc-model` contribution flow, not here.
-- **Resolution endpoint**: `https://nci-crdc.datacommons.io/index/<GUID>`, used for the GUID spot-check in Verification.
+Each header is an `h3` Markdown heading in the emoji + bold form shown.
 
-**Parameters (fill these in per megazip)**
+1. `### 🎯 **Summary**`: One or two sentences. Example: *"Create one megazip per data file type for AHOD0831, index each, and load them Dev → QA → Stage → Prod so each file type downloads as one file from the Study Details page. The individual files stay in the bucket."*
 
-- Study ID and data type (e.g., AHEP0731, Radiology Images).
-- CRDC Submission ID.
-- Release Package directory (within the metadata bucket).
-- Object Files bucket and directory (where the individual files live and where the megazip is written).
-- Resulting megazip filename (underscores).
-- Self-minted GUID (`dg.4DFC/` prefix), recorded once Index is complete.
+2. `### 📦 **Artifacts**`: Two Jira-wiki tables. The first holds the three study-level values; the second has one row per `data_file_type` and is filled in as the work progresses.
 
-**Section order (5 sections, exactly this sequence)**
+   ||Field||Value||
+   |CRDC Submission ID|`<submission-id>`|
+   |Release Package (metadata bucket)|`s3://nci-cbiit-clinicaltrialdatacommons-metadata/<timestamp>-<submission-id>/`|
+   |Object Files Directory (data bucket)|`s3://nci-crdc-data-bucket-prod/`PLACEHOLDER (Workflow step 1)|
 
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections.
+   One row per distinct `data_file_type` in `file.tsv` (Workflow step 2):
 
-1. `### 🎯 **Summary**`: One to two sentences naming the study and its data type, stating that a megazip of all the study's object files is being created, indexed, and loaded so the whole study downloads as one file, and noting that the individual object files remain in the bucket. Example: *"Create a megazip of all AHEP0731 Radiology Image object files via a Prefect job, register it in CRDC IndexD, and load its metadata through Dev → QA → Stage → Prod so users can download every Radiology Image for this study from the CTDC Study Details page as one file. The individual object files remain in the bucket; the megazip is created in addition to them."*
+   ||data_file_type||Megazip File||GUID||md5 / size||
+   |PLACEHOLDER|`<study>_<data_file_type>.zip`|TBD| |
 
-2. `### 📦 **Submission & Artifacts**`: Required. A Jira-wiki table. The AWS Account ID and the metadata bucket are constant for CTDC; everything else varies per megazip. Values pending upstream are filled with `To be created` or `TBD`.
+3. `### 🚦 **Workflow**`: Four phases, Markdown `1.` ordered lists under an italic phase label (numbering restarts per phase).
 
-   ||Field||Value||Notes||
-   |CRDC Submission ID|`<submission-id>`|Issued by the CRDC Submission Portal; one per submission.|
-   |AWS Account ID|`101183076466`|Constant for CTDC. The CTDC data commons AWS account.|
-   |Metadata S3 Bucket|`nci-cbiit-clinicaltrialdatacommons-metadata`|Constant for CTDC. Holds every release package.|
-   |Release Package|`<release-package-directory>`|Directory name within the Metadata S3 Bucket; this study's release artifacts.|
-   |Object Files S3 Bucket|`nci-crdc-data-bucket-prod`|CRDC prod data bucket holding the individual object files.|
-   |Object Files Directory|`<object-files-directory>`|Source directory of the files; the megazip is written here too.|
-   |Megazip File|`<STUDY_DATATYPE>.zip`|Created by the Prefect job; stored in the Object Files Directory alongside the individual files. Use underscores.|
-   |Metadata Loading File|To be created|File-metadata loading file for the CRDC Submission Portal CLI.|
-   |IndexD Manifest|To be created|`indexd.tsv` for the megazip; authored by the team, handed to CTDS via DCF Google Drive.|
-   |GUID|TBD|Self-minted for the megazip; `dg.4DFC/` prefix.|
+   *Read the release package*
+   1. The release package lives in the metadata bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`); the object files live in a different bucket (`nci-crdc-data-bucket-prod`). Open `indexd.tsv` in the release package and look at the `urls` column. Each row looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`; the directory is the segment after the bucket name (`663e6a44-f212-4673-a2ae-af2854557e3f` in that example). Record it in the Artifacts table.
+   2. Open `file.tsv` in the same release package and list the distinct `data_file_type` values. There is one megazip per value, named `<study>_<data_file_type>.zip` with spaces replaced by underscores (for example `AHOD0831_Radiology_Images.zip`). Add one row per value to the megazip table. No program prefix in the name.
 
-3. `### 🚦 **Workflow**`: Grouped into the three phases. Use Markdown ordered-list markers (`1.`) under each bold phase label so they render as Jira numbered lists; numbering restarts per phase.
+   *Create*
+   1. For each data file type, run the Prefect megazip job against the Object Files Directory. It writes the megazip into that same directory; the individual files stay in place.
+   2. Record each megazip's md5sum and size in the megazip table.
+   3. Author one file-metadata loading file covering every megazip (CRDC Submission Portal CLI format).
 
-   **Create**
-   1. Run the Prefect job to create the megazip from the Object Files Directory, writing `<STUDY_DATATYPE>.zip` to that same directory; the individual files must remain in place.
-   2. Record the megazip's md5sum and file size; both are needed for the `indexd.tsv` and the metadata loading file.
-   3. Author the file-metadata loading file for the megazip for use with the CRDC Submission Portal CLI.
+   *Index*
+   1. For each megazip, generate a UUID, prepend `dg.4DFC/`, and record the GUID in the megazip table.
+   2. Author one `indexd.tsv` with a row per megazip (GUID, size, md5, url) and upload it to the [DCF Google Drive folder](https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb).
+   3. File a [CRINTAKE](https://tracker.nci.nih.gov/projects/CRINTAKE/) ticket naming the manifest, and link it back to this ticket.
+   4. When CTDS reports done, resolve each GUID at `https://nci-crdc.datacommons.io/index/<GUID>`. A pass returns a record whose `urls` points at that megazip and whose `size` and `hashes` are non-empty. If any fails, comment on the CRINTAKE ticket and do not load.
 
-   **Index**
-   1. Author `indexd.tsv` for the megazip: generate a UUID (e.g., uuidgenerator.net), prepend `dg.4DFC/` to form the GUID, and record the GUID and the `indexd.tsv` AWS location in the Submission & Artifacts table. (This self-minting step is the one megazip-specific difference from a DO-INDEX registration, where the CRDC Submission Portal assigns the GUIDs.)
-   2. Upload the `indexd.tsv` to the [DCF Google Drive folder](https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb) for indexing, the same drop-off every CTDC file uses.
-   3. File a CRINTAKE intake ticket on the [CRDC CRs_INTAKE Jira board](https://tracker.nci.nih.gov/projects/CRINTAKE/) describing the data release being indexed, naming the manifest uploaded in the prior step, and giving a requested due date if the indexing is time-bound. If a due date matters, notify both the NCI CRDC (Leidos) PM and the NCI DCFS PM as early as possible.
-   4. Link the CRINTAKE ticket back to this CTDC ticket as a Jira-to-Jira remote link.
+   *Load*
+   1. Run the Jenkins *Dev* data-loading job with the megazip loading file. Confirm every megazip shows on the Study Details page.
+   2. Run *QA*. Tester confirms each megazip downloads from the Study Details page.
+   3. Run *Stage*. Tester confirms download.
+   4. Run *Prod*. Tester confirms download. *Prod signoff closes the ticket.*
 
-   **Load**
-   1. Confirm the release package and the megazip loading file in SharePoint before loading.
-   2. Run the dedicated Jenkins **Dev** data-loading job; verify the megazip appears on the Study Details page and check application metrics/pages for errors. Record in Testing Signoff.
-   3. Run the dedicated Jenkins **QA** data-loading job; assign for QA testing; the tester verifies download of the megazip on the Study Details page. Tester initials Testing Signoff.
-   4. Run the dedicated Jenkins **Stage** data-loading job; assign for Stage testing and signoff. Tester initials Testing Signoff.
-   5. Run the dedicated Jenkins **Prod** data-loading job; assign for Prod verification and signoff. Tester initials Testing Signoff. **This is the trigger to close the ticket.**
+4. `### ✅ **Testing Signoff**`: The completion record. **Prod signoff is the trigger to transition the ticket to Closed.**
 
-4. `### 🧪 **Verification**`: How CTDC confirms the megazip resolves, once CTDS/DCFS reports indexing complete (via CRINTAKE or direct notification). Bullet list (italic-labelled, colon separators, the rendering-safe pattern):
-
-   - *How to spot-check*: Resolve the minted GUID at `https://nci-crdc.datacommons.io/index/<GUID>`. A pass returns the full IndexD record with `urls` pointing to the megazip's S3 location and non-empty `size` and `hashes`.
-   - *If the spot-check fails*: Do not close the ticket. Reopen or comment on the CRINTAKE ticket with the specific GUID and the resolution-endpoint response, and coordinate the fix with CTDS.
-   - *Record the confirmed GUID*: Enter it in the Submission & Artifacts table above.
-
-5. `### ✅ **Testing Signoff**`: The completion record. The tester fills in date and initials per environment as work progresses. **Prod signoff is the trigger to transition the ticket to Closed.**
-
-   ||Environment||Testing Completion Date||Tester Initials||
+   ||Environment||Date||Initials||
    |Dev| | |
    |QA| | |
    |Stage| | |
    |Prod| | |
 
-**Standing emoji set (5 entries)**
+**Standing emoji set (4 entries)**
 
 | Section | Emoji |
 |---|---|
-| Summary | 🎯 *(shared with Data Loading and IndexD Registration tasks)* |
-| Submission & Artifacts | 📦 *(shared with Data Loading and IndexD Registration tasks)* |
-| Workflow | 🚦 *(shared with Data Loading and IndexD Registration tasks)* |
-| Verification | 🧪 *(shared with IndexD Registration task; GUID resolution spot-check)* |
-| Testing Signoff | ✅ *(shared with Data Loading task; per-environment promotion record)* |
+| Summary | 🎯 |
+| Artifacts | 📦 |
+| Workflow | 🚦 |
+| Testing Signoff | ✅ |
+
+The separate 🧪 Verification section from v1/v2 is gone; the GUID spot-check is now Index step 4.
 
 **Required content rules**
 
-- **Scope is megazip creation, self-minted indexing, and loading only.** Loading an external CRDC submission's study contents uses the Data Loading Task template (Section DO-LOAD). Registering study files whose GUIDs the Submission Portal assigned uses the IndexD Registration Task template (Section DO-INDEX). Schema/model changes use a modeling template (DO-INTMODEL/DO-MODEL). See "When NOT to use this template."
-- **The megazip is created in addition to the individual files.** Never describe it as replacing or moving them; the individual object files remain in the Object Files Directory.
-- **Megazip filename uses underscores** and is stored inside the Object Files Directory, alongside the individual files, not at the bucket root.
-- **The GUID is self-minted**, with the `dg.4DFC/` prefix — this is the one megazip-specific difference from a DO-INDEX registration. **The manifest still hands off to CTDS through the standard DCF Google Drive + CRINTAKE path**, exactly like every other CTDC file; a megazip is *not* indexed internally without a CRINTAKE ticket.
-- **A dedicated Jenkins data-loading job per tier.** Run the correct per-tier job (Dev, QA, Stage, Prod). The lower/upper-tiers split is a `ctdc-model` contribution concept and does **not** apply to data loading.
-- **Issue type is Task.** Do not use Story or Subtask.
-- **Parent Epic field set via `customfield_12350`.** Default parent CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
-- **`Relates` link to the download-feature user story** (the megazip exists to serve it), **`Relates` links to the paired study Index and Load tasks** when they exist, and a **remote link to the CRINTAKE ticket** once it is filed. The megazip runs alongside those; use `Relates`, never `Blocks`.
-- **Leave the ticket Unassigned at creation** per standing convention. Data management tasks do not require the Developer field.
-- **Submission & Artifacts table is mandatory and complete**: the two constant rows (AWS Account ID, Metadata S3 Bucket) are hardcoded; use `To be created` or `TBD` for values pending upstream.
-- **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); italic-label bullets as `* *Label*: content`, not `- **Label:**`; Jira-wiki `||header||` tables; inside table cells use `{{monospace}}` rather than backticks. Push Markdown via `jira_update_issue` (two-step create-then-update) and confirm the render with a UI screenshot; wiki source is not a reliable preview.
+- **Scope is megazip creation, self-minted indexing, and loading only.** A plain study load is DO-LOAD; registering Portal-assigned GUIDs is DO-INDEX; consent-group validation is DO-DBGAP; schema changes are DO-MODEL / DO-INTMODEL.
+- **One ticket per study, one megazip per `data_file_type`.** The megazip table has one row per type; the loading file and `indexd.tsv` each carry one row per megazip; Jenkins runs once per tier for all of them.
+- **Filename is `<study>_<data_file_type>.zip`**, underscores for spaces, no program prefix.
+- **Release package is inferred, not requested.** It is already recorded on the study's DO-DBGAP ticket (and usually DO-INDEX); copy it into the Artifacts table at creation. If neither carries it, the study has not been released and this ticket is premature.
+- **Object files directory is derived from `indexd.tsv`** (Workflow step 1), never guessed from the release package name; the two buckets are different.
+- **Title:** `Create, Index, and Load Megazip files for <Program> <Study>` (plural "files"; no data type in the title, since the types are not known until step 2).
+- **Issue type Task; Parent Epic via `customfield_12350`** (default CTDC-1664); **no label**; **Unassigned** at creation; priority Major to match the family.
+- **Links: `Relates` to every other task for the study** (parent submission user story, DO-DBGAP, DO-INDEX, DO-LOAD, and the DHDM tracker), plus a remote link to the CRINTAKE ticket once filed. **Never `Blocks`. No link to any feature user story.**
+- **No AWS Account ID row, no "To be created" rows, no Notes column.** If a value is not typed into a command, a file, or a form, it does not belong in the table.
+- **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); Jira-wiki `||header||` tables; `{{monospace}}` inside cells; Markdown `1.` ordered lists (a leading wiki `#` becomes an `h1.` heading); links as `[text|url]`. The converter rewrites `<placeholder>` as `[placeholder]`, which is fine. Two-step create (`jira_create_issue` then `jira_update_issue`) and confirm the render in the UI.
 
 **Writing-and-publishing workflow**
 
-1. Confirm the study's individual object files are present in the Object Files Directory and the Release Package exists in the metadata bucket.
-2. Confirm this is megazip work, not a plain study load (DO-LOAD) or a standard external IndexD registration (DO-INDEX).
-3. Identify the download-feature user story and any paired study Index and Load tasks; add them via native `Relates` links after creation (never `Blocks`).
-4. Create via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, and the parent epic via `customfield_12350`. Leave Unassigned.
-5. Push the full body via `jira_update_issue` (Markdown in; converts server-side).
-6. Add the `Relates` links, and the CRINTAKE remote link once the intake ticket is filed.
-7. Verify the rendered description with a UI screenshot.
-8. As Create, Index, and Load progress, fill in the self-minted GUID, then the per-environment Testing Signoff rows.
-9. **Prod signoff is the close trigger**: once the Prod row is filled in, transition to Closed.
+1. Confirm the study's DO-DBGAP ticket is Closed and carries the release package directory; copy it.
+2. Create via `jira_create_issue` (Task, placeholder description, `customfield_12350`, priority Major, Unassigned, no label).
+3. Push the body via `jira_update_issue`.
+4. Add `Relates` links to every study task and the DHDM tracker.
+5. Verify the render in the UI.
+6. As work progresses, fill the Object Files Directory, the per-type megazip rows (name, GUID, md5/size), then the Testing Signoff rows. Prod signoff closes the ticket.
 
 **When NOT to use this template**
 
-- **Loading an external CRDC submission's study contents** → Data Loading Task template (Section DO-LOAD).
-- **Registering study files whose GUIDs the CRDC Submission Portal assigned** (the `indexd.tsv` is extracted from the Release Package, not authored) → IndexD Registration Task template (Section DO-INDEX). The megazip template differs only in that the team creates the artifact and self-mints its GUID; both hand off to CTDS the same way.
-- **Data modeling** → Data Modeling for Study Submission (Section DO-MODEL) for study-driven changes, or Data Model Update Task (Section DO-INTMODEL) for internally-driven changes.
-- **Software development** → software development template family.
-- **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
+- **Loading a study's own release package** → DO-LOAD.
+- **Registering Portal-assigned GUIDs** → DO-INDEX.
+- **dbGaP consent-group validation** → DO-DBGAP.
+- **Data modeling** → DO-MODEL or DO-INTMODEL.
+- **Software development** → the software development template family.
+- **CRDC platform changes** → owned by CRDC platform teams; out of CTDC scope.
 
-A megazip task is distinct from its siblings because the team *creates* the artifact (Prefect) and *self-mints* its GUID (`dg.4DFC/` + UUID) rather than receiving a Submission-Portal-assigned one, then indexes it through the standard DCF/CRINTAKE handoff and loads it through the per-tier Jenkins jobs — all on one ticket, with both a GUID spot-check and a per-environment Testing Signoff.
+**Canonical examples**
 
-**Canonical example**
-
-**CTDC-2104**: *Create, Index, and Load Megazip file for NCTN-NCORP AHEP0731 Image Files*. The ticket carries:
-
-- 5 sections in the standard order (Summary, Submission & Artifacts, Workflow, Verification, Testing Signoff)
-- A Submission & Artifacts table with the study's real CRDC Submission ID, Release Package directory, Object Files bucket and directory, and the megazip filename `NCTN_AHEP0731_Radiology_Images.zip` written into the object-files directory
-- A three-phase Workflow (Create via Prefect, Index by self-minting the GUID and authoring `indexd.tsv` then handing off through DCF Google Drive + CRINTAKE, Load through the per-tier Jenkins jobs)
-- Both a 🧪 Verification GUID spot-check and a ✅ Testing Signoff table
-- `Relates` links to the download-feature user story (CTDC-1909) and to the paired study Index and Load tasks (CTDC-2060, CTDC-2063), plus a remote link to the megazip's CRINTAKE ticket (CRINTAKE-489), set via the Jira native Links panel, not duplicated in the description
+**CTDC-2220** (*Create, Index, and Load Megazip files for NCTN-NCORP AHOD0831*) and **CTDC-2221** (*... S0819*), created 2026-09-17: 4 sections, the two-table Artifacts block, a four-phase workflow starting with "Read the release package," release package copied from the sibling DO-DBGAP / DO-INDEX tickets, `Relates` links to CTDC-1805, the study's Index, Load, and dbGaP tickets, and the DHDM tracker. **CTDC-2104** (AHEP0731) is the v2 ancestor and still carries the older 5-section shape.
 
 **Changelog**
 
-> *Numbering note: the template IDs in the Changelog entries below predate the 2026-06-16 process-order renumber of the data-management templates. The full old -> new mapping is recorded in [`README.md`](./README.md).*
-> _Update 2026-07-23: these templates were renumbered from legacy 7x letters to stable Data Operations (DO-) codes. The Changelog IDs above are left as originally written under the numbering scheme in effect at the time of each entry; use the Template ID crosswalk in SKILL.md to map any legacy 7x reference to its current DO- code._
+> _Numbering note: template IDs in older entries predate the 2026-07-23 renumber from legacy 7x letters to DO- codes; see the crosswalk in SKILL.md._
 
-- **v2 (2026-07-22)**: **Corrected the indexing model.** v1 wrongly claimed a megazip is indexed "internally" with "no external CTDS/DCFS handoff and no CRINTAKE intake ticket." Per the TPM: **all** CTDC files — megazips included — are indexed through the external CTDS team via the DCF Google Drive + CRINTAKE path (Section 7g). The **only** megazip-specific difference is that the team *self-mints* the GUID (UUID + `dg.4DFC/`) and *authors* the `indexd.tsv`, rather than receiving Submission-Portal-assigned GUIDs and extracting the manifest from the Release Package. Corrected the intro, the Why/Index bullet, the IndexD anatomy bullet, the "GUID minted in-house / no CRINTAKE" required-content rule, the closing "CTDC-internal end to end" summary, the 7g cross-reference in "When NOT to use," and the canonical-example description. **Expanded the Index workflow phase** from one step (author `indexd.tsv`) to four (author `indexd.tsv` with self-minted GUID → upload to DCF Google Drive → file the CRINTAKE intake ticket → link it back), mirroring 7g's external-handoff steps, and added the DCF Google Drive and CRINTAKE anatomy bullets. Added a *record md5sum and file size* step to Create and an *if the spot-check fails* bullet to Verification. Added the CRINTAKE remote-link requirement to the links rule. Canonical example CTDC-2104's Index steps were already correct and drove this correction. No section-shape change (still 5 sections).
-- **v1 (2026-06-11)**: First version. Built from the Data Loading Task (7e) and IndexD Registration Task (7h) templates as the closest siblings, with CTDC-2104 as the canonical example. Carries both Verification and Testing Signoff because a megazip is created, indexed, and loaded on one ticket. Colon/semicolon separators throughout; no em-dashes.
+- **v3 (2026-09-17)**: Lean rewrite driven by the TPM after assignees reported the v2 ticket was too long to read. One megazip **per `data_file_type`** on one ticket (v2 assumed one per study); filename `<study>_<data_file_type>.zip` with **no program prefix**; the release package is **inferred from the linked DO-DBGAP / DO-INDEX tickets**; the object-files directory lookup (different bucket, read from `indexd.tsv` `urls`) is an explicit first step with an example; 4 sections instead of 5 (Verification folded into Index step 4); Artifacts split into a three-row study table and a per-type megazip table; dropped the AWS Account ID row, the Notes column, and the "To be created" rows; **no feature user story link**, `Relates` to every study task instead. Canonical examples CTDC-2220 and CTDC-2221.
+- **v2 (2026-07-22)**: Corrected the indexing model: megazips are indexed through the external CTDS team via DCF Google Drive + CRINTAKE like every CTDC file; the only megazip-specific difference is the self-minted GUID and team-authored `indexd.tsv`. Expanded the Index phase to four steps; added md5sum/size and spot-check-failure guidance; added the CRINTAKE remote-link requirement.
+- **v1 (2026-06-11)**: First version, built from the Data Loading and IndexD Registration templates with CTDC-2104 as the canonical example.
