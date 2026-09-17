@@ -85,17 +85,20 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 - Issue type **User Story**; priority **Major**; component **Data**; labels **`Data-Concierge`** plus the WBS line (`Task-1.2.1.x`).
 - Leave **Unassigned** at creation unless directed.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
 
 **Writing-and-publishing workflow**
 
 1. Confirm the study-integration epic (CTDC-1664) exists for the epic link.
 2. Two-step create: `jira_create_issue` with a one-line placeholder, then `jira_update_issue` with the full Markdown body. Same pattern as every other CTDC template.
-3. **Do not hand-edit the description in the Jira UI afterward** — re-push via `jira_update_issue`; the wiki editor eats underscores and mangles monospace.
-4. Render-verify in the Jira UI. The MCP read-tool's Markdown reconversion mangles underscores into asterisks — trust the rendered ticket, not the API echo.
-5. Add the native links above as the modeling/indexing/loading tasks and the DHDM ticket come into being.
+3. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+4. **Do not hand-edit the description in the Jira UI afterward** — re-push via `jira_update_issue`; the wiki editor eats underscores and mangles monospace.
+5. Render-verify in the Jira UI. The MCP read-tool's Markdown reconversion mangles underscores into asterisks — trust the rendered ticket, not the API echo.
+6. Add the native links above as the modeling/indexing/loading tasks and the DHDM ticket come into being.
 
 **Changelog**
 
+- **2026-09-17 sprint rule** (no version bump): every ticket from this template goes into the standing `CTDC Data Related` sprint (board 641, id 8612) at creation, per the TPM on 2026-09-17. Applies to the whole DO-* family.
 - **v2 (2026-06-16)** — Renamed the opening section **Study Identity → Study Submission Details** and reordered its rows to follow the submission process from SRF approval onward: SRF → Request Date → Data Concierge → SharePoint Folder → Program → Program Short Name → Study Name → Submitter/Submission Team → CDE Request Workbook → DHDM → Submission ID → dbGaP ID → dbGaP Link → Study Status in CTDC. Removed the **Associated Publications** row (captured in the submission itself, not the story). Added process-gating notes (SRF approval triggers Concierge assignment + SharePoint folder creation; CDE Workbook completed before the DHDM ticket; dbGaP IDs required before the DataHub portal submission; Submission ID created at portal submission). Emoji set and the "Links consolidated" rule updated to the new section name. 15 rows → 14.
 
 - **v1 (2026-06-16)** — Initial draft. Promotes the CTDC-1666 gold-standard shape into a reusable template. Establishes: Data Concierge POV; the 🚦 Submission Lifecycle outline that coordinates linked modeling/indexing/loading at summary altitude; link-consolidated Study Identity (no separate references section; SRF, Submission ID, DHDM rows added; the two SharePoint folder rows consolidated to one; AWS bucket row removed as loading-only); aggregate-only Data Details; the submission-vs-model-change "related but distinct activities" framing; and the `Data Submission: <Study Name vN>` title convention that defines the canonical study token reused verbatim by all downstream tasks. Canonical example CTDC-1666; working instance CTDC-2110 (Data Submission: Cancer Moonshot Biobank v6).
