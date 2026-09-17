@@ -87,6 +87,7 @@ The separate 🧪 Verification section from v1/v2 is gone; the GUID spot-check i
 - **Object files directory is derived from `indexd.tsv`** (Workflow step 1), never guessed from the release package name; the two buckets are different.
 - **Title:** `Create, Index, and Load Megazip files for <Program> <Study>` (plural "files"; no data type in the title, since the types are not known until step 2).
 - **Issue type Task; Parent Epic via `customfield_12350`** (default CTDC-1664); **no label**; **Unassigned** at creation; priority Major to match the family.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog and never place it in a numbered development sprint.
 - **Links: `Relates` to every other task for the study** (parent submission user story, DO-DBGAP, DO-INDEX, DO-LOAD, and the DHDM tracker), plus a remote link to the CRINTAKE ticket once filed. **Never `Blocks`. No link to any feature user story.**
 - **No AWS Account ID row, no "To be created" rows, no Notes column.** If a value is not typed into a command, a file, or a form, it does not belong in the table.
 - **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); Jira-wiki `||header||` tables; `{{monospace}}` inside cells; Markdown `1.` ordered lists (a leading wiki `#` becomes an `h1.` heading); links as `[text|url]`. The converter rewrites `<placeholder>` as `[placeholder]`, which is fine. Two-step create (`jira_create_issue` then `jira_update_issue`) and confirm the render in the UI.
@@ -96,9 +97,10 @@ The separate 🧪 Verification section from v1/v2 is gone; the GUID spot-check i
 1. Confirm the study's DO-DBGAP ticket is Closed and carries the release package directory; copy it.
 2. Create via `jira_create_issue` (Task, placeholder description, `customfield_12350`, priority Major, Unassigned, no label).
 3. Push the body via `jira_update_issue`.
-4. Add `Relates` links to every study task and the DHDM tracker.
-5. Verify the render in the UI.
-6. As work progresses, fill the Object Files Directory, the per-type megazip rows (name, GUID, md5/size), then the Testing Signoff rows. Prod signoff closes the ticket.
+4. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+5. Add `Relates` links to every study task and the DHDM tracker.
+6. Verify the render in the UI.
+7. As work progresses, fill the Object Files Directory, the per-type megazip rows (name, GUID, md5/size), then the Testing Signoff rows. Prod signoff closes the ticket.
 
 **When NOT to use this template**
 
@@ -111,12 +113,12 @@ The separate 🧪 Verification section from v1/v2 is gone; the GUID spot-check i
 
 **Canonical examples**
 
-**CTDC-2220** (*Create, Index, and Load Megazip files for NCTN-NCORP AHOD0831*) and **CTDC-2221** (*... S0819*), created 2026-09-17: 4 sections, the two-table Artifacts block, a four-phase workflow starting with "Read the release package," release package copied from the sibling DO-DBGAP / DO-INDEX tickets, `Relates` links to CTDC-1805, the study's Index, Load, and dbGaP tickets, and the DHDM tracker. **CTDC-2104** (AHEP0731) is the v2 ancestor and still carries the older 5-section shape.
+**CTDC-2220** (*Create, Index, and Load Megazip files for NCTN-NCORP AHOD0831*) and **CTDC-2221** (*... S0819*), created 2026-09-17: 4 sections, the two-table Artifacts block, a four-phase workflow starting with "Read the release package," release package copied from the sibling DO-DBGAP / DO-INDEX tickets, `Relates` links to CTDC-1805, the study's Index, Load, and dbGaP tickets, and the DHDM tracker; both placed in the `CTDC Data Related` sprint. **CTDC-2104** (AHEP0731) is the v2 ancestor and still carries the older 5-section shape.
 
 **Changelog**
 
 > _Numbering note: template IDs in older entries predate the 2026-07-23 renumber from legacy 7x letters to DO- codes; see the crosswalk in SKILL.md._
 
-- **v3 (2026-09-17)**: Lean rewrite driven by the TPM after assignees reported the v2 ticket was too long to read. One megazip **per `data_file_type`** on one ticket (v2 assumed one per study); filename `<study>_<data_file_type>.zip` with **no program prefix**; the release package is **inferred from the linked DO-DBGAP / DO-INDEX tickets**; the object-files directory lookup (different bucket, read from `indexd.tsv` `urls`) is an explicit first step with an example; 4 sections instead of 5 (Verification folded into Index step 4); Artifacts split into a three-row study table and a per-type megazip table; dropped the AWS Account ID row, the Notes column, and the "To be created" rows; **no feature user story link**, `Relates` to every study task instead. Canonical examples CTDC-2220 and CTDC-2221.
+- **v3 (2026-09-17)**: Lean rewrite driven by the TPM after assignees reported the v2 ticket was too long to read. One megazip **per `data_file_type`** on one ticket (v2 assumed one per study); filename `<study>_<data_file_type>.zip` with **no program prefix**; the release package is **inferred from the linked DO-DBGAP / DO-INDEX tickets**; the object-files directory lookup (different bucket, read from `indexd.tsv` `urls`) is an explicit first step with an example; 4 sections instead of 5 (Verification folded into Index step 4); Artifacts split into a three-row study table and a per-type megazip table; dropped the AWS Account ID row, the Notes column, and the "To be created" rows; **no feature user story link**, `Relates` to every study task instead; every ticket goes into the standing `CTDC Data Related` sprint (id 8612) at creation. Canonical examples CTDC-2220 and CTDC-2221.
 - **v2 (2026-07-22)**: Corrected the indexing model: megazips are indexed through the external CTDS team via DCF Google Drive + CRINTAKE like every CTDC file; the only megazip-specific difference is the self-minted GUID and team-authored `indexd.tsv`. Expanded the Index phase to four steps; added md5sum/size and spot-check-failure guidance; added the CRINTAKE remote-link requirement.
 - **v1 (2026-06-11)**: First version, built from the Data Loading and IndexD Registration templates with CTDC-2104 as the canonical example.
