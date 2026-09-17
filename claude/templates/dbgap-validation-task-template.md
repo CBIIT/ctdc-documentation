@@ -78,6 +78,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Parent Epic field set via `customfield_12350`.** Default parent is CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
 - **`Data-Concierge` label is mandatory.** The validation is performed by the Data Concierge, so the task carries the `Data-Concierge` label, set at creation via the `labels` field: the same posture as the IndexD Registration (Index) task.
 - **Leave the ticket Unassigned at creation** per standing team convention. Data management tasks do not require the Developer field.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **`Relates` link to the parent submission user story is mandatory** (set via `jira_create_issue_link` after creation), and to the study-specific Data Hub tracker (DHDM-XXX) when one exists. The user story is the canonical record of study identity and the home for open questions / risks.
 - **`Relates` links to the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks, never `Blocks`.** The team's standing posture is that data-operations tasks in a submission family are linked with `Relates`, and this task is no exception: indexing and validation do not block the loading task in Jira terms, and the consent-group gate is enforced by the Data Concierge's process (do not hand off until the run is clean; see Verification), not by a Jira link. `Blocks` links are reserved for true tooling dependencies where one ticket cannot be worked at all until another closes. If the paired tasks do not exist yet at validation-ticket creation time, add the `Relates` links as soon as they do.
 - **Submission & Artifacts table is mandatory and complete at ticket creation.** All six rows present. Use PLACEHOLDER explicitly when a value is pending upstream (typically the Release Package directory, which does not exist until release), never silently omit a row.
@@ -94,10 +95,11 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 4. Identify the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks (or note they will follow); this validation `Relates` to both.
 5. Create the validation task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, the parent epic via `customfield_12350` in `additional_fields` (default: CTDC-1664), and the `Data-Concierge` label via the `labels` field. Leave Unassigned.
 6. Push the full description in a second call via `jira_update_issue` with the full Markdown body.
-7. Add the `Relates` links (parent user story, DHDM tracker, paired IndexD and Loading tasks) via `jira_create_issue_link`.
-8. Run the deployment per the Validation Workflow, attach the results screenshot, and remediate any mismatch.
-9. Verify the rendered description with a UI screenshot.
-10. After a clean run with the screenshot attached (Verification section), transition the ticket to Closed with resolution `Fixed`. **A clean validation run plus attached screenshot is the close trigger.**
+7. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+8. Add the `Relates` links (parent user story, DHDM tracker, paired IndexD and Loading tasks) via `jira_create_issue_link`.
+9. Run the deployment per the Validation Workflow, attach the results screenshot, and remediate any mismatch.
+10. Verify the rendered description with a UI screenshot.
+11. After a clean run with the screenshot attached (Verification section), transition the ticket to Closed with resolution `Fixed`. **A clean validation run plus attached screenshot is the close trigger.**
 
 **When NOT to use this template**
 
@@ -119,5 +121,5 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Changelog**
 
-- **v2 (2026-09-16)**: Link posture changed from `Blocks` to `Relates` for the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks. Indexing and validation do not block loading in Jira terms; the consent-group gate is a process rule carried by the Verification section, not a Jira dependency. Aligns the template with the CTDC-2142 and CTDC-2218 instances. Title convention on the tracker is `PREFECT dbGaP Validation: <Study Name vN>`.
+- **v2 (2026-09-16)**: Link posture changed from `Blocks` to `Relates` for the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks. Indexing and validation do not block loading in Jira terms; the consent-group gate is a process rule carried by the Verification section, not a Jira dependency. Aligns the template with the CTDC-2142 and CTDC-2218 instances. Title convention on the tracker is `PREFECT dbGaP Validation: <Study Name vN>`. Added the rule that every ticket goes into the standing `CTDC Data Related` sprint (id 8612) at creation.
 - **v1 (2026-07-09)**: Initial template. Establishes the dbGaP validation gate between "Released" (workflow step 7) and the paired IndexD Registration (DO-INDEX) / Data Loading (DO-LOAD) tasks, run via the established `dbgap_validatation_prod` Prefect deployment with `check_consent_group` toggled on. Canonical example CTDC-2141.
