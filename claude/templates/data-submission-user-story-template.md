@@ -1,4 +1,7 @@
-### DO-STORY. 📥 Data Submission User Story Template (Drafted v2)
+### DO-STORY. 📥 Data Submission User Story Template (Retired 2026-09-25)
+
+> **Retired 2026-09-25. Do not use for new submissions.** Every study submission is now a **submission epic** (Section DO-EPIC, `data-submission-epic-template.md`), which holds this story's fields and the lifecycle outline and has the dbGaP, indexing, loading, and megazip tasks as native children. Existing Data Submission user stories are converted in the Jira UI (Move to Epic) so their keys and history survive; the pilot was CTDC-2110 (CMB v6). Per the DO code governance rule, the DO-STORY code is kept, marked retired, and never reused. The text below is kept for history.
+
 
 > **Use this template for the parent user story of every CTDC study data submission** — the artifact the **CTDC Data Concierge** uses to shepherd a study's data into CTDC end to end. Canonical example: **[CTDC-1666](https://tracker.nci.nih.gov/browse/CTDC-1666)** (NCI-MATCH Arm Z1D). Working instance: **[CTDC-2110](https://tracker.nci.nih.gov/browse/CTDC-2110)** (Data Submission: Cancer Moonshot Biobank v6). This story is the **coordinating outline** for one study submission; it is **not** where any activity is executed. Data modeling (DO-MODEL/DO-INTMODEL), IndexD registration (DO-INDEX), and data loading (DO-LOAD) each get their own linked task, and term-level modeling detail lives in the study's CDE Request Workbook. This is the parent that every downstream data-management task for the submission links back to.
 
@@ -98,6 +101,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 **Changelog**
 
+- **Retired (2026-09-25)**: Replaced by the Data Submission Epic template (DO-EPIC). Canonical example CTDC-2110 was converted from this template's working instance to the first submission epic.
 - **2026-09-17 sprint rule** (no version bump): every ticket from this template goes into the standing `CTDC Data Related` sprint (board 641, id 8612) at creation, per the TPM on 2026-09-17. Applies to the whole DO-* family.
 - **v2 (2026-06-16)** — Renamed the opening section **Study Identity → Study Submission Details** and reordered its rows to follow the submission process from SRF approval onward: SRF → Request Date → Data Concierge → SharePoint Folder → Program → Program Short Name → Study Name → Submitter/Submission Team → CDE Request Workbook → DHDM → Submission ID → dbGaP ID → dbGaP Link → Study Status in CTDC. Removed the **Associated Publications** row (captured in the submission itself, not the story). Added process-gating notes (SRF approval triggers Concierge assignment + SharePoint folder creation; CDE Workbook completed before the DHDM ticket; dbGaP IDs required before the DataHub portal submission; Submission ID created at portal submission). Emoji set and the "Links consolidated" rule updated to the new section name. 15 rows → 14.
 
