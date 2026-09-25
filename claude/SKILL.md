@@ -449,7 +449,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 ### 7b. 🏛️ Epic Template (Lean v2)
 
-> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security), except the three standing data epics, which use the data variant in 7b-D. The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
+> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security), except the two standing data modeling epics, which use the data variant in 7b-D, and data submission epics, which use the Data Submission Epic template (DO-EPIC). The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
 >
 > **v2 (2026-09-14): one five-section template replaces the per-grouping templates.** The v1 templates (7b-1 Application Pages at 15 sections, 7b-2 Microservices at 20, 7b-3 Features at 18, and the 7b-4 through 7b-7 stubs) produced 3,000-word epic bodies that nobody read in Jira. Per Gina's direction the standard is now what the Agile Alliance actually prescribes: an epic is "a large user story that cannot be delivered as defined within a single iteration," and "there is no standard form to represent epics." CTDC's form is a goal-and-objectives statement, not the As a / I want / So that story form, which is reserved for the child stories. Everything the v1 templates carried beyond that (Upstream Provenance, Surface Area, Stakeholders, Key Definitions, Composition, Dependencies, Assumptions, Constraints, Risks, User Impact, Components Breakdown, Documentation & Compliance) now lives in one of three places: a child story, a Jira comment, or the leadership `.docx` epic summary (Section 5). The seven groupings survive only as a classification aid for deciding what to verify before drafting (see 7b-shared, "Verification & ground truth"); they no longer select a template.
 
@@ -499,21 +499,21 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Migration of v1 epics**
 
-*Data-related epics use the data variant in 7b-D* (Gina, 2026-09-25). Data Integration, Submission Data Modeling, and Internal Data Modeling are standing epics that stay Open and carry a Risks table; they are migrated with 7b-D, not this template. Mock Data Generation was reclassified the same day as a feature epic (its outputs serve data submitters, but it closes when delivered) and is migrated with this template.
+*Data-related epics use the data variant in 7b-D* (Gina, 2026-09-25). Submission Data Modeling and Internal Data Modeling are standing epics that stay Open and carry a Risks table; they are migrated with 7b-D, not this template. The standing Data Integration epic (CTDC-1664) is being retired: each study submission becomes its own closing epic on the Data Submission Epic template (DO-EPIC, 2026-09-25), piloted on CTDC-2110 (CMB v6). Mock Data Generation was reclassified the same day as a feature epic (its outputs serve data submitters, but it closes when delivered) and is migrated with this template.
 
 Superseded 2026-09-24: Gina directed a sweep of every active CTDC epic to this template (the earlier "condense when next edited, no sweep" rule is retired). Order: In Progress epics first, then Ready for Review, then On Hold, with drafts reviewed by the TPM before each batch is written. Drafts condense the existing description only (no new facts); stale items are flagged to the TPM rather than guessed. Cut detail is not copied into comments: Jira's History tab keeps every prior description, and a JSON backup of the pre-sweep descriptions was taken on 2026-09-24. Final Design QA epics keep their own container template (cloned from the Final Design QA template epic) and only gain the card line.
 
 #### 7b-D. Data Epic Variant (Lean v2-D)
 
-> **Use this variant for the three standing data epics only**: Data Integration, Submission Data Modeling, and Internal Data Modeling (Gina, 2026-09-25). Everything in 7b and 7b-shared applies except where this subsection says otherwise. Mock Data Generation is a feature epic and uses 7b; Bento Data Retriever is a microservice epic and uses 7b.
+> **Use this variant for the two standing data modeling epics only**: Submission Data Modeling and Internal Data Modeling (Gina, 2026-09-25). Data submissions no longer have a standing epic: each study submission is its own closing epic on the Data Submission Epic template (DO-EPIC, 2026-09-25). Everything in 7b and 7b-shared applies except where this subsection says otherwise. Mock Data Generation is a feature epic and uses 7b; Bento Data Retriever is a microservice epic and uses 7b.
 
 **Why a variant**
 
-A feature epic delivers something and closes. A data epic is a standing pipeline: submissions, model releases, and data loads keep arriving, and each one is a child ticket that opens and closes on its own. The body therefore describes how work flows through the epic, not what one phase delivers. The three data epics also form a chain that no feature epic has:
+A feature epic delivers something and closes. A data epic is a standing pipeline: submissions, model releases, and data loads keep arriving, and each one is a child ticket that opens and closes on its own. The body therefore describes how work flows through the epic, not what one phase delivers. The two modeling epics also feed a chain that no feature epic has:
 
 ```
 Submission Data Modeling ─┐
-                          ├─> model release ─┬─> Data Integration (validate, load, index, test)
+                          ├─> model release ─┬─> Data submission epics (validate, index, load, test)
 Internal Data Modeling ───┘                  └─> Mock Data Generation and other consumers
 ```
 
@@ -545,7 +545,7 @@ Internal Data Modeling ───┘                  └─> Mock Data Generatio
 - **Under 800 words** for the seven sections, including the Risks table text (the card line is not counted).
 - **Standing, not closed.** These epics stay Open for the life of the CTDC project. The wording is "Standing"; the sweep check for "evergreen" still applies.
 - **Not restored from the v1 data templates**: Stakeholders, Key Definitions, Assumptions, Constraints, User Impact, Components Breakdown, Documentation & Compliance. A constraint worth keeping becomes one acceptance criterion or one risk row.
-- **Migration moves, never invents.** Drafts condense existing text only. A risk that belongs to a sister data epic moves to that epic (for example, "the model lags the incoming dataset" belongs to the modeling epics, not Data Integration).
+- **Migration moves, never invents.** Drafts condense existing text only. A risk that belongs to a sister data epic moves to that epic (for example, "the model lags the incoming dataset" belongs to the modeling epics, not to a data submission epic).
 
 ---
 
@@ -694,12 +694,13 @@ Data management ticket templates live in the component library at **`claude/temp
 >
 > | Step | ID | Template | File |
 > |---|---|---|---|
-> | 1 | **DO-STORY** | Data Submission User Story | `data-submission-user-story-template.md` |
+> | 1 | **DO-EPIC** | Data Submission Epic | `data-submission-epic-template.md` |
 > | 2 | **DO-MODEL** | Data Modeling for Study Submission | `data-modeling-study-submission-template.md` |
 > | 3 | **DO-DBGAP** | dbGaP Validation Task | `dbgap-validation-task-template.md` |
 > | 4 | **DO-INDEX** | IndexD Registration Task | `indexd-registration-task-template.md` |
 > | 5 | **DO-LOAD** | Data Loading Task | `data-loading-task-template.md` |
 > | 6 | **DO-ZIP** | Megazip Creation Task | `megazip-creation-task-template.md` |
+> | retired | ~~DO-STORY~~ | Data Submission User Story (retired 2026-09-25, replaced by DO-EPIC) | `data-submission-user-story-template.md` |
 >
 > **Internal Modeling**
 >
@@ -707,7 +708,7 @@ Data management ticket templates live in the component library at **`claude/temp
 > |---|---|---|
 > | **DO-INTMODEL** | Data Model Update Task | `data-model-update-template.md` |
 >
-> **Template ID crosswalk (legacy 7x -> DO code).** Renumbered from the legacy Section 7 letter scheme to stable Data Operations codes on 2026-07-23. Legacy references resolve as: 7e = DO-STORY, 7f = DO-MODEL, 7g = DO-INDEX, 7h = DO-LOAD, 7i = DO-ZIP, 7j = DO-INTMODEL (internal), 7k = DO-DBGAP.
+> **Template ID crosswalk (legacy 7x -> DO code).** Renumbered from the legacy Section 7 letter scheme to stable Data Operations codes on 2026-07-23. Legacy references resolve as: 7e = DO-STORY, 7f = DO-MODEL, 7g = DO-INDEX, 7h = DO-LOAD, 7i = DO-ZIP, 7j = DO-INTMODEL (internal), 7k = DO-DBGAP. DO-EPIC (Data Submission Epic) was added on 2026-09-25 with no legacy letter; DO-STORY was retired the same day and stays a deprecated code, never reused.
 >
 > **ID governance.** DO codes are permanent identities: assigned once, never reused, never renumbered when the flow is reordered. Operational order is carried by the Step column and is the only thing edited when the sequence changes. A new template receives a new DO code and is placed by its Step, not inserted into a letter sequence. A retired template keeps its code, marked deprecated, and the code is never recycled. This crosswalk is maintained permanently so historical 7x references stay resolvable.
 
@@ -715,7 +716,8 @@ Data management ticket templates live in the component library at **`claude/temp
 
 | Template | File | Use When |
 |---|---|---|
-| **Data Submission User Story** | [`data-submission-user-story-template.md`](./templates/data-submission-user-story-template.md) | The **parent user story** for a study's data submission (DO-STORY) — the Data Concierge's coordinating outline over the whole lifecycle (submission, modeling, indexing, loading, verification). Carries study identity and aggregate scope; downstream modeling/indexing/loading tasks link back to it. |
+| **Data Submission Epic** | [`data-submission-epic-template.md`](./templates/data-submission-epic-template.md) | One **epic per study submission** (DO-EPIC, v1 2026-09-25): the Data Concierge's record from request to Production. Carries study identity (Submission Details), lifecycle, acceptance criteria, risks, and chronology; the dbGaP validation, IndexD, loading, and megazip tasks are its children through the Epic Link. Closes when the study is verified in Production. |
+| **Data Submission User Story** *(retired 2026-09-25)* | [`data-submission-user-story-template.md`](./templates/data-submission-user-story-template.md) | Retired: replaced by the Data Submission Epic (DO-EPIC). Kept for history; do not create new ones. |
 | **Data Loading Task** | [`data-loading-task-template.md`](./templates/data-loading-task-template.md) | Loading a CRDC submission's contents into CTDC's databases. Schema is stable; data is changing. |
 | **IndexD Registration Task** | [`indexd-registration-task-template.md`](./templates/indexd-registration-task-template.md) | Minting GUIDs for a submission's files via the external CTDS/DCFS handoff. Runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking) — file downloads for the study resolve once the GUIDs are minted and spot-checked. |
 | **dbGaP Validation Task** | [`dbgap-validation-task-template.md`](./templates/dbgap-validation-task-template.md) | Runs the established `dbgap_validatation_prod` Prefect deployment (`check_consent_group` on) to reconcile a released submission's consent group / ACL values against dbGaP. A consent-group gate that runs after release and **before** IndexD registration (DO-INDEX) and Data Loading (DO-LOAD). Since v2 (2026-09-16) it links to both with `Relates`, never `Blocks`: the gate is a process rule, not a Jira link. |
@@ -729,15 +731,16 @@ Data management ticket templates live in the component library at **`claude/temp
 
 **Decision tree** (matches `claude/README.md`):
 
+- *Is a new study submission (or a new version of a study) starting?* → **Data Submission Epic** (DO-EPIC); every task below for that submission hangs off it
 - *Is new data being loaded into the existing schema?* → **Data Loading Task** (DO-LOAD)
 - *Are the files in the submission still pending IndexD GUID minting via the external CTDS/DCFS team?* (paired with a planned Data Loading Task — the two run in parallel) → **IndexD Registration Task** (DO-INDEX)
 - *Is the schema changing because an incoming **study submission** needs new properties/enums/permissible values, with that study's CDE Request Workbook as the spec?* → **Data Modeling for Study Submission** (DO-MODEL) — study-driven; records in the study's workbook
 - *Is the schema changing because the **CTDC project itself** decided to change it (application roadmap or data team), anywhere from a single additive optional property to a breaking multi-repo refactor?* → **Data Model Update Task** (DO-INTMODEL) — internally/CTDC-driven; records in the internal CTDC workbook
 - *(Either way, the change always records in a CDE Request Workbook — the driver just decides which one. There is no "no workbook" path. As of DO-MODEL v11 the two templates diverge by exactly one section: DO-MODEL carries a study-submission-specific **⭐ Data Concierge** section — 6 sections — while DO-INTMODEL has no study Data Concierge and deliberately stays 5-section. Otherwise identical; pick by driver, then follow the matching template's context.)*
 
-**Universal pattern for data submissions** (verified 2026-05-20 on CTDC-1666 ↔ CTDC-2051 and CTDC-1804 ↔ CTDC-1799):
+**Universal pattern for data submissions** (revised 2026-09-25 with DO-EPIC on CTDC-2110; first verified 2026-05-20 on CTDC-1666 ↔ CTDC-2051 and CTDC-1804 ↔ CTDC-1799):
 
-Every CTDC data submission generates multiple tickets — a user story for the submission as a whole, a modeling ticket for schema additions, eventually a loading ticket, possibly supporting tasks (documentation review, mapping work, anonymization options). The **parent user story carries study identity** (program, study name, dbGaP ID, submitter, chronology, document references, study description). Downstream tickets link back to the parent user story and **do not duplicate study identity** in their descriptions. This pattern is required for Data Modeling tickets (DO-MODEL of the template); apply it to Data Loading and any other downstream tickets the same way.
+Every CTDC data submission generates multiple tickets: the **submission epic** for the submission as a whole, a dbGaP validation task, an IndexD task, a loading task, a megazip task, usually a modeling task for schema additions, and possibly supporting tasks (documentation review, mapping work, anonymization options). The **submission epic carries study identity** (program, study name, dbGaP ID, submitter, chronology, document references, study context). The validation, IndexD, loading, and megazip tasks are its children through the Epic Link and relate to each other with `Relates`; the modeling task stays a child of the Submission Data Modeling epic and links to the submission epic with `Relates`. Every task reuses the epic's title token (`<Program Short Name> <Study Short Name> <version>`) and **does not duplicate study identity** in its description. No `Supports` links.
 
 See `claude/README.md` for the full library overview, `claude/workflows/data-submission-workflow.md` for the internal end-to-end Data Submission Process SOP (the process order and which artifact/template to create at each step), and `claude/lessons-learned/2026-05-20-data-modeling-templates.md` for the methodology lessons that produced this convention.
 
@@ -798,14 +801,15 @@ Tracks the status of every CTDC ticket template — software-development lane an
 |---|---|
 | 7a · User Story | CTDC-1691 |
 | 7b · Epic (lean v2) | CTDC-1802 |
-| 7b-D · Data epic variant | Data Integration, Submission Data Modeling, Internal Data Modeling (first drafts in progress, 2026-09-25) |
+| 7b-D · Data epic variant | Submission Data Modeling, Internal Data Modeling (first drafts in progress, 2026-09-25) |
 | 7c · Bug Format | n/a |
 | 7d · Design Task | CTDC-2044 |
-| DO-STORY · Data Submission User Story | CTDC-1666 *(working instance: CTDC-2110)* |
-| DO-MODEL · Data Modeling for Study Submission | CTDC-2051 *(parent user story CTDC-1666)* |
-| DO-DBGAP · dbGaP Validation Task | CTDC-2141 |
+| DO-EPIC · Data Submission Epic | CTDC-2110 (CMB v6) |
+| DO-STORY · Data Submission User Story *(retired 2026-09-25)* | CTDC-1666 *(historical)* |
+| DO-MODEL · Data Modeling for Study Submission | CTDC-2051 *(current link pattern: CTDC-2111 Relates submission epic CTDC-2110)* |
+| DO-DBGAP · dbGaP Validation Task | CTDC-2141 *(first under a submission epic: CTDC-2233)* |
 | DO-INDEX · IndexD Registration Task | CTDC-2060 |
-| DO-LOAD · Data Loading Task | CTDC-2063 |
+| DO-LOAD · Data Loading Task | CTDC-2063 *(first v9 with Expected Counts: CTDC-2205)* |
 | DO-ZIP · Megazip Creation Task | CTDC-2220, CTDC-2221 *(v2 ancestor: CTDC-2104)* |
 | DO-INTMODEL · Data Model Update Task | CTDC-2068 |
 
@@ -814,7 +818,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
 | User Story | Section 7a | ✅ Drafted v2 (2026-09-04) — slimmed from 7 to 5 sections; removed Parent Epic & Context and Notes (now carried by the Epic Link field, native Jira links, and comments); aligned with ICDC's `user-story-template.md` (canonical ICDC-4244) | CTDC-1691 (Upload Participant Set, child of CTDC-2042 — still carries the v1 7-section body; new stories use v2) |
-| Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the three standing data epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template | CTDC-1802 (Export to the Cancer Genomics Cloud) |
+| Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v3 (2026-09-04): no Jira ticket keys in the body (Links holds external references only), colons instead of em dashes in labeled bullets. v2 (2026-07-07) slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
 
@@ -824,12 +828,13 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Step | ID | Template | File | Sub-function | Status | Canonical Example |
 |---|---|---|---|---|---|---|
-| 1 | **DO-STORY** | Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission — parent user story | ✅ Drafted v2 (2026-06-16) — Data Concierge POV; 6-section shape (Study Submission Details · POC Requirements · Submission Lifecycle · Submission Chronology · Study Description · Data Details); Submission Lifecycle outline coordinating linked modeling/indexing/loading at summary altitude; consolidated Study Submission Details (SRF, Submission ID, DHDM rows; single SharePoint Folder; no AWS bucket); aggregate-only Data Details; `Data Submission: <Study Name vN>` title convention reused verbatim by downstream tasks | CTDC-1666 (canonical); CTDC-2110 (CMB v6, working instance) |
+| 1 | **DO-EPIC** | Data Submission Epic | `claude/templates/data-submission-epic-template.md` | Submission: one epic per study submission | ✅ Drafted v1 (2026-09-25): card line plus 9 sections (Epic Summary · Context & Background · Goal / Objectives · Submission Details · Submission Lifecycle · Acceptance Criteria · Risks & Mitigations · Submission Chronology · Notes); built from CTDC-1664's structure plus every field across its user stories; Process Documentation link first in Submission Details; chronology holds milestones and decisions only, never data model versions; counts live on DO-LOAD Expected Counts; title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`, reused as the token in every child title; children via Epic Link, modeling task via `Relates`, no `Supports` links; replaces DO-STORY and the standing Data Integration epic | CTDC-2110 (CMB v6, pilot) |
 | 2 | **DO-MODEL** | Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v11 (2026-07-22) — **6-section shape** (Modeling Summary · CDE Request Workbook · **⭐ Data Concierge** · DM Federal Lead & SME Review · Steps to Completion · Verification Surfaces). v11 added the study-submission-specific **⭐ Data Concierge** section as new Section 3 — a **deliberate divergence from DO-INTMODEL**, which stays 5-section (an internally-driven update has no study Data Concierge); the section names the responsible party (Primary + Backups) via a Name/Role roster. Carries forward all v10 content: Section 4 row 3 is the **caDSR II Help Desk Request Form** (owner: Data Concierge), replacing the earlier "ServiceNow Ticket / DM Fed Lead"; conditional watcher rule (DM Fed Lead watches the caDSR ticket when one is filed, the CTDC Jira ticket only when none is required; both TPMs added to the caDSR ticket); Steps to Completion is the 11-step canonical workflow (TPM verification gate, multiple caDSR tickets per node, SI curation, Slack #data-modeling PR review, QA send-back); milestone tracker — no specifics, no counts | CTDC-2051 ↔ CTDC-1666 (canonical, drove v11 — already carries the ⭐ Data Concierge section); CTDC-1799 ↔ CTDC-1804 (pending retrofit to v11) |
-| 3 | **DO-DBGAP** | dbGaP Validation Task | `claude/templates/dbgap-validation-task-template.md` | Loading data — consent-group gate | ✅ Drafted v2 (2026-09-16): 4-section shape (Validation Summary · Submission & Artifacts · Validation Workflow · Verification); runs the established `dbgap_validatation_prod` Prefect deployment (`check_consent_group` on) to reconcile a released submission's ACLs against dbGaP; v2 links the paired IndexD (DO-INDEX) and Data Loading (DO-LOAD) tasks with `Relates`, never `Blocks` (the consent-group gate is a process rule in Verification), title `PREFECT dbGaP Validation: <Study Name vN>`, and the `CTDC Data Related` sprint at creation; `Data-Concierge` label, parent epic CTDC-1664 | CTDC-2141 (first ticket of the pattern); CTDC-2142 and CTDC-2218 (v2 instances) |
+| 3 | **DO-DBGAP** | dbGaP Validation Task | `claude/templates/dbgap-validation-task-template.md` | Loading data — consent-group gate | ✅ Drafted v2 (2026-09-16): 4-section shape (Validation Summary · Submission & Artifacts · Validation Workflow · Verification); runs the established `dbgap_validatation_prod` Prefect deployment (`check_consent_group` on) to reconcile a released submission's ACLs against dbGaP; v2 links the paired IndexD (DO-INDEX) and Data Loading (DO-LOAD) tasks with `Relates`, never `Blocks` (the consent-group gate is a process rule in Verification), title `PREFECT dbGaP Validation: <Study Name vN>`, and the `CTDC Data Related` sprint at creation; `Data-Concierge` label; parent is the study's submission epic (Epic Link) since 2026-09-25 | CTDC-2141 (first ticket of the pattern); CTDC-2142 and CTDC-2218 (v2 instances) |
 | 4 | **DO-INDEX** | IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v7 (2026-06-11) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label; v6 slimmed the task to 4 sections (one-sentence Registration Summary; Pre-registration + External handoff workflow only — the Confirmation-and-verification phase folded into the Verification section; no Notes section), building on the v5 Submission & Artifacts table that mirrors the Data Loading Task; v7 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change | CTDC-2060 (AHEP0731 Images-Only — canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
-| 5 | **DO-LOAD** | Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v8 (2026-06-11) — 4-section slim shape (Load Summary · Submission & Artifacts · Loading Workflow · Testing Signoff); v8 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to DO-INDEX | AHEP0731 load (CTDC-2063) |
+| 5 | **DO-LOAD** | Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v9 (2026-09-25): 5-section shape (Load Summary · Submission & Artifacts · Expected Counts · Loading Workflow · Testing Signoff); v9 added a one-column Expected Counts table filled once from the Release Package and checked at Dev, QA, Stage, and Prod, and made the submission epic the parent (Epic Link); v8 (2026-06-11) replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to DO-INDEX | AHEP0731 load (CTDC-2063); CTDC-2205 (CMB v6, first v9) |
 | 6 | **DO-ZIP** | Megazip Creation Task | `claude/templates/megazip-creation-task-template.md` | CTDC-created artifact (megazip) | ✅ Drafted v3 (2026-09-17): lean rewrite after assignees reported v2 was too long to read. One ticket per study and one megazip **per `data_file_type`** (filename `<study>_<data_file_type>.zip`, no program prefix); release package copied from the study's DO-DBGAP / DO-INDEX tickets; object-files directory (in `nci-crdc-data-bucket-prod`, a different bucket) read from the `urls` column of `indexd.tsv` as the first workflow step; 4 sections (Summary · Artifacts · Workflow · Testing Signoff), with the GUID spot-check folded into the Index phase; GUIDs self-minted (`dg.4DFC/`) and handed to CTDS through the standard DCF Google Drive + CRINTAKE path; `Relates` to every study task, no feature user story link; `CTDC Data Related` sprint at creation | CTDC-2220 (AHOD0831) and CTDC-2221 (S0819), v3 canonical; CTDC-2104 (AHEP0731), v2 ancestor |
+| retired | ~~DO-STORY~~ | Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission: parent user story | ⛔ Retired 2026-09-25, replaced by DO-EPIC. Last version v2 (2026-06-16, Data Concierge POV, 6 sections). Existing stories convert with Move → Epic | CTDC-1666 (historical) |
 
 **Internal Modeling**
 
