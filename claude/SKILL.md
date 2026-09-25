@@ -457,15 +457,16 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 An epic is a container over its child stories, not a design document. The body needs to do four things: state the goal, objectives, and why, describe the mechanism in one breath, draw the scope line, and state how we know it is done. Anything longer either duplicates the children or goes stale. The target is **under 600 words**; if content does not fit, it belongs in a child story, a comment, or the epic summary `.docx`.
 
-**Section order (5 sections, exactly this sequence)**
+**Card line + section order (card line, then 5 sections, exactly this sequence)**
 
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header.
+Each section header is an `h3.` Jira wiki heading using the emoji + bold title format shown (`h3. 🎯 *Epic Statement*`; see "Authoring format" in 7b-shared). Do not omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header.
 
-1. `### 🎯 **Epic Statement**`: One paragraph stating the **goal**, the **objectives**, and **why** the work is being done. Not a user story: the As a / I want / So that form belongs to the child stories, where one user and one behavior are in view. The epic statement is the umbrella over those stories: the outcome the team is delivering, the two to four objectives that define it, and the problem or value that justifies it. Example (CTDC-1802): *"Give CTDC researchers a one-click path from the files they have gathered in the Cart to a project on the Seven Bridges Cancer Genomics Cloud, so that CTDC data can be analyzed in the cloud without being downloaded or manually re-uploaded. Objectives: an export that needs no manual manifest handling; a manifest CGC can import as-is with CTDC clinical metadata attached; file access still governed by the researcher's own dbGaP authorization; identical behavior on every tier. Why: finding files is only half of FAIR. Without a direct hand-off to a CRDC Cloud Resource, researchers had to download a manifest, log in to CGC separately, and upload it by hand."*
-2. `### 🧬 **Description**`: Two short paragraphs. (a) How it works: the surface(s) it lives on with the route, the services and data stores involved (Memgraph, never Neo4j; OpenSearch when relevant), and where authorization is enforced. (b) What this epic's phase delivers (design, frontend, backend, DevOps, defect fixes) and the release it shipped in or targets. Ground (a) in the canonical repo and the live UI, not in ticket titles.
-3. `### 🗺️ **Scope**`: Two sub-blocks, **In Scope** and **Out of Scope**, about five bullets each. Out of Scope names adjacent or excluded work in prose (never by ticket key) and ends with the bullet that future enhancements will be scoped as a new phase epic.
-4. `### ✅ **Acceptance Criteria**`: A numbered list of five to eight items, each a single observable behavior QA can pass or fail on Dev, QA, Stage, and Prod. The quality bar (WCAG 2.1 AA, design system conformance, automated test coverage for user-facing work; contract stability, test coverage, observability, and cross-environment parity for backend work) is one item, not a sub-block.
-5. `### 📝 **Notes**`: Two or three bullets at most: the phase statement (complete and the release it shipped in, or what closes it), and the canonical repos with branch. An upstream Bento package goes here when one is involved. Nothing else.
+0. **Card line** (added 2026-09-24): the first line of the description, with no header. One plain sentence, 140 characters or fewer, saying what the epic delivers in terms Federal Leadership would use. No markup, emoji, ticket keys, or heading; follow it with one blank line, then the 🎯 heading. It is what the Federal Leadership epic Kanban board shows on each card (Board settings, Card layout: Description shows the first line). Example (CTDC-1926): *"Lets users download all files of one type for a study as a single zip, built on request instead of stored in the cloud."* When the admins add the existing Business Value text field (`customfield_10502`) to the CTDC and ICDC epic screens, the same sentence moves into that field and the card layout switches to it.
+1. `h3. 🎯 *Epic Statement*`: One paragraph stating the **goal**, the **objectives**, and **why** the work is being done. Not a user story: the As a / I want / So that form belongs to the child stories, where one user and one behavior are in view. The epic statement is the umbrella over those stories: the outcome the team is delivering, the two to four objectives that define it, and the problem or value that justifies it. Example (CTDC-1802): *"Give CTDC researchers a one-click path from the files they have gathered in the Cart to a project on the Seven Bridges Cancer Genomics Cloud, so that CTDC data can be analyzed in the cloud without being downloaded or manually re-uploaded. Objectives: an export that needs no manual manifest handling; a manifest CGC can import as-is with CTDC clinical metadata attached; file access still governed by the researcher's own dbGaP authorization; identical behavior on every tier. Why: finding files is only half of FAIR. Without a direct hand-off to a CRDC Cloud Resource, researchers had to download a manifest, log in to CGC separately, and upload it by hand."*
+2. `h3. 🧬 *Description*`: Two short paragraphs. (a) How it works: the surface(s) it lives on with the route, the services and data stores involved (Memgraph, never Neo4j; OpenSearch when relevant), and where authorization is enforced. (b) What this epic's phase delivers (design, frontend, backend, DevOps, defect fixes) and the release it shipped in or targets. Ground (a) in the canonical repo and the live UI, not in ticket titles.
+3. `h3. 🗺️ *Scope*`: Two sub-blocks, **In Scope** and **Out of Scope**, about five bullets each. Out of Scope names adjacent or excluded work in prose (never by ticket key) and ends with the bullet that future enhancements will be scoped as a new phase epic.
+4. `h3. ✅ *Acceptance Criteria*`: A numbered list of five to eight items, each a single observable outcome the epic delivers. The epic itself is not tested: verification happens in its child stories and tasks, so these criteria state what must be true when the children are done (Gina, 2026-09-25). The quality bar (WCAG 2.1 AA, design system conformance, automated test coverage for user-facing work; contract stability, test coverage, observability, and cross-environment parity for backend work) is one item, not a sub-block.
+5. `h3. 📝 *Notes*`: Two or three bullets at most: the phase statement (complete and the release it shipped in, or what closes it), and the canonical repos with branch. An upstream Bento package goes here when one is involved. Nothing else.
 
 **Standing emoji set (5 entries)**
 
@@ -479,25 +480,28 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 **Required content rules (universal rules in 7b-shared also apply)**
 
-- **Under 600 words.** Count before pushing. CTDC-1802 is 597.
+- **Card line first.** Line 1 is the card line (item 0), exactly one sentence of 140 characters or fewer, then a blank line.
+- **Under 600 words** for the five sections (the card line is not counted). Count before pushing. CTDC-1802 is 597.
 - **No ticket keys in the body** (7b-shared, "Cross-ticket references"). Related work is named in prose; Jira links are for parent/child only.
 - **Grounded before drafting.** Verify the live UI with Playwright for anything user-facing, and read the canonical repo (confirmed via `CBIIT/crdc-ctdc-starter-kit/.gitmodules`, Section 17) for the mechanism in the Description. The child tickets' summaries are not a substitute.
 - **Memgraph, never Neo4j; OpenSearch named when relevant; FAIR stated where it falls naturally** (usually in the Epic Statement's "why").
-- **Underscored identifiers in backticks** (`drs_uri`, `REACT_APP_INTEROP_SERVICE_URL`) so the wiki converter renders them as monospace instead of opening italic spans.
+- **Underscored identifiers in `{{...}}` monospace** (`{{drs_uri}}`, `{{REACT_APP_INTEROP_SERVICE_URL}}`) so Jira does not open italic spans.
 - **Curly braces escaped as `\{...\}`** anywhere they appear.
-- **Not evergreen.** The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
+- **Not evergreen** (feature, page, service, and infrastructure epics; data-related epics are the exception noted under "Migration of v1 epics"). The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
 
 **Writing-and-publishing workflow**
 
 1. **Verify** the hosting surface (Playwright) and the canonical repo before drafting.
-2. **Draft** all 5 sections in Markdown, applying the rules above. Check the word count.
-3. **Push** via `jira_update_issue` with the `description` field (for a new epic, `jira_create_issue` with a one-line placeholder first, then update). Set `priority` to Major in the same call; never touch `labels` unless deliberately changing them.
+2. **Draft** the card line and all 5 sections in Jira wiki markup, applying the rules above. Check the word count.
+3. **Push** via `jira_update_issue` with the description in `additional_fields` (`{"description": "..."}`, raw Jira wiki; see "Authoring format" in 7b-shared) (for a new epic, `jira_create_issue` with a one-line placeholder first, then update). Set `priority` to Major in the same call; never touch `labels` unless deliberately changing them.
 4. **Verify the render with a UI screenshot** from the user; wiki source is not a render preview.
 5. **Close the epic** (transition `Close`, resolution `Completed`) with a short comment naming the release once every child ticket is Closed.
 
 **Migration of v1 epics**
 
-Existing epics written to the v1 templates (Home, Programs, Explore Dashboard, Study, Study Details, Participant Details, Cart, Static Pages, Program Details, Local Find, Bento Data Retriever, Data Integration, Internal Data Modeling, and others) are left as-is until each is next edited, then condensed to v2. No sweep. When condensing, move anything worth keeping into the epic summary `.docx` or a comment before cutting it from the body.
+*Data-related epics are handled separately* (Gina, 2026-09-25). Data Integration, Submission Data Modeling, Internal Data Modeling, and similar data-operations epics differ from feature epics: they may stay Open across phases, and they are expected to keep a Risks table and possibly other sections. They are excluded from the sweep below until a data-epic variant of this template is defined; the card line still applies to them.
+
+Superseded 2026-09-24: Gina directed a sweep of every active CTDC epic to this template (the earlier "condense when next edited, no sweep" rule is retired). Order: In Progress epics first, then Ready for Review, then On Hold, with drafts reviewed by the TPM before each batch is written. Drafts condense the existing description only (no new facts); stale items are flagged to the TPM rather than guessed. Cut detail is not copied into comments: Jira's History tab keeps every prior description, and a JSON backup of the pre-sweep descriptions was taken on 2026-09-24. Final Design QA epics keep their own container template (cloned from the Final Design QA template epic) and only gain the card line.
 
 ---
 
@@ -538,7 +542,20 @@ These rules apply to every CTDC epic. The lean template in 7b-lean inherits them
 - **Verify the canonical repo before reading code.** When an epic touches CTDC code, **the first verification step is confirming you are in the project-canonical repo**, not just any repo whose name matches. CTDC has historical/abandoned repos that share name fragments with the active canonical repo (e.g., `bento-ctdc-frontend` is the abandoned 2021–2023 frontend; `crdc-ctdc-ui` is the active starter-kit-canonical frontend). The single source of truth for which repos are canonical is the `.gitmodules` file in `CBIIT/crdc-ctdc-starter-kit`. See Section 17 for the full list.
 - **For all groupings:** the rendered Jira UI is the only ground truth for description rendering. Wiki source returned by `jira_get_issue` does not reveal rendering state and looks identical for working and broken tickets — only a UI screenshot tells the truth.
 
-**Markdown conventions**
+**Authoring format (Jira wiki, since 2026-09-24): overrides the Markdown guidance below**
+
+The Jira connector (`mcp-atlassian`, Docker, configured in the Claude desktop app) now runs with `DISABLE_JIRA_MARKUP_TRANSLATION=true`. Nothing converts Markdown any more: whatever is sent is stored exactly. Author every description and comment in **Jira wiki markup**, and pass descriptions in `additional_fields` as `{"description": "..."}`.
+
+- h3 heading: `h3. 🎯 *Title*`
+- Bold: `*bold*`; italic: `_italic_`
+- Bullet: `* item` at column 0; numbered: `# item` at column 0
+- Monospace: `{{code_name}}`
+- Table: header row `||h||h||`, data rows `|c|c|`
+- Literal braces: `\{` and `\}`
+
+Why the change: prepending a card line to existing epics meant sending back text already in Jira wiki, and the connector's Markdown converter re-translated it (bold headings became italics, `#` lists became `h1.` headings, underscores gained backslashes). Turning translation off makes every write exact. The Markdown-era guidance below (and in 7a, the templates folder, and Section 9) is historical: read it through the list above. If the setting is ever removed, the Markdown rules apply again.
+
+**Markdown conventions (historical: applied while translation was on)**
 - **The `description` field expects Markdown input, not Jira wiki markup.** The `jira_update_issue` MCP tool docs are explicit: "for 'description', provide text in Markdown format." Markdown is converted server-side into Jira-wiki for storage. **If you write Jira-wiki by mistake (`*bold*`, `h3.`, `#` for ordered lists), the tool interprets the asterisks as Markdown italic emphasis and converts them to underscores — so your bold headers render as italic.** Always author in Markdown:
 
   | Want | Write (Markdown) | Don't write (Jira-wiki) |
