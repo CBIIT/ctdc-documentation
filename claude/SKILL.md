@@ -449,7 +449,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 ### 7b. 🏛️ Epic Template (Lean v2)
 
-> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security, data). The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
+> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security), except the three standing data epics, which use the data variant in 7b-D. The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
 >
 > **v2 (2026-09-14): one five-section template replaces the per-grouping templates.** The v1 templates (7b-1 Application Pages at 15 sections, 7b-2 Microservices at 20, 7b-3 Features at 18, and the 7b-4 through 7b-7 stubs) produced 3,000-word epic bodies that nobody read in Jira. Per Gina's direction the standard is now what the Agile Alliance actually prescribes: an epic is "a large user story that cannot be delivered as defined within a single iteration," and "there is no standard form to represent epics." CTDC's form is a goal-and-objectives statement, not the As a / I want / So that story form, which is reserved for the child stories. Everything the v1 templates carried beyond that (Upstream Provenance, Surface Area, Stakeholders, Key Definitions, Composition, Dependencies, Assumptions, Constraints, Risks, User Impact, Components Breakdown, Documentation & Compliance) now lives in one of three places: a child story, a Jira comment, or the leadership `.docx` epic summary (Section 5). The seven groupings survive only as a classification aid for deciding what to verify before drafting (see 7b-shared, "Verification & ground truth"); they no longer select a template.
 
@@ -487,7 +487,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 - **Memgraph, never Neo4j; OpenSearch named when relevant; FAIR stated where it falls naturally** (usually in the Epic Statement's "why").
 - **Underscored identifiers in `{{...}}` monospace** (`{{drs_uri}}`, `{{REACT_APP_INTEROP_SERVICE_URL}}`) so Jira does not open italic spans.
 - **Curly braces escaped as `\{...\}`** anywhere they appear.
-- **Not evergreen** (feature, page, service, and infrastructure epics; data-related epics are the exception noted under "Migration of v1 epics"). The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
+- **Not evergreen** (feature, page, service, and infrastructure epics; the standing data epics in 7b-D are the exception). The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
 
 **Writing-and-publishing workflow**
 
@@ -499,9 +499,53 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Migration of v1 epics**
 
-*Data-related epics are handled separately* (Gina, 2026-09-25). Data Integration, Submission Data Modeling, Internal Data Modeling, and similar data-operations epics differ from feature epics: they may stay Open across phases, and they are expected to keep a Risks table and possibly other sections. They are excluded from the sweep below until a data-epic variant of this template is defined; the card line still applies to them.
+*Data-related epics use the data variant in 7b-D* (Gina, 2026-09-25). Data Integration, Submission Data Modeling, and Internal Data Modeling are standing epics that stay Open and carry a Risks table; they are migrated with 7b-D, not this template. Mock Data Generation was reclassified the same day as a feature epic (its outputs serve data submitters, but it closes when delivered) and is migrated with this template.
 
 Superseded 2026-09-24: Gina directed a sweep of every active CTDC epic to this template (the earlier "condense when next edited, no sweep" rule is retired). Order: In Progress epics first, then Ready for Review, then On Hold, with drafts reviewed by the TPM before each batch is written. Drafts condense the existing description only (no new facts); stale items are flagged to the TPM rather than guessed. Cut detail is not copied into comments: Jira's History tab keeps every prior description, and a JSON backup of the pre-sweep descriptions was taken on 2026-09-24. Final Design QA epics keep their own container template (cloned from the Final Design QA template epic) and only gain the card line.
+
+#### 7b-D. Data Epic Variant (Lean v2-D)
+
+> **Use this variant for the three standing data epics only**: Data Integration, Submission Data Modeling, and Internal Data Modeling (Gina, 2026-09-25). Everything in 7b and 7b-shared applies except where this subsection says otherwise. Mock Data Generation is a feature epic and uses 7b; Bento Data Retriever is a microservice epic and uses 7b.
+
+**Why a variant**
+
+A feature epic delivers something and closes. A data epic is a standing pipeline: submissions, model releases, and data loads keep arriving, and each one is a child ticket that opens and closes on its own. The body therefore describes how work flows through the epic, not what one phase delivers. The three data epics also form a chain that no feature epic has:
+
+```
+Submission Data Modeling ─┐
+                          ├─> model release ─┬─> Data Integration (validate, load, index, test)
+Internal Data Modeling ───┘                  └─> Mock Data Generation and other consumers
+```
+
+**Card line + section order (card line, then 7 sections, exactly this sequence)**
+
+0. **Card line**: same rule as 7b item 0.
+1. `h3. 🎯 *Epic Statement*`: same as 7b (goal, objectives, why; not a user story).
+2. `h3. 🧬 *Description*`: Two short paragraphs. (a) How the work runs: the repos and branches, the CRDC Submission Portal where relevant, and the data stores (Memgraph, OpenSearch). (b) How child work is tracked: the child naming pattern (for example `{{Submission Data Modeling: <submission>}}`) and the event that closes each child. Part (b) replaces 7b's "what this phase delivers." No list of active studies or releases in the body: the children carry that, and a list in the body goes stale.
+3. `h3. 🗺️ *Scope*`: **In Scope** and **Out of Scope**, about five bullets each. Out of Scope names the sister data epics in prose. Omit 7b's closing "new phase epic" bullet.
+4. `h3. 🔗 *Upstream & Downstream*`: Two labeled sub-lists, *Upstream* (what must be true before this work starts) and *Downstream* (who consumes what it produces), two to four bullets each, named in prose.
+5. `h3. ✅ *Acceptance Criteria*`: Five to eight **standing** criteria, each phrased "Every <child, release, or load> ..." so it holds for every cycle rather than once at close. The epic itself is not tested. A data promotion constraint (for example, no direct loads to Prod) is one item here.
+6. `h3. ⚠️ *Risks & Mitigations*`: Required. A Jira wiki table `||Risk||Impact||Mitigation||` with three to six rows. Only standing risks that apply to the epic as a whole; a risk tied to one study or release goes on that child ticket. PHI handling is a row when the epic touches patient-level data.
+7. `h3. 📝 *Notes*`: Two or three bullets: the Standing line ("Standing: stays Open for the life of the CTDC project; each child closes when <event>.") and the canonical repos with branch. Never the word "evergreen."
+
+**Standing emoji set (7 entries)**
+
+| Section | Emoji |
+|---|---|
+| Epic Statement | 🎯 |
+| Description | 🧬 |
+| Scope | 🗺️ |
+| Upstream & Downstream | 🔗 |
+| Acceptance Criteria | ✅ |
+| Risks & Mitigations | ⚠️ |
+| Notes | 📝 |
+
+**Content rules that differ from 7b**
+
+- **Under 800 words** for the seven sections, including the Risks table text (the card line is not counted).
+- **Standing, not closed.** These epics stay Open for the life of the CTDC project. The wording is "Standing"; the sweep check for "evergreen" still applies.
+- **Not restored from the v1 data templates**: Stakeholders, Key Definitions, Assumptions, Constraints, User Impact, Components Breakdown, Documentation & Compliance. A constraint worth keeping becomes one acceptance criterion or one risk row.
+- **Migration moves, never invents.** Drafts condense existing text only. A risk that belongs to a sister data epic moves to that epic (for example, "the model lags the incoming dataset" belongs to the modeling epics, not Data Integration).
 
 ---
 
