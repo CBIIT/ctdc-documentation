@@ -95,6 +95,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Parent Epic field set via `customfield_12350`.** Default parent is CTDC-1664 (CTDC Data Integration) unless a release-specific epic exists.
 - **`Data-Concierge` label is mandatory on this registration (Index) task.** Indexing is performed by the Data Concierge, so the IndexD Registration task carries the `Data-Concierge` label, set at creation via the `labels` field. The paired Data Loading task carries **no** label; the load is performed by engineering.
 - **Leave the ticket Unassigned at creation.** Per standing team convention, newly created tickets are left Unassigned unless an assignee is explicitly directed. Data management tasks (IndexD Registration, Data Loading) also do not require the Developer field.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **`Relates` link to the parent submission user story is mandatory.** Set via `jira_create_issue_link` after ticket creation. The parent user story is the canonical record of study identity AND the home for open questions / risks. The Task description does not duplicate that content.
 - **`Relates` link to the study-specific Data Hub tracking ticket (DHDM-XXX) when one exists.** Set the same way as the parent submission user story link. This gives the ticket two anchors: the program-level user story (CTDC-XXXX) and the study-specific Data Hub tracker (DHDM-XXX). Verified on CTDC-2060 (linked to CTDC-1805 + DHDM-143).
 - **`Relates` link to the paired Data Loading Task is mandatory** when that load ticket exists. The registration and the load run **in parallel**: IndexD registration does **not** block the load (metadata can load before GUIDs are minted; file downloads resolve once this registration's GUID spot-check passes). Do **not** use a `Blocks` link between them. Pass the registration ticket as the inward issue, the load ticket as the outward issue. If the load ticket has not been filed yet at registration ticket creation time, add the `Relates` link as soon as the load ticket exists.
@@ -112,11 +113,12 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 4. Confirm the paired Data Loading Task exists (or will exist). The two tickets are paired by design and run **in parallel**; a registration without a paired load is unusual and should be questioned.
 5. Create the IndexD registration task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, the parent epic linked via `customfield_12350` in `additional_fields` (default: CTDC-1664), and the `Data-Concierge` label via the `labels` field. **Leave the ticket Unassigned** per standing convention; the TPM still owns the external CRINTAKE coordination, but that ownership is tracked through comments and the CRINTAKE remote link, not the assignee field.
 6. Push the full description in a second call via `jira_update_issue` with the full Markdown body. Same two-step pattern as the Data Loading Task and Features templates.
-7. Add `Relates` links from the registration ticket to the parent submission user story AND the study-specific DHDM tracker using `jira_create_issue_link`. Order: registration ticket as inward issue.
-8. Add a `Relates` link from the registration ticket to the paired Data Loading Task using `jira_create_issue_link` (registration as inward issue, load as outward issue). Do **not** use `Blocks`; the two run in parallel.
-9. Verify the rendered description with a UI screenshot.
-10. As the workflow progresses, add the CRINTAKE remote link via `jira_create_remote_issue_link` once step 3 of the workflow is complete.
-11. After GUID spot-check passes (Verification section), transition the ticket to Closed with resolution `Fixed`. **GUID spot-check success is the close trigger.**
+7. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+8. Add `Relates` links from the registration ticket to the parent submission user story AND the study-specific DHDM tracker using `jira_create_issue_link`. Order: registration ticket as inward issue.
+9. Add a `Relates` link from the registration ticket to the paired Data Loading Task using `jira_create_issue_link` (registration as inward issue, load as outward issue). Do **not** use `Blocks`; the two run in parallel.
+10. Verify the rendered description with a UI screenshot.
+11. As the workflow progresses, add the CRINTAKE remote link via `jira_create_remote_issue_link` once step 3 of the workflow is complete.
+12. After GUID spot-check passes (Verification section), transition the ticket to Closed with resolution `Fixed`. **GUID spot-check success is the close trigger.**
 
 **When to expand vs trim**
 
@@ -150,3 +152,8 @@ The CTDC team has two primary functions: software development and data managemen
 - Open questions and risks for the broader submission live on **CTDC-1805's Open Questions / Risks section**, not on CTDC-2060
 
 The retrofit recommendation that existed in v1 (against CTDC-1907) has been removed; CTDC-1907 is a different TCIA submission lineage (CMB, not Images-Only) and was never going to be the right canonical anchor for this template. It is retained in this template's antipattern notes for historical context only.
+
+
+**Changelog**
+
+- **2026-09-17 sprint rule** (no version bump): every ticket from this template goes into the standing `CTDC Data Related` sprint (board 641, id 8612) at creation, per the TPM on 2026-09-17. Applies to the whole DO-* family.
