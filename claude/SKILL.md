@@ -489,6 +489,20 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 - **Curly braces escaped as `\{...\}`** anywhere they appear.
 - **Not evergreen** (feature, page, service, and infrastructure epics; data-related epics are the exception noted under "Migration of v1 epics"). The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
 
+**Epic categories (Gina, 2026-09-25)**
+
+- *Feature, service, and infrastructure epics*: one phase of work; close as `Completed` when the phase ships.
+- *Improvement epics for live surfaces*: when a page or service already exists in production (Home, Explore Dashboard, Cart, Studies, Study Details, Participant Details, Static Pages, Global Search), its epic covers improvements to the live surface. Card line starts "Improves the existing ...". Scope is enhancements, defect fixes, accessibility, and data-driven updates; criteria are outcomes plus no regression. When a build epic's surface has shipped, close it and move open children to a new improvement epic (CTDC-926 to CTDC-2232).
+- *Standing operational epics*: recurring operational work stays in one open epic instead of one epic per cycle. Software release deployments (CTDC-2007) group each quarterly release's tickets by Fix Version; container security remediation (CTDC-1678) gets one task per monthly scan named "Container Scan Remediation: YYYY-MM". Notes say "Standing operational epic: ..."; no future-enhancements bullet.
+- *Data-related epics*: handled with a separate data-epic variant (see "Migration of v1 epics").
+- *Final Design QA epics*: keep their container template; card line only.
+- *Skeleton epics*: when the source has too little content, keep all five sections and write "_To be completed by the epic owner._" where there is nothing to say.
+
+**Status and lifecycle reminders**
+
+- For an epic, **Ready for Review means awaiting Federal review and approval before work can begin**. It is not a development status and never means "feature complete" or "in QA".
+- Do not restate the SDLC in an epic (feature branch, develop, qa, release candidate to stage, prod). Every feature follows it.
+
 **Writing-and-publishing workflow**
 
 1. **Verify** the hosting surface (Playwright) and the canonical repo before drafting.
