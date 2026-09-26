@@ -99,7 +99,7 @@ This section did real work too. Without it, the template would have buried "exte
 - **Sibling templates:** `claude/templates/data-loading-task-template.md` (Section 7e), `claude/templates/data-modeling-study-submission-template.md` (Section 7g), `claude/templates/data-model-update-template.md` (Section 7f)
 - **Canonical workflow example:** CTDC-1907 (TCIA CMB radiology images, 2,632 files, closed 2026-03-11)
 - **Canonical relationships example:** CTDC-2051 ↔ CTDC-1666 and CTDC-1799 ↔ CTDC-1804 (Data Modeling for Study Submission pattern)
-- **Parent epic for IndexD registration tickets:** CTDC-1664 (CTDC Data Integration)
+- **Parent epic for IndexD registration tickets:** the study's submission epic (DO-EPIC, since 2026-09-25); before that, CTDC-1664 (CTDC Data Integration)
 - **External team:** UChicago CTDS (Center for Translational Data Science) — operators of CRDC IndexD via the open-source `github.com/uc-cdis/indexd` codebase
 - **External intake board:** `https://tracker.nci.nih.gov/projects/CRINTAKE/`
 - **DCF Google Drive folder for manifest upload:** `https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`
