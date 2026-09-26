@@ -16,7 +16,7 @@ Designing, coding, testing, and releasing the React frontend, the Java backend, 
 ### Data management
 Managing CRDC submissions, modeling the shape of CTDC's data, and loading data into CTDC's databases. Verified against application *contents* (row counts, page renders, downloadable artifacts) and against schema state (node types, properties, relationships, version numbers).
 
-**Every study submission is one Data Submission Epic** (DO-EPIC, since 2026-09-25). The epic carries study identity (Submission Details, lifecycle, risks, chronology) and closes when the study is verified in Production. It replaces the Data Submission user story (DO-STORY, retired) and the single standing CTDC Data Integration epic (CTDC-1664). The submission's tasks hang off it, and they fall into **two sub-functions**:
+**Every study submission is one Data Submission Epic** (DO-EPIC, since 2026-09-25). The epic carries study identity (Submission Details, lifecycle, risks, chronology) and closes when the study is verified in Production. It replaces the Data Submission user story (DO-STORY, retired). Study submissions no longer sit under the Data Integration epic (CTDC-1664), which stays open as the standing epic for cross-study integration work that no single submission owns. The submission's tasks hang off it, and they fall into **two sub-functions**:
 
 - **Loading data**: taking a CRDC submission's *contents* into CTDC's databases. Four work patterns, all children of the submission epic through the Epic Link and linked to each other with `Relates`, never `Blocks`:
   - **Consent-group gate**: running the `dbgap_validatation_prod` Prefect deployment against the released submission so its consent group / ACL values reconcile with dbGaP before anything is indexed or loaded. Use the **dbGaP Validation Task** (DO-DBGAP).
@@ -99,7 +99,7 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 |---|---|---|---|
 | **User Story** | Section 7a | ✅ Drafted v2 (2026-09-04): 5 sections (Story Summary · User Story · Scope · Acceptance Criteria · Testing Requirements), no ticket keys in the body | CTDC-1691 |
 | **Epic (lean v2)** | Section 7b | ✅ Drafted v2 (2026-09-14): card line plus 5 sections (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, closes when delivered. Replaced the v1 per-grouping epic templates (7b-1 to 7b-7) | CTDC-1802 |
-| **Data Epic Variant** | Section 7b-D | 🚧 Defined 2026-09-25 for the two standing modeling epics only (Submission Data Modeling, Internal Data Modeling): card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words; first drafts in progress | n/a yet |
+| **Data Epic Variant** | Section 7b-D | ✅ Drafted 2026-09-25 for the two standing modeling epics only (Submission Data Modeling, Internal Data Modeling): card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words | CTDC-2217, CTDC-1801 |
 | **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
 
 ---

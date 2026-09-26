@@ -39,7 +39,7 @@ Until September 2026 this work was tracked inside the Data Integration epic alon
 ### Out of Scope
 
 - Internally motivated model changes such as governance, SOP, repository structure, CDE hygiene, and application-driven properties (tracked under the Internal Data Modeling epic)
-- Transformation, validation, ingestion, and testing of the submission itself (tracked under the Data Integration epic)
+- Transformation, validation, ingestion, and testing of the submission itself (tracked under each study's submission epic; cross-study integration work sits under the Data Integration epic)
 - Mock data generation, backend and OpenSearch implementation, application UI changes, and the ICDC data model, each owned elsewhere
 
 ---

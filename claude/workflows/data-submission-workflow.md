@@ -4,7 +4,7 @@
 
 ## The issue family: one submission epic per study submission
 
-Every study submission (and every new version of a study) is its own **submission epic**. It replaces the Data Submission user story (DO-STORY, retired 2026-09-25) and the single standing CTDC Data Integration epic (CTDC-1664). The epic carries study identity and closes when the study is verified in Production.
+Every study submission (and every new version of a study) is its own **submission epic**. It replaces the Data Submission user story (DO-STORY, retired 2026-09-25). Study submissions no longer sit under the Data Integration epic (CTDC-1664), which stays open as the standing epic for cross-study integration work that no single submission owns. The epic carries study identity and closes when the study is verified in Production.
 
 | Artifact | Template | Parent and links | Count |
 |---|---|---|---|
