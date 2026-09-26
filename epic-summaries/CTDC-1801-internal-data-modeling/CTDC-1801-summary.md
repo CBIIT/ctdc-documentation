@@ -39,7 +39,7 @@ This is an evergreen epic. It stays open for the life of the CTDC project, and i
 ### Out of Scope
 
 - Model changes driven by an incoming submission (tracked under the Submission Data Modeling epic)
-- Transformation, validation, ingestion, and testing of submitted data (tracked under the Data Integration epic)
+- Transformation, validation, ingestion, and testing of submitted data (tracked under each study's submission epic; cross-study integration work sits under the Data Integration epic)
 - Mock data generation, backend and OpenSearch implementation, application UI changes, and the ICDC data model, each owned elsewhere
 
 ---
