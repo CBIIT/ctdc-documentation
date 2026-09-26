@@ -1,6 +1,6 @@
 ### DO-EPIC. 📥 Data Submission Epic Template (v1)
 
-> **Use this template for every CTDC study data submission.** One epic per study submission (and per version, when a study submits again). It replaces the Data Submission user story (Section DO-STORY, retired 2026-09-25) and the single standing CTDC Data Integration epic (CTDC-1664), which grew to over 100 children across every program. The canonical example is **CTDC-2110** (*CTDC Data Submission: CMB v6*), converted from a user story on 2026-09-25 as the pilot.
+> **Use this template for every CTDC study data submission.** One epic per study submission (and per version, when a study submits again). It replaces the Data Submission user story (Section DO-STORY, retired 2026-09-25) and takes study submissions out of the Data Integration epic (CTDC-1664), which grew to over 100 children across every program. CTDC-1664 stays open as the standing epic for cross-study integration work that no single submission owns. The canonical example is **CTDC-2110** (*CTDC Data Submission: CMB v6*), converted from a user story on 2026-09-25 as the pilot.
 
 **Why this template**
 
@@ -121,4 +121,4 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Changelog**
 
-- **v1 (2026-09-25)**: Initial template, piloted on CTDC-2110 (CMB v6). Replaces the Data Submission user story (DO-STORY, retired) and the standing CTDC Data Integration epic (CTDC-1664). Built from CTDC-1664's section structure plus every field found across its 10 user stories; Scope, Stakeholders, Key Definitions, Performance & Quality, Dependencies, Assumptions, Constraints, and Documentation & Compliance dropped in favor of the Process Documentation link. Data Details moved to the Data Loading task's Expected Counts. Chronology excludes data model versions. Title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`.
+- **v1 (2026-09-25)**: Initial template, piloted on CTDC-2110 (CMB v6). Replaces the Data Submission user story (DO-STORY, retired) and takes study submissions out of the standing Data Integration epic (CTDC-1664), which stays open for cross-study integration work. Built from CTDC-1664's section structure plus every field found across its 10 user stories; Scope, Stakeholders, Key Definitions, Performance & Quality, Dependencies, Assumptions, Constraints, and Documentation & Compliance dropped in favor of the Process Documentation link. Data Details moved to the Data Loading task's Expected Counts. Chronology excludes data model versions. Title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`.
