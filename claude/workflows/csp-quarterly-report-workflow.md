@@ -127,7 +127,7 @@ Use this mapping to sort epics and ticket clusters into the right SOW subsection
 
 | Section | Belongs Here |
 |---|---|
-| **1.2.1 Data Acquisition & Ingestion** | Active submission tracks (CTDC-1664 children); per-study CDE workbooks and submission docs; new submission track onboarding; stakeholder/submitter engagement specific to a track |
+| **1.2.1 Data Acquisition & Ingestion** | Active submission tracks (one submission epic per study, DO-EPIC; before 2026-09-25, CTDC-1664 children); cross-study integration work (CTDC-1664); per-study CDE workbooks and submission docs; new submission track onboarding; stakeholder/submitter engagement specific to a track |
 | **1.2.2 Data validation, QA, provenance** | Data model updates (CTDC-1801); megazip indexing via DCF; mock data generation; **data releases delivered to Production** (this is where data releases live — see lesson below on never conflating with software releases); CMB data migration / loading |
 | **1.3.1 Integration of emerging technologies** | Software releases (with full build manifest and feature list); new epics (megazip download capability, Local Find feature, Webpack 5 migration, Bento Data Retriever); RAS authentication work; technology spikes |
 | **1.3.2 General operations and maintenance** | Page-level work and bug fixes (DMN, Study Details, Explore Dashboard); infrastructure work (Neo4j → Memgraph, Jenkins → Prefect migrations); Auth Service; deployment work; cross-cutting application maintenance |
