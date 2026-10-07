@@ -55,12 +55,12 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 
    If the task changes no variables, state "None at this time".
 
-5. `h3. 🎫 *ServiceNow Requests*`: One row per upper-tier request filed with CloudOne. Mirrors the Tracking table on the deploy task templates so the two read the same.
+5. `h3. 🎫 *ServiceNow Requests*`: One row per upper-tier request filed with CloudOne. The only field is the ticket URL: the assignee, schedule, and history live in ServiceNow itself, one click away, so engineers don't copy them into Jira.
 
    ```
-   ||Tier||ServiceNow Ticket||URL||CloudOne Assignee||Scheduled Date||Notes||
-   |STAGE| | | | | |
-   |PROD| | | | | |
+   ||Tier||ServiceNow Ticket URL||
+   |STAGE| |
+   |PROD| |
    ```
 
    If no upper tier is in scope, state "None at this time".
@@ -112,4 +112,4 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 
 **Changelog**
 
-* *v1 (2026-10-07)*: Drafted with CTDC-2261 as the canonical ticket. ID 7l (not 7k, which is the legacy crosswalk letter for DO-DBGAP and is never reused).
+* *v1 (2026-10-07)*: Drafted with CTDC-2261 as the canonical ticket. Same day: ServiceNow Requests slimmed to Tier and ticket URL only (assignee, scheduled date, and notes dropped as duplicating ServiceNow). ID 7l (not 7k, which is the legacy crosswalk letter for DO-DBGAP and is never reused).
