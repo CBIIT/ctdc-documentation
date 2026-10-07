@@ -804,6 +804,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | 7b-D · Data epic variant | CTDC-2217 (Submission Data Modeling), CTDC-1801 (Internal Data Modeling), both written 2026-09-25 |
 | 7c · Bug Format | n/a |
 | 7d · Design Task | CTDC-2044 |
+| 7l · DevOps Task | CTDC-2261 |
 | DO-EPIC · Data Submission Epic | CTDC-2110 (CMB v6) |
 | DO-STORY · Data Submission User Story *(retired 2026-09-25)* | CTDC-1666 *(historical)* |
 | DO-MODEL · Data Modeling for Study Submission | CTDC-2051 *(current link pattern: CTDC-2111 Relates submission epic CTDC-2110)* |
@@ -821,6 +822,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v3 (2026-09-04): no Jira ticket keys in the body (Links holds external references only), colons instead of em dashes in labeled bullets. v2 (2026-07-07) slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
+| DevOps Task (7l) | `claude/templates/devops-task-template.md` | ✅ Drafted v1 (2026-10-07): 7 sections (Task Summary · Scope · Environments · Environment Variables · ServiceNow Requests · Workflow · Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>`; ID 7l because 7k is a retired crosswalk letter | CTDC-2261 |
 
 **Data Operations lane** — templates live in the component library at `claude/templates/`; see also the Data Management Templates (Component Library) section.
 
