@@ -11,7 +11,7 @@ The SKILL.md remains the operational knowledge base (SOPs, JQL recipes, deck sta
 Templates in this library map to one of the team's two primary functions. Knowing which lane a piece of work belongs in is the first step in picking the right template.
 
 ### Software development
-Designing, coding, testing, and releasing the React frontend, the Java backend, the microservices, and the infrastructure. Verified against application *behavior*. Tracked with the User Story, Epic, Design Task, Release, and Bug templates.
+Designing, coding, testing, and releasing the React frontend, the Java backend, the microservices, and the infrastructure. Verified against application *behavior*. Tracked with the User Story, Epic, Design Task, DevOps Task, Release, and Bug templates.
 
 ### Data management
 Managing CRDC submissions, modeling the shape of CTDC's data, and loading data into CTDC's databases. Verified against application *contents* (row counts, page renders, downloadable artifacts) and against schema state (node types, properties, relationships, version numbers).
@@ -40,7 +40,8 @@ Application pages updating when new data is loaded is the application working as
 | Template | File | Status | Canonical Examples |
 |---|---|---|---|
 | **Design Task** | [`design-task-template.md`](./templates/design-task-template.md) | ✅ Drafted v3 (2026-09-04): no Jira ticket keys in the body, colons instead of em dashes; v2 (2026-07-07) slimmed from 10 to 7 sections | CTDC-2044, CTDC-2045 |
-| **Release Ticket Templates** | [`release-ticket-templates.md`](./templates/release-ticket-templates.md) | ✅ Drafted v1 (2026-07-08): the three tickets cloned every software release (Final Design QA epic, Stage deploy task, Prod deploy task); house-style bodies, deploy tasks parented to the standing epic CTDC-2007; companion to the Software Release Playbook | Templates CTDC-2135 (FDQA epic), CTDC-2136 (Stage), CTDC-2137 (Prod); live CTDC-2130 / CTDC-2128 / CTDC-2129 |
+| **DevOps Task** | [`devops-task-template.md`](./templates/devops-task-template.md) | ✅ Drafted v1 (2026-10-07): 7 sections (🎯 Task Summary · 🧭 Scope · 🌐 Environments · 🔑 Environment Variables · 🎫 ServiceNow Requests · 🚦 Workflow · ✅ Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>` | CTDC-2261 (RDS MySQL engine upgrade) |
+| **Release Ticket Templates** | [`release-ticket-templates.md`](./templates/release-ticket-templates.md) | ✅ Drafted v2 (2026-10-07): bodies rewritten in Jira wiki markup (Markdown translation is disabled on the connector); v1 (2026-07-08): the three tickets cloned every software release (Final Design QA epic, Stage deploy task, Prod deploy task); house-style bodies, deploy tasks parented to the standing epic CTDC-2007; companion to the Software Release Playbook | Templates CTDC-2135 (FDQA epic), CTDC-2136 (Stage), CTDC-2137 (Prod); live CTDC-2130 / CTDC-2128 / CTDC-2129 |
 
 ### Data management lane
 
