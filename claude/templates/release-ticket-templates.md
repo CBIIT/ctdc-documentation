@@ -1,10 +1,10 @@
 # 🎟️ Release Ticket Templates
 
-> **Use this component for the three Jira tickets that recur every CTDC software release and must be formatted identically each time: the Final Design QA epic, the Stage deployment task, and the Production deployment task.** Each has a canonical **template ticket** in Jira (labeled `template`) that is cloned per release. This file is the canonical spec; the Jira template tickets are the clone sources. Companion: the Software Release Playbook (`software-release-playbook.md`), whose "Canonical Release Tickets" section links here.
+> **Use this component for the three Jira tickets that recur every CTDC software release and must be formatted identically each time: the Final Design QA epic, the Stage deployment task, and the Production deployment task.** Each has a canonical **template ticket** in Jira (labeled `template`) that is cloned per release. This file is the canonical spec; the Jira template tickets are the clone sources. Companion: the Software Release Playbook (`software-release-playbook.md`), whose "Canonical Release Tickets" section links here. For DevOps work that is not a release promotion (upgrades, environment variables, infrastructure changes), use the DevOps Task template (`devops-task-template.md`).
 
 **Why this component**
 
-Three tickets are created for every release. When each is hand-built from memory, formatting drifts release to release (escaped markup, inconsistent sections, stale ticket references). Pinning one canonical template ticket per artifact — cloned, never re-typed — keeps every release's tickets identical in shape, so reviewers and automation can rely on the structure.
+Three tickets are created for every release. When each is hand-built from memory, formatting drifts release to release (escaped markup, inconsistent sections, stale ticket references). Pinning one canonical template ticket per artifact (cloned, never re-typed) keeps every release's tickets identical in shape, so reviewers and automation can rely on the structure.
 
 ---
 
@@ -22,7 +22,7 @@ Live Q4 examples already following this format: **CTDC-2130** (Final Design QA),
 
 ## House style (all three)
 
-`### **Section**` headers (round-trip to Jira `h3.`), emoji-prefixed; slim shape; italic-label `* *Label*:` bullets (not `- **Label:**`); Markdown tables (convert to `||header||`). Push the body via `jira_update_issue` using the two-step create-then-update pattern (MCP converts Markdown to wiki server-side), then confirm the render in the Jira UI — the wiki echo is not a reliable preview.
+`h3.` section headers, emoji-prefixed, with bold titles; slim shape; italic-label `* *Label*: content` bullets; Jira wiki tables (`||header||` header row, `|cell|` body rows). Bodies are written directly in **Jira wiki markup**: Markdown translation is disabled on the mcp-atlassian connector (`DISABLE_JIRA_MARKUP_TRANSLATION=true`, Sep 2026), so Markdown pushed through `jira_update_issue` renders as literal `###` and `**` characters. Push with the two-step create-then-update pattern, escape literal curly braces as `\{` and `\}`, then confirm the render in the Jira UI: the API echo is not a reliable preview.
 
 ---
 
@@ -31,25 +31,22 @@ Live Q4 examples already following this format: **CTDC-2130** (Final Design QA),
 Four sections: 🎯 Design QA Summary · 🔎 Findings · 🚦 Workflow · ✅ Definition of Done.
 
 ```
-### 🎯 **Design QA Summary**
-Conduct a thorough final design review of every new feature and page implemented during
-this release cycle, verifying design fidelity and Section 508 accessibility compliance
-before the release candidate is promoted to Stage.
+h3. 🎯 *Design QA Summary*
+Conduct a thorough final design review of every new feature and page implemented during this release cycle, verifying design fidelity and Section 508 accessibility compliance before the release candidate is promoted to Stage.
 
-### 🔎 **Findings**
+h3. 🔎 *Findings*
 Log each discrepancy below and file it as a bug linked to this epic, grouped by page or feature.
 
-| Feature | Page | 508 Compliance | Design Discrepancy Comment | Figma Link | JIRA Bug Ticket |
-|---|---|---|---|---|---|
+||Feature||Page||508 Compliance||Design Discrepancy Comment||Figma Link||JIRA Bug Ticket||
 | | | | | | |
 
-### 🚦 **Workflow**
-1. When the release Slack channel signals QA regression has started in the QA tier, begin Final Design QA on the QA environment.
-2. Review every new feature and page for design fidelity and Section 508 compliance.
-3. File each discrepancy as a bug linked to this epic; announce it in the release channel.
-4. Notify the TPM when Final Design QA is complete.
+h3. 🚦 *Workflow*
+# When the release Slack channel signals QA regression has started in the QA tier, begin Final Design QA on the QA environment.
+# Review every new feature and page for design fidelity and Section 508 compliance.
+# File each discrepancy as a bug linked to this epic; announce it in the release channel.
+# Notify the TPM when Final Design QA is complete.
 
-### ✅ **Definition of Done**
+h3. ✅ *Definition of Done*
 * *Review*: every new feature and page checked for design and 508 compliance.
 * *Findings*: all discrepancies logged and filed as linked bugs.
 * *Blockers*: any release-blocker findings routed to Engineering before promotion.
@@ -63,23 +60,21 @@ Log each discrepancy below and file it as a bug linked to this epic, grouped by 
 Three sections: 🎯 Deployment Summary · 🚦 Workflow · 📋 Tracking. Identical except the environment word (**Stage** / **Production**).
 
 ```
-### 🎯 **Deployment Summary**
-File an NCI ServiceNow ticket so the CloudOne team reserves the date and time to deploy
-the software release candidate to the CTDC <Stage | Production> environment.
+h3. 🎯 *Deployment Summary*
+File an NCI ServiceNow ticket so the CloudOne team reserves the date and time to deploy the software release candidate to the CTDC <Stage | Production> environment.
 
 * *Release Dashboard*: paste the link to this release's Release Dashboard here.
 
-### 🚦 **Workflow**
-1. Add the TPMs (`kuffelgr`, `singletonss`) as watchers on the NCI ServiceNow ticket.
-2. Create an all-day Outlook calendar invite for the scheduled deployment day (exact time added later) and add the TPM, BE Lead, FE Lead, and CloudOne Engineer.
-3. Send the Outlook invite to the assigned CloudOne member and the TPMs.
-4. Deploy the build to <Stage | Production> on the scheduled date and notify the TPM.
-5. Fill in the Tracking table as information becomes available.
+h3. 🚦 *Workflow*
+# Add the TPMs ({{kuffelgr}}, {{singletonss}}) as watchers on the NCI ServiceNow ticket.
+# Create an all-day Outlook calendar invite for the scheduled deployment day (exact time added later) and add the TPM, BE Lead, FE Lead, and CloudOne Engineer.
+# Send the Outlook invite to the assigned CloudOne member and the TPMs.
+# Deploy the build to <Stage | Production> on the scheduled date and notify the TPM.
+# Fill in the Tracking table as information becomes available.
 
-### 📋 **Tracking**
-| NCI ServiceNow Ticket | URL | Assignee | Notes about Deployment |
-|---|---|---|---|
-| | | (CloudOne point of contact) | (nuances or issues encountered) |
+h3. 📋 *Tracking*
+||NCI ServiceNow Ticket||URL||Assignee||Notes about Deployment||
+| | |(CloudOne point of contact)|(nuances or issues encountered)|
 ```
 
 ---
@@ -96,4 +91,5 @@ the software release candidate to the CTDC <Stage | Production> environment.
 
 ## Changelog
 
+- **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
 - **v1 (2026-07-08)**: Initial component. Template tickets created and labeled `template`: CTDC-2135 (Final Design QA epic), CTDC-2136 (Stage deploy task, under CTDC-2007), CTDC-2137 (Prod deploy task, under CTDC-2007). Live Q4 tickets CTDC-2130 / CTDC-2128 / CTDC-2129 reformatted to this house style.
