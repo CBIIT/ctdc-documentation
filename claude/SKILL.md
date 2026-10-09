@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-09-25
+> **Last Updated:** 2026-10-09 (deck standard aligned across ICDC and CTDC: shared generator, story-point charts, goal and risk levels)
 
 ---
 
@@ -1074,18 +1074,24 @@ Combined Sprint Review + Release Demo + Retro decks follow this standard. Built 
 
 ### 11c. Standard Slide Order: Sprint Review + Retro (default, 10 slides, 60 minutes)
 
-The Sprint 31 deck is the reference layout; Sprints 32 and 33 follow it. The meeting is always 60 minutes, split 5 · 10 · 8 · 10 · 7 · 20.
+**Shared generator (aligned 2026-10-09):** ICDC and CTDC build this deck from the same generator, `claude/templates/sprint-review-deck/build-deck.js`, plus a per-sprint `config.sprintNN.json` and `tickets.sprintNN.json` (see that folder's README). Each repo keeps its own identical copy: when one changes, copy it to the other in the same session. Do not hand-build slides.
 
-1. **Cover** (dark bg): title `CTDC Sprint [N]`, subtitle "Sprint Review & Retrospective", sprint dates, meeting date and time, "Sprint [N] (closed) · Sprint [N+1] is now active", preparer block
-2. **Agenda**: six numbered rows with minutes, total 60
-3. **By the Numbers**: big stat in story points (`X of Y story points closed`, tickets underneath), three stat cards, status doughnut in points (ticket counts in the legend), breakdown panel, carry-over line
-4. **Goal Scorecard**: sprint goal quoted verbatim from Jira, badge ✓ DELIVERED / ▲ PARTIAL / ✗ NOT STARTED, up to four workstream cards, bottom line
-5. **Breakdown by Work Type**: stacked bar in points (Closed vs Carried over, tickets in the category labels) + takeaways panel
-6. **Who Closed What**: assignee at close (left) and Developer field (right), shout-out (include the QA gate), "why the two charts disagree" card
-7. **Carry-Over into Sprint [N+1]**: bar of unfinished points by status at close (tickets in parentheses), big stat of points carried, four workstream cards; carry-over is already in motion, not future work
-8. **What Needs a Decision Today**: three to five risk cards (HIGH red, MEDIUM amber, INFO green), each with a next step; never list a mid-sprint scope cut as a risk
-9. **Up Next: Retrospective** (dark bg): Liked · Lacked · Learned, five steps, 20 minute block, timing note for the in-flight sprint
-10. **Retro Board**: clickable retrotool URL (confirm with the TPM), three seeded columns, ground rules strip
+**Velocity is Fibonacci story points.** Every chart is in story points (`customfield_10042`); ticket counts go in the labels or parentheses. Pointed coverage (`pointed: X of Y tickets`) is printed on slide 3 so a low points figure is not misread when tickets are unpointed. `excludeTypes` in the config drops issue types that are not sprint work (`["Epic"]`, since data submission epics are long-running).
+
+1. **Cover** (dark bg, red left edge stripe): eyebrow `CANCER RESEARCH DATA COMMONS · CTDC`, "Sprint N", "Sprint Review & Retrospective", short red rule, three label/value rows (Sprint dates · Meeting · Reviewing: Sprint N (closed) · Sprint N+1 is now active), prepared-by card bottom-right
+2. **Today's Agenda**: six alternating rows (Georgia number, title, muted detail, minutes right-aligned), "Total: NN minutes". Meeting length is set per project in the config (CTDC: 60 minutes, 5 · 10 · 8 · 10 · 7 · 20)
+3. **Sprint N by the Numbers**: big "P of Q pts" story-points card (ticket count underneath) + three stat cards (carry-over; then two that say when things closed relative to the sprint window) + "How the M tickets break down" panel ending with the carry-over formula and pointed coverage + doughnut of **story points by status** (Closed / In motion / On hold / Open, ticket counts in the legend)
+4. **Goal Scorecard**: if the Jira sprint has a goal, the banner quotes it verbatim (`sprint.goal` in the config); otherwise the banner names the workstreams and the subtitle says "Scored against the N workstreams the sprint carried". "X OF Y DELIVERED" pill, then up to five rows, each ✓ DELIVERED (green), ▲ PARTIAL (amber) or ✗ NOT STARTED (red), with title, detail and ticket refs; red rule and one-line bottom summary
+5. **Breakdown by Work Type**: horizontal stacked bar of **story points** Closed vs Carried over by issue type, labels `Type (closed of total tickets)`, + "What the shape tells us" panel. The panel's card stripes are always neutral NIH Blue
+6. **Who Closed What**: two charts, "Closed by (Assignee at close)" and "Built by (Developer field)", + 🏆 Shout-out card (include the QA gate) + red-stripe "Why the two charts disagree" card
+7. **Carry-Over into Sprint N+1**: horizontal bar of **unfinished story points by status**, labels `Status (tickets)` + big amber "points carried" card that also says how many of the unfinished tickets are in Sprint N+1 (verified against `sprint = <nextId>`) + four fact cards, the first always "Sprint N+1 is NN% inherited". Carry-over is work already in motion, not future work
+8. **What Needs a Decision Today**: three to five rows, **HIGH (red) or MEDIUM (amber) only**, HIGH first; each has a Georgia title, muted detail and a bold blue "Next step:" naming a decision, owner or date. No green INFO level (green means Closed). Never list a mid-sprint scope cut as a risk
+9. **Retrospective** (dark bg): "Liked · Lacked · Learned", five numbered steps, "10 min" on step 1, "20 minute block", ⚠ "A note on timing" card for the sprint already in flight
+10. **Open the Board and Start Dropping Cards**: clickable retrotool URL (confirm the board with the TPM), three LIKED/LACKED/LEARNED cards with sprint-specific prompts, ground-rules bar
+
+Optional, inserted after slide 6 only when applicable: **Release [version] Overview** (dark section break, 4 stat cards), **Demo Schedule** table, and one **Presenter Intro** slide per slot. No demo slot unless the item is confirmed deployed to QA/Stage; no release overview unless a tagged release shipped in the sprint.
+
+Every slide except cover and section breaks carries a red eyebrow label above the title, a Georgia 32pt title, an italic muted subtitle, and a thin footer rule with `CTDC · Sprint N Review & Retrospective · Month D, YYYY` and the page number.
 
 ### 11c-2. Release Demo variant (only when a release shipped in the sprint)
 
@@ -1098,6 +1104,10 @@ When the review doubles as a release demo, insert these after slide 6, before th
 
 - **Never put red accent bars under slide titles.** Accent lines under titles read as AI-generated slop. Use whitespace or a dark background instead. A red motif line elsewhere on the slide (between content blocks, not attached to a heading) is OK.
 - **Never let big stat numbers overflow their text box.** `fontSize: 72` in an `h: 1.2` box with `valign: "middle"` will clip the top of the glyph. Use `fontSize: 64` in `h: 1.3` with valign middle, or size the box generously.
+- **Green and amber mean one thing.** On any slide with a Closed vs Carried over chart, green means Closed and amber means Carried over, nothing else. Takeaway cards beside a chart use a neutral NIH Blue stripe, never a severity color, or the audience reads an amber card as "all of these carried over" (ICDC Sprint 51, slide 5).
+- **Georgia titles need slack.** LibreOffice QA renders Georgia with a wider substitute, so a title that wraps in QA usually wraps in PowerPoint too. Keep goal, fact-card and risk titles short enough for one line; shorten the text rather than the font.
+- **Never use em dashes** anywhere on a slide (or in Slack, or in docs). Use colons, middle dots (`·`) or a comma. En dashes in date ranges are fine.
+- **No Jira hygiene on slides.** Missing sprint goal, missing epic links, resolution-date quirks and similar record-keeping observations do not go on the deck, in the Slack post or in retro prompts.
 - **Multi-presenter slots** get a single slide with two presenter cards stacked vertically on the left, "What you'll see" bullets on the right. Allocate 8 min instead of 5–6 for two-presenter demos.
 
 ### 11e. Presenter Intro Slide Structure
