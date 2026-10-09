@@ -304,7 +304,7 @@ Run these checks before each standup:
 [X] of [Y] goals delivered. Each goal scored: ✓ DELIVERED / ▲ PARTIAL / ✗ NOT STARTED.
 Score against the Jira-recorded sprint goal, not raw ticket completion.
 
-#### 📊 Velocity (story points first, ticket counts alongside)
+### 📊 Velocity (story points first, ticket counts alongside)
 Story Points = `customfield_10042`. The team has always used story points; the points trend starts with Sprint 32. Completion = `resolutiondate` on or before the sprint end; status at close comes from changelogs. Epics are excluded from the counts (data submission epics are long-running and do not count toward velocity).
 - Total: P pts (T tickets)
 - Closed at close: Y pts (Z%) · (N tickets, M%)
