@@ -23,11 +23,11 @@ The work is three operations the team already runs separately, on one ticket: **
 
 **Section order (4 sections, exactly this sequence)**
 
-Each header is an `h3` Markdown heading in the emoji + bold form shown.
+Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
 
-1. `### 🎯 **Summary**`: One or two sentences. Example: *"Create one megazip per data file type for AHOD0831, index each, and load them Dev → QA → Stage → Prod so each file type downloads as one file from the Study Details page. The individual files stay in the bucket."*
+1. `h3. 🎯 *Summary*`: One or two sentences. Example: *"Create one megazip per data file type for AHOD0831, index each, and load them Dev → QA → Stage → Prod so each file type downloads as one file from the Study Details page. The individual files stay in the bucket."*
 
-2. `### 📦 **Artifacts**`: Two Jira-wiki tables. The first holds the three study-level values; the second has one row per `data_file_type` and is filled in as the work progresses.
+2. `h3. 📦 *Artifacts*`: Two Jira-wiki tables. The first holds the three study-level values; the second has one row per `data_file_type` and is filled in as the work progresses.
 
    ||Field||Value||
    |CRDC Submission ID|`<submission-id>`|
@@ -39,7 +39,7 @@ Each header is an `h3` Markdown heading in the emoji + bold form shown.
    ||data_file_type||Megazip File||GUID||md5 / size||
    |PLACEHOLDER|`<study>_<data_file_type>.zip`|TBD| |
 
-3. `### 🚦 **Workflow**`: Four phases, Markdown `1.` ordered lists under an italic phase label (numbering restarts per phase).
+3. `h3. 🚦 *Workflow*`: Four phases, `#` numbered lists under a bold phase label (numbering restarts per phase).
 
    *Read the release package*
    1. The release package lives in the metadata bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`); the object files live in a different bucket (`nci-crdc-data-bucket-prod`). Open `indexd.tsv` in the release package and look at the `urls` column. Each row looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`; the directory is the segment after the bucket name (`663e6a44-f212-4673-a2ae-af2854557e3f` in that example). Record it in the Artifacts table.
@@ -62,7 +62,7 @@ Each header is an `h3` Markdown heading in the emoji + bold form shown.
    3. Run *Stage*. Tester confirms download.
    4. Run *Prod*. Tester confirms download. *Prod signoff closes the ticket.*
 
-4. `### ✅ **Testing Signoff**`: The completion record. **Prod signoff is the trigger to transition the ticket to Closed.**
+4. `h3. ✅ *Testing Signoff*`: The completion record. **Prod signoff is the trigger to transition the ticket to Closed.**
 
    ||Environment||Date||Initials||
    |Dev| | |
@@ -93,7 +93,7 @@ The separate 🧪 Verification section from v1/v2 is gone; the GUID spot-check i
 - **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog and never place it in a numbered development sprint.
 - **Links: `Relates` to every other task for the study** (DO-DBGAP, DO-INDEX, DO-LOAD, and the DHDM tracker; the submission epic is the parent via the Epic Link), plus a remote link to the CRINTAKE ticket once filed. **Never `Blocks`. No link to any feature user story.**
 - **No AWS Account ID row, no "To be created" rows, no Notes column.** If a value is not typed into a command, a file, or a form, it does not belong in the table.
-- **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); Jira-wiki `||header||` tables; `{{monospace}}` inside cells; Markdown `1.` ordered lists (a leading wiki `#` becomes an `h1.` heading); links as `[text|url]`. The converter rewrites `<placeholder>` as `[placeholder]`, which is fine. Two-step create (`jira_create_issue` then `jira_update_issue`) and confirm the render in the UI.
+- **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
 
 **Writing-and-publishing workflow**
 

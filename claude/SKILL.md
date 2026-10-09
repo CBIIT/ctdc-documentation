@@ -9,7 +9,7 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 > **Ecosystem:** Cancer Research Data Commons (CRDC)
 > **Team:** React web application engineers
 > **Claude Project:** Sprint Command Center
-> **Last Updated:** 2026-10-09 (deck standard aligned across ICDC and CTDC: shared generator, story-point charts, goal and risk levels)
+> **Last Updated:** 2026-10-09 (Jira ticket templates synced across ICDC and CTDC: Jira wiki authoring everywhere, design task and IndexD shapes aligned; earlier the same day: deck standard aligned)
 
 ---
 
@@ -371,9 +371,11 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 ## 7. 🎫 Ticket Writing Standards
 
-### 7a. 📖 User Story Template (Drafted v2)
+### 7a. 📖 User Story Template (Drafted v3)
 
 > **Use this template for every CTDC user story.** The canonical example is **CTDC-1691 (End User can find specific Participant IDs using an Input Set)**: drafted 2026-05-06 as a child of CTDC-2042 (Local Find: Participant). The template is deliberately scoped at story level, not epic level. It inherits the 7b-shared universal conventions (Markdown authoring, curly-brace escaping, render verification by UI screenshot), so most of the gotchas are covered there.
+>
+> **v3 (2026-10-09): Jira wiki authoring and a 3-item quality bar, matching ICDC.** Section headers are `h3.` wiki headings; the Performance & Quality bar drops the cross-browser parity item (browser targets are boilerplate) and folds Section 508 into the accessibility item, so it matches ICDC's bar exactly.
 >
 > **v2 (2026-09-04): slimmed from 7 to 5 sections, no Jira keys in the body, no em dashes.** The 🔗 Parent Epic & Context section was removed (the Epic Link field `customfield_12350` is the canonical link; restating it in the body is noise) and the 📝 Notes section was removed (predecessor tickets, design tasks, Figma links, and decisions are carried by native Jira links, remote links, and comments: the same reasoning that slimmed the Design Task template to v2 on 2026-07-07). ICDC adopted the identical 5-section shape the same day (`CBIIT/icdc-documentation → claude/templates/user-story-template.md`, canonical ICDC-4244) so the two projects stay aligned. CTDC-1691 still carries the v1 7-section body; retrofit is optional: new stories use v2.
 
@@ -391,23 +393,22 @@ The emoji set deliberately overlaps with the epic templates (🎯 🗺️ ✅) s
 
 **Section order (5 sections, exactly this sequence)**
 
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header: same rule as the epic templates.
+Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Author in Jira wiki markup (7b-shared, "Authoring format"). Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header: same rule as the epic templates.
 
-1. `### 🎯 **Story Summary**`: One sentence: what this story delivers, who consumes it, on which surface. Example: *"This story delivers the Upload Participant Set capability on the Explore Dashboard, letting researchers paste or upload a list of Participant IDs to seed a cohort directly."*
+1. `h3. 🎯 *Story Summary*`: One sentence: what this story delivers, who consumes it, on which surface. Example: *"This story delivers the Upload Participant Set capability on the Explore Dashboard, letting researchers paste or upload a list of Participant IDs to seed a cohort directly."*
 
-2. `### 👤 **User Story**`: The classic As-a / I-want / So-that, written as flowing prose. One paragraph, not three bullet lines. Example: *"As an end user with a known list of Participant IDs relevant to my research, I want to paste or upload that list directly into CTDC so that I can seed a cohort without having to rebuild it from scratch using filters."*
+2. `h3. 👤 *User Story*`: The classic As-a / I-want / So-that, written as flowing prose. One paragraph, not three bullet lines. Example: *"As an end user with a known list of Participant IDs relevant to my research, I want to paste or upload that list directly into CTDC so that I can seed a cohort without having to rebuild it from scratch using filters."*
 
-3. `### 🗺️ **Scope**`: Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as the 7b epic template. Out of Scope items describe the excluded work in words; do not cite the Jira key of the story or epic that covers it (add a `Relates` link instead).
+3. `h3. 🗺️ *Scope*`: Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as the 7b epic template. Out of Scope items describe the excluded work in words; do not cite the Jira key of the story or epic that covers it (add a `Relates` link instead).
 
-4. `### ✅ **Acceptance Criteria**`: Two sub-blocks, mirroring the epic AC pattern:
-   - **Functional**: Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `**bold**` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
+4. `h3. ✅ *Acceptance Criteria*`: Two sub-blocks, mirroring the epic AC pattern:
+   - **Functional**: Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `*bold*` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear.
    - **Performance & Quality**: Numbered list with the standard CTDC quality bar:
-     1. WCAG 2.1 AA accessibility on all new UI elements
-     2. Design system conformance (colors, typography, spacing, button states)
-     3. Performance baseline maintained under realistic data volumes
-     4. Cross-browser parity on supported browsers (Chrome, Firefox, Safari, Edge)
+     1. Section 508 / WCAG 2.1 AA accessibility on all new UI elements
+     2. CTDC design system conformance (colors, typography, spacing, button states)
+     3. Performance baseline of the affected page maintained under realistic data volumes
 
-5. `### 🧪 **Testing Requirements**`: Three sub-blocks naming the test artifacts the dev needs to produce. Test coverage is a first-class deliverable on this team: Valentina is QA-only and does not write code, so every line of automated test that covers this story has to be written by the engineer. Burying that work in a single P&Q bullet hides the actual scope of what's being asked.
+5. `h3. 🧪 *Testing Requirements*`: Three sub-blocks naming the test artifacts the dev needs to produce. Test coverage is a first-class deliverable on this team: Valentina is QA-only and does not write code, so every line of automated test that covers this story has to be written by the engineer. Burying that work in a single P&Q bullet hides the actual scope of what's being asked.
    - **Unit Tests**: Numbered list of unit test surfaces (parsers, match logic, state reducers, utility functions). Each item is a single observable behavior, testable in isolation.
    - **Integration Tests**: Numbered list of end-to-end flows that exercise multiple components together (modal flows, file upload flows, post-submit state changes, re-open flows, clear flows, error paths).
    - **Manual QA Scenarios**: Numbered list of things that are hard to automate but still need verification: tooltip text content, cross-browser visual parity, accessibility audits (keyboard navigation, screen reader announcements, focus management), visual conformance against the design system.
@@ -436,11 +437,11 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
 1. Pull the existing ticket via `jira_get_issue` to capture the original requirements text: preserve the substance, restructure the form. Fix typos and tighten wordings; don't drop requirements.
 2. Confirm the parent epic link via `customfield_12350` on the ticket itself; if missing, set it before pushing the description.
-3. Draft the description in Markdown with all 5 sections in order, applying the section emojis and content rules above.
-4. Push the description via `jira_update_issue` with the `description` field.
+3. Draft the description in Jira wiki markup with all 5 sections in order, applying the section emojis and content rules above.
+4. Push the description via `jira_update_issue`, passed as `{"description": "..."}` in `additional_fields`; read it back and confirm it starts with `h3.`, not `###`.
 5. Add `Relates` issue links to the design task and any predecessor or sibling stories via `jira_create_issue_link`.
 6. Verify the rendered description with a UI screenshot from the user: wiki source is unreliable as a render preview (per 7b-shared).
-7. If rendering is broken, first re-check the Markdown source for any unescaped `{...}`. Then check for the Markdown-vs-Jira-wiki authoring confusion (asterisks rendering as italic instead of bold).
+7. If rendering is broken, first re-check the wiki source for any unescaped `{...}`.
 
 **When to expand vs trim**
 
@@ -665,23 +666,25 @@ The lean epic template (7b-lean) has no Risks section: risks belong in the `.doc
 
 ### 7c. Bug Format
 ```
-**Environment:** [dev / qa / staging / prod]
-**Severity:** [Critical / High / Medium / Low]
+*Environment*: [Dev / QA / Stage / Prod]
+*Severity*: [Critical / High / Medium / Low]
 
-**Steps to Reproduce:**
-1.
-2.
-3.
+*Steps to Reproduce*
+# 
+# 
+# 
 
-**Expected Behavior:**
+*Expected Behavior*
 [What should happen]
 
-**Actual Behavior:**
+*Actual Behavior*
 [What actually happens]
 
-**Screenshots/Logs:**
+*Screenshots/Logs*
 [Attach or paste]
 ```
+
+Authored in Jira wiki markup (stored exactly as sent). The epic is set through the Epic Link field (`customfield_12350`), never written in the body. ICDC and CTDC use this identical bug format.
 
 ---
 
@@ -819,10 +822,10 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
-| User Story | Section 7a | ✅ Drafted v2 (2026-09-04) — slimmed from 7 to 5 sections; removed Parent Epic & Context and Notes (now carried by the Epic Link field, native Jira links, and comments); aligned with ICDC's `user-story-template.md` (canonical ICDC-4244) | CTDC-1691 (Upload Participant Set, child of CTDC-2042 — still carries the v1 7-section body; new stories use v2) |
+| User Story | Section 7a | ✅ Drafted v3 (2026-10-09): Jira wiki authoring; Performance & Quality bar trimmed to 3 items (cross-browser item dropped), identical to ICDC. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use v2) |
 | Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Acceptance Criteria · Notes), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
-| Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v3 (2026-09-04): no Jira ticket keys in the body (Links holds external references only), colons instead of em dashes in labeled bullets. v2 (2026-07-07) slimmed from 10 to 7 sections; removed Linked Work, Collaboration & Reviews, Open Design Questions, and Notes (now captured via native Jira links, workflows/handoffs, and comments); added Links for reference materials | CTDC-2044 |
+| Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v4 (2026-10-09): slimmed from 7 to 6 sections (🧩 Design System & Standards removed), 3 standard deliverables, 5-item Definition of Done, Jira wiki authoring; identical shape to ICDC's design task template. v3 (2026-09-04): no ticket keys in the body | CTDC-2044 |
 | DevOps Task (7l) | `claude/templates/devops-task-template.md` | ✅ Drafted v1 (2026-10-07): 7 sections (Task Summary · Scope · Environments · Environment Variables · ServiceNow Requests · Workflow · Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>`; ID 7l because 7k is a retired crosswalk letter | CTDC-2261 |
 
 **Data Operations lane** — templates live in the component library at `claude/templates/`; see also the Data Management Templates (Component Library) section.
@@ -834,7 +837,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | 1 | **DO-EPIC** | Data Submission Epic | `claude/templates/data-submission-epic-template.md` | Submission: one epic per study submission | ✅ Drafted v1 (2026-09-25): card line plus 9 sections (Epic Summary · Context & Background · Goal / Objectives · Submission Details · Submission Lifecycle · Acceptance Criteria · Risks & Mitigations · Submission Chronology · Notes); built from CTDC-1664's structure plus every field across its user stories; Process Documentation link first in Submission Details; chronology holds milestones and decisions only, never data model versions; counts live on DO-LOAD Expected Counts; title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`, reused as the token in every child title; children via Epic Link, modeling task via `Relates`, no `Supports` links; replaces DO-STORY; study submissions no longer sit under the Data Integration epic (CTDC-1664), which stays as the standing epic for cross-study integration work | CTDC-2110 (CMB v6, pilot) |
 | 2 | **DO-MODEL** | Data Modeling for Study Submission | `claude/templates/data-modeling-study-submission-template.md` | Modeling — study-driven | ✅ Drafted v11 (2026-07-22) — **6-section shape** (Modeling Summary · CDE Request Workbook · **⭐ Data Concierge** · DM Federal Lead & SME Review · Steps to Completion · Verification Surfaces). v11 added the study-submission-specific **⭐ Data Concierge** section as new Section 3 — a **deliberate divergence from DO-INTMODEL**, which stays 5-section (an internally-driven update has no study Data Concierge); the section names the responsible party (Primary + Backups) via a Name/Role roster. Carries forward all v10 content: Section 4 row 3 is the **caDSR II Help Desk Request Form** (owner: Data Concierge), replacing the earlier "ServiceNow Ticket / DM Fed Lead"; conditional watcher rule (DM Fed Lead watches the caDSR ticket when one is filed, the CTDC Jira ticket only when none is required; both TPMs added to the caDSR ticket); Steps to Completion is the 11-step canonical workflow (TPM verification gate, multiple caDSR tickets per node, SI curation, Slack #data-modeling PR review, QA send-back); milestone tracker — no specifics, no counts | CTDC-2051 ↔ CTDC-1666 (canonical, drove v11 — already carries the ⭐ Data Concierge section); CTDC-1799 ↔ CTDC-1804 (pending retrofit to v11) |
 | 3 | **DO-DBGAP** | dbGaP Validation Task | `claude/templates/dbgap-validation-task-template.md` | Loading data — consent-group gate | ✅ Drafted v2 (2026-09-16): 4-section shape (Validation Summary · Submission & Artifacts · Validation Workflow · Verification); runs the established `dbgap_validatation_prod` Prefect deployment (`check_consent_group` on) to reconcile a released submission's ACLs against dbGaP; v2 links the paired IndexD (DO-INDEX) and Data Loading (DO-LOAD) tasks with `Relates`, never `Blocks` (the consent-group gate is a process rule in Verification), title `PREFECT dbGaP Validation: <Study Name vN>`, and the `CTDC Data Related` sprint at creation; `Data-Concierge` label; parent is the study's submission epic (Epic Link) since 2026-09-25 | CTDC-2141 (first ticket of the pattern); CTDC-2142 and CTDC-2218 (v2 instances) |
-| 4 | **DO-INDEX** | IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data — upstream artifact creation | ✅ Drafted v7 (2026-06-11) — external CTDS/DCFS handoff for GUID minting; runs in parallel with the paired Data Loading Task (linked with `Relates`, not blocking); carries the `Data-Concierge` label; v6 slimmed the task to 4 sections (one-sentence Registration Summary; Pre-registration + External handoff workflow only — the Confirmation-and-verification phase folded into the Verification section; no Notes section), building on the v5 Submission & Artifacts table that mirrors the Data Loading Task; v7 replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change | CTDC-2060 (AHEP0731 Images-Only — canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
+| 4 | **DO-INDEX** | IndexD Registration Task | `claude/templates/indexd-registration-task-template.md` | Loading data: upstream artifact creation | ✅ Drafted v8 (2026-10-09): one row per submission in Submission & Artifacts (adopted from ICDC v4), new-vs-existing study marker, 7-step workflow with a Confirmation & verification phase, one Sample GUID spot-check per indexed submission, Jira wiki authoring | CTDC-2060 (AHEP0731 Images-Only: canonical, v6 shape); the 11 paired NCTN-NCORP Index tickets (CTDC-2072–2092, even) aligned to v6; CTDC-1907 referenced for historical context only |
 | 5 | **DO-LOAD** | Data Loading Task | `claude/templates/data-loading-task-template.md` | Loading data — end-to-end load | ✅ Drafted v9 (2026-09-25): 5-section shape (Load Summary · Submission & Artifacts · Expected Counts · Loading Workflow · Testing Signoff); v9 added a one-column Expected Counts table filled once from the Release Package and checked at Dev, QA, Stage, and Prod, and made the submission epic the parent (Epic Link); v8 (2026-06-11) replaced em-dashes with colons (rendering-safe `* *Label*:` bullets), no structural change; a dedicated Jenkins job per tier (Dev/QA/Stage/Prod), no lower/upper grouping; routes schema work to the modeling templates and IndexD work to DO-INDEX | AHEP0731 load (CTDC-2063); CTDC-2205 (CMB v6, first v9) |
 | 6 | **DO-ZIP** | Megazip Creation Task | `claude/templates/megazip-creation-task-template.md` | CTDC-created artifact (megazip) | ✅ Drafted v3 (2026-09-17): lean rewrite after assignees reported v2 was too long to read. One ticket per study and one megazip **per `data_file_type`** (filename `<study>_<data_file_type>.zip`, no program prefix); release package copied from the study's DO-DBGAP / DO-INDEX tickets; object-files directory (in `nci-crdc-data-bucket-prod`, a different bucket) read from the `urls` column of `indexd.tsv` as the first workflow step; 4 sections (Summary · Artifacts · Workflow · Testing Signoff), with the GUID spot-check folded into the Index phase; GUIDs self-minted (`dg.4DFC/`) and handed to CTDS through the standard DCF Google Drive + CRINTAKE path; `Relates` to every study task, no feature user story link; `CTDC Data Related` sprint at creation | CTDC-2220 (AHOD0831) and CTDC-2221 (S0819), v3 canonical; CTDC-2104 (AHEP0731), v2 ancestor |
 | retired | ~~DO-STORY~~ | Data Submission User Story | `claude/templates/data-submission-user-story-template.md` | Submission: parent user story | ⛔ Retired 2026-09-25, replaced by DO-EPIC. Last version v2 (2026-06-16, Data Concierge POV, 6 sections). Existing stories convert with Move → Epic | CTDC-1666 (historical) |

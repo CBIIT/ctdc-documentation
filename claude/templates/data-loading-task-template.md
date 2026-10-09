@@ -28,11 +28,11 @@ This template owns only the loading-data sub-function, tuned for loading into a 
 
 **Section order (5 sections, exactly this sequence)**
 
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections.
+Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Don't omit, reorder, or merge sections.
 
-1. `### 🎯 **Load Summary**`: One to two sentences: what's being loaded (the study or release) and whether it's a brand-new study or an addition to an existing study. Do **not** add a study version (it's inferable from the study metadata), enumerate the application surfaces or nodes the load lights up (that's dictated by the Release Package), or mention the data model (model work is tracked on a modeling Task). The paired IndexD relationship is conveyed by the Jira link, not restated here. Example: *"Load the Cancer Moonshot Biobank (CMB) release into CTDC across all four environments (Dev → QA → Stage → Prod). This adds new data to the existing CMB study."*
+1. `h3. 🎯 *Load Summary*`: One to two sentences: what's being loaded (the study or release) and whether it's a brand-new study or an addition to an existing study. Do **not** add a study version (it's inferable from the study metadata), enumerate the application surfaces or nodes the load lights up (that's dictated by the Release Package), or mention the data model (model work is tracked on a modeling Task). The paired IndexD relationship is conveyed by the Jira link, not restated here. Example: *"Load the Cancer Moonshot Biobank (CMB) release into CTDC across all four environments (Dev → QA → Stage → Prod). This adds new data to the existing CMB study."*
 
-2. `### 📦 **Submission & Artifacts**`: Required. A four-row table. The AWS Account ID and S3 Bucket are constant for CTDC; only the CRDC Submission ID and the Release Package directory vary per load. Study identity lives on the parent submission user story via the native Links panel, not in this table.
+2. `h3. 📦 *Submission & Artifacts*`: Required. A four-row table. The AWS Account ID and S3 Bucket are constant for CTDC; only the CRDC Submission ID and the Release Package directory vary per load. Study identity lives on the parent submission user story via the native Links panel, not in this table.
 
    | Field | Value | Notes |
    |---|---|---|
@@ -43,7 +43,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    **Naming discipline**: Release Package holds only the directory name, the one variable part of the address; the constant account and bucket are their own rows above. The directory doesn't exist until the study is released, so it stays a placeholder until then.
 
-3. `### 📊 **Expected Counts**`: Added in v9. One lead line, then a one-column table filled **once** from the Release Package when the submission is released. Testers check the Explore dashboard and Studies page against it at every tier. This is where the aggregate counts that used to sit on the Data Submission user story live now.
+3. `h3. 📊 *Expected Counts*`: Added in v9. One lead line, then a one-column table filled **once** from the Release Package when the submission is released. Testers check the Explore dashboard and Studies page against it at every tier. This is where the aggregate counts that used to sit on the Data Submission user story live now.
 
    | Metric | Expected |
    |---|---|
@@ -57,7 +57,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    Lead line: *"Filled from the Release Package when the submission is released. Testers check these against the Explore dashboard and Studies page at every tier."* This is not the per-environment count table removed in v7: it is written once, and the per-tier check is a phrase in the existing workflow steps, recorded through the existing Testing Signoff initials.
 
-4. `### 🚦 **Loading Workflow**`: Numbered list of the end-to-end promotion. **Data loading runs a dedicated Jenkins job per tier**: one each for Dev, QA, Stage, and Prod. There is no lower/upper grouping (that two-tier split is the `ctdc-model` contribution flow, not data loading).
+4. `h3. 🚦 *Loading Workflow*`: Numbered list of the end-to-end promotion. **Data loading runs a dedicated Jenkins job per tier**: one each for Dev, QA, Stage, and Prod. There is no lower/upper grouping (that two-tier split is the `ctdc-model` contribution flow, not data loading).
 
    **Dev**
    1. Run the dedicated Jenkins Dev data-loading job.
@@ -75,7 +75,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    7. Run the dedicated Jenkins Prod data-loading job.
    8. Assign for Prod verification and signoff; verify in production with the live application URL, including counts against Expected Counts. Tester initials Testing Signoff on completion. **This is the trigger to close the ticket.**
 
-5. `### ✅ **Testing Signoff**`: The completion record. Tester fills in date and initials per environment as work progresses. **Prod signoff is the trigger to transition the ticket to Closed.**
+5. `h3. ✅ *Testing Signoff*`: The completion record. Tester fills in date and initials per environment as work progresses. **Prod signoff is the trigger to transition the ticket to Closed.**
 
    | Environment | Testing Completion Date | Tester Initials |
    |---|---|---|
@@ -118,7 +118,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **Leave the ticket Unassigned at creation** per standing convention. Data loading tasks do not require the Developer field.
 - **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **Submission & Artifacts table is mandatory and complete**: all four rows present. The two constant rows (AWS Account ID, AWS S3 Bucket) are hardcoded; use PLACEHOLDER for the Submission ID or the Release Package directory when pending upstream.
-- **Rendering-safe authoring**: `### **Title**` headers (round-trip to `h3.`); italic-label bullets as `* *Label*: content`, not `- **Label:**`; Jira-wiki `||header||` tables. Push Markdown via `jira_update_issue` (two-step create-then-update) and confirm the render with a UI screenshot; wiki source is not a reliable preview.
+- **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
 
 **Writing-and-publishing workflow**
 
@@ -126,7 +126,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 2. Confirm this is a data load, not a model update or software development. If the schema is changing, a modeling Task (DO-INTMODEL/DO-MODEL) lands first.
 3. Identify the submission epic (set as the Epic Link at creation) and the paired IndexD Registration Task (add via a native `Relates` link after creation, never `Blocks`).
 4. Create via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, and the parent epic via `customfield_12350`. Add no label. Leave Unassigned.
-5. Push the full body via `jira_update_issue` (Markdown in; converts server-side).
+5. Push the full body via `jira_update_issue`, authored in Jira wiki markup (stored exactly as sent; no server-side conversion).
 6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
 7. Add the `Relates` links (DHDM tracker, paired IndexD task, and the other tasks for the study).
 8. Verify the rendered description with a UI screenshot.

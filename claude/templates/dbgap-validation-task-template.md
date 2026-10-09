@@ -25,11 +25,11 @@ The validation is **internal automation, not an external handoff and not a Jenki
 
 **Section order (4 sections, exactly this sequence)**
 
-Each section header is an `h3` Markdown heading using the emoji + bold title format shown. Keep the order so a reader scanning multiple validation tickets sees the same visual flow. The section shapes deliberately mirror the IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) templates.
+Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Keep the order so a reader scanning multiple validation tickets sees the same visual flow. The section shapes deliberately mirror the IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) templates.
 
-1. `### 🎯 **Validation Summary**`: **One sentence**: that the established dbGaP validation job is run against the released submission to reconcile consent group / ACL values with dbGaP, gating the paired indexing and loading. Do **not** restate study identity, consent codes, or submission chronology: those live on the parent submission user story (linked via the native Links panel) and are visible in Jira statuses. Example: *"Run the established dbGaP validation Prefect job against the released study submission to confirm its consent group / ACL values reconcile with the consent groups registered in dbGaP, gating the paired Data Indexing and Data Loading tasks that follow."*
+1. `h3. 🎯 *Validation Summary*`: **One sentence**: that the established dbGaP validation job is run against the released submission to reconcile consent group / ACL values with dbGaP, gating the paired indexing and loading. Do **not** restate study identity, consent codes, or submission chronology: those live on the parent submission user story (linked via the native Links panel) and are visible in Jira statuses. Example: *"Run the established dbGaP validation Prefect job against the released study submission to confirm its consent group / ACL values reconcile with the consent groups registered in dbGaP, gating the paired Data Indexing and Data Loading tasks that follow."*
 
-2. `### 📦 **Submission & Artifacts**`: Required. A six-row table holding what the assignee needs to run the deployment. Study identity lives on the parent submission user story, not in this table.
+2. `h3. 📦 *Submission & Artifacts*`: Required. A six-row table holding what the assignee needs to run the deployment. Study identity lives on the parent submission user story, not in this table.
 
    | Field | Value | Notes |
    |---|---|---|
@@ -40,7 +40,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
    | dbGaP Accession | *(phsXXXXXX)* | The study's dbGaP accession whose registered consent groups the job reconciles against. Lives on the parent submission user story; repeated here only as the validation anchor. |
    | Prefect Deployment | `dbgap_validatation_prod` | The established deployment in the Prefect Cloud `crdc-workspace`, run under the `FNLCRDCPrefectCurators` account. |
 
-3. `### 🚦 **Validation Workflow**`: Numbered list grouped into two phases. Standard CTDC sequence:
+3. `h3. 🚦 *Validation Workflow*`: Numbered list grouped into two phases. Standard CTDC sequence:
 
    **Run the Prefect job**
    1. Log in to Prefect Cloud using the `FNLCRDCPrefectCurators` account and open the `crdc-workspace` workspace.
@@ -54,7 +54,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 
    **Step count: 6 (4 run, 2 record and remediate).**
 
-4. `### 🧪 **Verification**`: How CTDC confirms the validation passed, and the close trigger. Bullet list (italic-labelled, colon separators, the rendering-safe pattern):
+4. `h3. 🧪 *Verification*`: How CTDC confirms the validation passed, and the close trigger. Bullet list (italic-labelled, colon separators, the rendering-safe pattern):
 
    - *How to confirm a pass*: The `dbgap_validatation_prod` flow run reaches a *Completed* state and the `check_consent_group` result reports zero consent group / ACL mismatches between the released package and the consent groups registered in dbGaP for the accession.
    - *Evidence on the ticket*: The results screenshot from workflow step 5 is attached to this task.
@@ -86,8 +86,8 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 - **`Relates` links to the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks, never `Blocks`.** The team's standing posture is that data-operations tasks in a submission family are linked with `Relates`, and this task is no exception: indexing and validation do not block the loading task in Jira terms, and the consent-group gate is enforced by the Data Concierge's process (do not hand off until the run is clean; see Verification), not by a Jira link. `Blocks` links are reserved for true tooling dependencies where one ticket cannot be worked at all until another closes. If the paired tasks do not exist yet at validation-ticket creation time, add the `Relates` links as soon as they do.
 - **Submission & Artifacts table is mandatory and complete at ticket creation.** All six rows present. Use PLACEHOLDER explicitly when a value is pending upstream (typically the Release Package directory, which does not exist until release), never silently omit a row.
 - **Results screenshot is mandatory evidence.** The flow-run results screenshot (workflow step 5) must be attached to the task; a free-text "validation passed" note is not sufficient. The screenshot is the reproducible record behind the close trigger.
-- **Two-step create:** `jira_create_issue` (issue_type `Task`, short placeholder description, parent epic via `customfield_12350` in `additional_fields`, `Data-Concierge` in `labels`, Unassigned) then `jira_update_issue` with the full Markdown body. Same pattern as DO-INDEX/DO-LOAD.
-- **Rendering-safe authoring patterns**: section headers use `### **Title**` Markdown form (round-trips to `h3.`); italic-label bullets use `* *Label*: content` (italic label, colon separator), NOT `- **Label:** content`; tables use Jira-wiki `||header||` syntax, NOT GitHub-flavored `|h|h|`; numbered workflow steps use Markdown `1.` ordered-list form (round-trips to wiki `#` items), NOT a leading wiki `#`, which the Markdown converter turns into an `h1.` heading. Confirm the render with a UI screenshot; wiki source is not a reliable preview.
+- **Two-step create:** `jira_create_issue` (issue_type `Task`, short placeholder description, parent epic via `customfield_12350` in `additional_fields`, `Data-Concierge` in `labels`, Unassigned) then `jira_update_issue` with the full Jira wiki body. Same pattern as DO-INDEX/DO-LOAD.
+- **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
 - **All four sections are required**, in order: Validation Summary, Submission & Artifacts, Validation Workflow, Verification.
 
 **Writing-and-publishing workflow**
@@ -97,7 +97,7 @@ Each section header is an `h3` Markdown heading using the emoji + bold title for
 3. Identify the submission epic (Section DO-EPIC) and the study-specific Data Hub tracker (DHDM-XXX). The epic is set as the Epic Link at creation; the DHDM tracker goes on via a `Relates` link.
 4. Identify the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks (or note they will follow); this validation `Relates` to both.
 5. Create the validation task via `jira_create_issue` with `issue_type = "Task"`, a short placeholder description, the parent epic via `customfield_12350` in `additional_fields` (the submission epic), and the `Data-Concierge` label via the `labels` field. Leave Unassigned.
-6. Push the full description in a second call via `jira_update_issue` with the full Markdown body.
+6. Push the full description in a second call via `jira_update_issue` with the full Jira wiki body.
 7. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
 8. Add the `Relates` links (DHDM tracker, paired IndexD and Loading tasks, megazip task) via `jira_create_issue_link`.
 9. Run the deployment per the Validation Workflow, attach the results screenshot, and remediate any mismatch.
