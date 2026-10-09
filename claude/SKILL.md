@@ -304,21 +304,22 @@ Run these checks before each standup:
 [X] of [Y] goals delivered. Each goal scored: ✓ DELIVERED / ▲ PARTIAL / ✗ NOT STARTED.
 Score against the Jira-recorded sprint goal, not raw ticket completion.
 
-### 📊 Velocity (by ticket count — team does not track story points)
-- Total tickets: X
-- Done / Closed: Y (Z%)
-- In Motion (In Progress + Ready for Review + Ready for QA + Testing): A
-- On Hold: B
-- Open / Reopened: C
-- Carry-overs: (Total − Done)
+#### 📊 Velocity (story points first, ticket counts alongside)
+Story Points = `customfield_10042`. The team has always used story points; the points trend starts with Sprint 32. Completion = `resolutiondate` on or before the sprint end; status at close comes from changelogs. Epics are excluded from the counts (data submission epics are long-running and do not count toward velocity).
+- Total: P pts (T tickets)
+- Closed at close: Y pts (Z%) · (N tickets, M%)
+- In Motion (In Progress + Ready for Review + Ready for QA + Testing): A pts (tickets)
+- On Hold: B pts (tickets)
+- Open / Reopened: C pts (tickets)
+- Carry-over: (Total − Closed) pts (tickets)
 
 ### 🧩 Breakdown by Work Type
-- User Stories: done / total
-- Tasks: done / total
-- Bugs: done / total
+- User Stories: closed pts / total pts (closed tickets / total tickets)
+- Tasks: closed pts / total pts (closed tickets / total tickets)
+- Bugs: closed pts / total pts (closed tickets / total tickets)
 
 ### 👥 Who Closed What
-Table of Done tickets by assignee, ordered by count descending.
+Credit the builder from the Developer field (`customfield_23650`, first listed), shown next to assignee at close. The assignee on a closed ticket is usually QA (Valentina), so recognize her separately for the QA gate. DevOps tickets closed by Michael Fleming are credited to the Developer (usually Charles Ngu).
 
 ### 🚀 Release Scope (if a release shipped in this sprint)
 - Versions shipped (FE, BE, File Service, Auth, Interoperation, DMN Core, DMN Standalone)
@@ -1071,20 +1072,27 @@ Combined Sprint Review + Release Demo + Retro decks follow this standard. Built 
 | **Header font** | Georgia (bold) |
 | **Body font** | Calibri |
 
-### 11c. Standard Slide Order (Combined Review + Release + Retro)
+### 11c. Standard Slide Order: Sprint Review + Retro (default, 10 slides, 60 minutes)
 
-1. **Cover** (dark bg) — Sprint number, release tag, meeting date/time, sprint dates, preparer block
-2. **Agenda** (light bg) — Numbered card rows, duration per block, total
-3. **Sprint [N] by the Numbers** — Big stat callout + status doughnut chart
-4. **Sprint [N] Goal Scorecard** — "X of Y goals delivered" + one card per goal (✓/▲/✗)
-5. **Breakdown by Work Type** — Stacked bar (Done vs Carry-over) by User Story / Task / Bug + takeaways panel
-6. **Who Closed What** — Horizontal bar by assignee + shout-out callout
-7. **Release [version] Overview** (dark bg, section break) — 4 stat cards
-8. **Demo Schedule** — Table: slot | time | feature | presenter(s) | tickets
-9–12. **Presenter Intro Slides** — One per demo slot: role eyebrow, presenter card(s), "What you'll see" bullets, ticket refs
-13. **Looking Ahead: Sprint [N+1]** — Carry-over chart + key flags panel
-14. **Up Next: Retrospective** (dark bg, section break) — Title + format + timebox
-15. **Retro Board Link** — Call to action with clickable retrotool URL + ground rules strip
+The Sprint 31 deck is the reference layout; Sprints 32 and 33 follow it. The meeting is always 60 minutes, split 5 · 10 · 8 · 10 · 7 · 20.
+
+1. **Cover** (dark bg): title `CTDC Sprint [N]`, subtitle "Sprint Review & Retrospective", sprint dates, meeting date and time, "Sprint [N] (closed) · Sprint [N+1] is now active", preparer block
+2. **Agenda**: six numbered rows with minutes, total 60
+3. **By the Numbers**: big stat in story points (`X of Y story points closed`, tickets underneath), three stat cards, status doughnut in points (ticket counts in the legend), breakdown panel, carry-over line
+4. **Goal Scorecard**: sprint goal quoted verbatim from Jira, badge ✓ DELIVERED / ▲ PARTIAL / ✗ NOT STARTED, up to four workstream cards, bottom line
+5. **Breakdown by Work Type**: stacked bar in points (Closed vs Carried over, tickets in the category labels) + takeaways panel
+6. **Who Closed What**: assignee at close (left) and Developer field (right), shout-out (include the QA gate), "why the two charts disagree" card
+7. **Carry-Over into Sprint [N+1]**: bar of unfinished points by status at close (tickets in parentheses), big stat of points carried, four workstream cards; carry-over is already in motion, not future work
+8. **What Needs a Decision Today**: three to five risk cards (HIGH red, MEDIUM amber, INFO green), each with a next step; never list a mid-sprint scope cut as a risk
+9. **Up Next: Retrospective** (dark bg): Liked · Lacked · Learned, five steps, 20 minute block, timing note for the in-flight sprint
+10. **Retro Board**: clickable retrotool URL (confirm with the TPM), three seeded columns, ground rules strip
+
+### 11c-2. Release Demo variant (only when a release shipped in the sprint)
+
+When the review doubles as a release demo, insert these after slide 6, before the carry-over slide:
+- **Release [version] Overview** (dark bg, section break): 4 stat cards
+- **Demo Schedule**: table of slot | time | feature | presenter(s) | tickets
+- **Presenter Intro Slides**: one per demo slot (see 11e)
 
 ### 11d. Design Rules (what NOT to do)
 
