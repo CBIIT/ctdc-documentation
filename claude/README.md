@@ -98,7 +98,7 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 
 | Template | SKILL.md Section | Status | Canonical Examples |
 |---|---|---|---|
-| **User Story** | Section 7a | ✅ Drafted v4 (2026-10-13): one functional Acceptance Criteria list (no Performance & Quality), unit tests only, identical to ICDC; 5 sections (Story Summary · User Story · Acceptance Criteria · Out of Scope · Testing Requirements), no ticket keys in the body | CTDC-1691 |
+| **User Story** | Section 7a | ✅ Drafted v4 (2026-10-13): one functional Acceptance Criteria list (no Performance & Quality), unit tests only, identical to ICDC; 4 sections (User Story · Acceptance Criteria · Out of Scope · Testing Requirements), no ticket keys in the body | CTDC-1691 |
 | **Epic (lean v2)** | Section 7b | ✅ Drafted v2 (2026-09-14): card line plus 5 sections (Epic Statement · Description · Scope · Definition of Done · Notes; v2.1, 2026-10-13, renamed section 4 from Acceptance Criteria), under 600 words, closes when delivered. Replaced the v1 per-grouping epic templates (7b-1 to 7b-7) | CTDC-1802 |
 | **Data Epic Variant** | Section 7b-D | ✅ Drafted 2026-09-25 for the two standing modeling epics only (Submission Data Modeling, Internal Data Modeling): card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words | CTDC-2217, CTDC-1801 |
 | **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
