@@ -63,7 +63,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
    8. A megazip is built for each data file type.
    9. Data loads to QA, Stage, and Prod, with testing at each tier.
    10. Production Verification Testing (PVT) or Post-Deployment Testing (PDT) confirms the study and its file downloads.
-6. `h3. ✅ *Acceptance Criteria*`: Five to eight functional outcomes that close the epic. The epic itself is not tested; verification happens on the child tasks. Standard set: released and marked Complete with the Release Package with engineering; consent groups pass dbGaP validation before indexing and loading; every file registered in IndexD and its GUID resolves; loaded Dev, QA, Stage, Prod with signoff and nothing loaded directly to Prod; one megazip per data file type downloads; the study renders correctly in Production and its files download for authorized users; the CDE Request Workbook records the released model version. Add submission-specific outcomes (for example new model fields rendering) as needed.
+6. `h3. ✅ *Definition of Done*`: The closure conditions: what must be true to close the epic, written as outcomes. The epic itself is not tested; verification happens on the child tasks. Standard set: released and marked Complete with the Release Package with engineering; consent groups pass dbGaP validation before indexing and loading; every file registered in IndexD and its GUID resolves; loaded Dev, QA, Stage, Prod with signoff and nothing loaded directly to Prod; one megazip per data file type downloads; the study renders correctly in Production and its files download for authorized users; the CDE Request Workbook records the released model version. Add submission-specific outcomes (for example new model fields rendering) as needed.
 7. `h3. ⚠️ *Risks & Mitigations*`: `||Risk||Impact||Mitigation||` table, three to seven rows, specific to this submission. Offer these standing risks where they apply: the data model lags the submission; submitter package quality or validation errors; PHI handling on patient-level data (BlindID for NCI-MATCH); newly indexed fields break frontend rendering; a software release gated on this data release.
 8. `h3. 📅 *Submission Chronology*`: `_Current as of <date>_` then a dated bullet log of **submission milestones and decisions only**: request filed, approvals, released, marked Complete, loaded to each tier, verified in Prod, and decisions that change the plan. **Never record data model version releases**; they change too often and the modeling task and model repo track them. Meeting tables from older submissions may stay here.
 9. `h3. 📝 *Notes*`: Two bullets at most: what closes the epic (the study verified in Production and every child task Closed), and prior-version lineage. The next version of the study gets its own epic.
@@ -77,7 +77,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 | Goal / Objectives | 🏁 |
 | Submission Details | 🗂️ |
 | Submission Lifecycle | 🚦 |
-| Acceptance Criteria | ✅ |
+| Definition of Done | ✅ |
 | Risks & Mitigations | ⚠️ |
 | Submission Chronology | 📅 |
 | Notes | 📝 |
@@ -121,4 +121,5 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Changelog**
 
+- **v1.1 (2026-10-13)**: Section 6 renamed from Acceptance Criteria to Definition of Done (epics are not tested; Acceptance Criteria belong to user stories). Content unchanged. Existing submission epics are renamed the next time each is edited.
 - **v1 (2026-09-25)**: Initial template, piloted on CTDC-2110 (CMB v6). Replaces the Data Submission user story (DO-STORY, retired) and takes study submissions out of the standing Data Integration epic (CTDC-1664), which stays open for cross-study integration work. Built from CTDC-1664's section structure plus every field found across its 10 user stories; Scope, Stakeholders, Key Definitions, Performance & Quality, Dependencies, Assumptions, Constraints, and Documentation & Compliance dropped in favor of the Process Documentation link. Data Details moved to the Data Loading task's Expected Counts. Chronology excludes data model versions. Title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`.
