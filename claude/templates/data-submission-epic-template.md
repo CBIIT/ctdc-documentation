@@ -100,7 +100,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 **Metadata**
 
 - Issue type **Epic**; priority **Major**; component **Data**; labels **`Task-1.2.1`** and **`Data-Concierge`**.
-- Status follows the epic workflow; the epic closes with resolution `Completed` when the study is verified in Production and every child is Closed.
+- Status follows the epic workflow; the epic closes (transition `Closed`, no resolution) when the study is verified in Production and every child is Closed, with a comment naming the Production verification.
 - Epics are not placed in sprints. The child tasks go into the standing `CTDC Data Related` sprint (id 8612) at creation.
 
 **Content rules**

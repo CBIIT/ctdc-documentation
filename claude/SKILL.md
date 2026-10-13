@@ -489,7 +489,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 - **Memgraph, never Neo4j; OpenSearch named when relevant; FAIR stated where it falls naturally** (usually in the Epic Statement's "why").
 - **Underscored identifiers in `{{...}}` monospace** (`{{drs_uri}}`, `{{REACT_APP_INTEROP_SERVICE_URL}}`) so Jira does not open italic spans.
 - **Curly braces escaped as `\{...\}`** anywhere they appear.
-- **Not evergreen** (feature, page, service, and infrastructure epics; the standing data epics in 7b-D are the exception). The Notes phase statement says what this epic delivered; the epic is Closed with resolution `Completed` when its children are done (7b-shared, "Epic posture defaults").
+- **Not evergreen** (feature, page, service, and infrastructure epics; the standing data epics in 7b-D are the exception). The Notes phase statement says what this epic delivered; the epic is Closed (no resolution) when its children are done (7b-shared, "Epic posture defaults").
 
 **Writing-and-publishing workflow**
 
@@ -497,7 +497,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 2. **Draft** the card line and all 5 sections in Jira wiki markup, applying the rules above. Check the word count.
 3. **Push** via `jira_update_issue` with the description in `additional_fields` (`{"description": "..."}`, raw Jira wiki; see "Authoring format" in 7b-shared) (for a new epic, `jira_create_issue` with a one-line placeholder first, then update). Set `priority` to Major in the same call; never touch `labels` unless deliberately changing them.
 4. **Verify the render with a UI screenshot** from the user; wiki source is not a render preview.
-5. **Close the epic** (transition `Close`, resolution `Completed`) with a short comment naming the release once every child ticket is Closed.
+5. **Close the epic** (transition `Closed`, no resolution) with a short comment naming the release once every child ticket is Closed.
 
 **Migration of v1 epics**
 
@@ -569,7 +569,7 @@ These rules apply to every CTDC epic. The lean template in 7b-lean inherits them
 
 **Epic posture defaults**
 - **Priority:** Major (set via MCP, not the description).
-- **Status and lifecycle:** Open while any child work is in flight; **Closed with resolution `Completed`** once every child ticket is delivered. Epics are NOT evergreen containers. When a delivered feature, page, or service needs further work later, open a **new phase epic** for that work rather than reopening or extending the finished one. The closing transition on this tracker is `Close` (transition id 231) and it requires the resolution to be set in the same call; `Completed` is the resolution the CTDC project uses for finished epics (`Done` is rejected on this transition). Verified on CTDC-1802, 2026-09-14.
+- **Status and lifecycle:** Open while any child work is in flight; **Closed** once every child ticket is delivered. Epics are NOT evergreen containers. When a delivered feature, page, or service needs further work later, open a **new phase epic** for that work rather than reopening or extending the finished one. Close via the `Closed` transition (id 31 on the epic workflow both projects share since 2026-10-01); **no resolution is set or required on epics**. An epic is either Open or Closed: the children's resolutions record how the work ended, and the closing comment states whether the epic was **delivered** (name the release) or **retired** (why). To find open epics, query `statusCategory != Done`, never `resolution = Unresolved` (closed epics carry no resolution, so resolution-based filters would count them as open). TPM decision, 2026-10-13.
 - **Assignee:** Unassigned, unless directed otherwise. Individual child tickets carry the actual ownership.
 - **Labels:** Preserve any existing label (e.g., `Task-1.3.8.X`). Do not add or remove labels in epic-normalization passes unless deliberately changing them.
 
@@ -957,7 +957,7 @@ The NCI tracker workflow has two relevant gotchas when closing tickets via the M
 |---|---|---|---|
 | `Open` | 191 (`Close`) | Yes — must be one of the allowed values | Confirmed: `Won't Fix`, `Duplicate` both work. `Won't Do` does NOT work. |
 | `Testing Hold` | 731 (`Move to Closed`) | No — accepts `null` | Issue closes with no resolution recorded. Follow up with a manual UI edit if reporting hygiene matters. |
-| `In Progress` (Epic) | 231 (`Close`) | Yes: must be one of the allowed values | Confirmed: `Completed` works; `Done` returns "The selected resolution cannot be chosen during this action"; omitting the resolution returns "Resolution should be modified during this transition". Verified on CTDC-1802, 2026-09-14. |
+| Any (Epic) | 31 (`Closed`) | No: the shared epic workflow (since 2026-10-01) has no resolution screen, and none is wanted | Epics close with status only; the closing comment says delivered or retired. Replaces the old `In Progress` → 231 (`Close`, resolution `Completed`) path verified on CTDC-1802, 2026-09-14. Verified on CTDC-2237 and ICDC-31, 2026-10. |
 
 **Discovery pattern:** there is no API that enumerates allowed resolutions per transition. Discover by trial. When closing, pick the most semantically appropriate resolution first; fall back to `Won't Fix` if it fails. After a successful transition, the resolution field is **not editable** via `jira_update_issue` ("Field 'resolution' cannot be set") — you must set it during the transition itself, or accept the gap.
 
