@@ -375,7 +375,7 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 > **Use this template for every CTDC user story.** The canonical example is **CTDC-1691 (End User can find specific Participant IDs using an Input Set)**: drafted 2026-05-06 as a child of CTDC-2042 (Local Find: Participant). The template is deliberately scoped at story level, not epic level. It inherits the 7b-shared universal conventions (Markdown authoring, curly-brace escaping, render verification by UI screenshot), so most of the gotchas are covered there.
 >
-> **v4 (2026-10-13): one functional Acceptance Criteria list and unit tests only, matching ICDC.** The Performance & Quality sub-block is removed: the quality bar is a team-wide standard QA checks, not restated per ticket. Testing Requirements is unit tests only. Integration and manual test scenarios belong to QA, who write their own test cases from the Acceptance Criteria; the story no longer prescribes them.
+> **v4 (2026-10-13): Out of Scope replaces Scope, one functional Acceptance Criteria list, and unit tests only, matching ICDC.** In Scope only restated the Acceptance Criteria, so it is dropped. Out of Scope stays because Acceptance Criteria can only say what must happen, not what is deliberately excluded; without it, engineers build adjacent features, QA fails stories for behavior nobody asked for, and settled questions get re-raised. The Performance & Quality sub-block is removed: the quality bar is a team-wide standard QA checks, not restated per ticket. Testing Requirements is unit tests only. Integration and manual test scenarios belong to QA, who write their own test cases from the Acceptance Criteria; the story no longer prescribes them.
 >
 > **v3 (2026-10-09): Jira wiki authoring and a 3-item quality bar, matching ICDC.** Section headers are `h3.` wiki headings; the Performance & Quality bar drops the cross-browser parity item (browser targets are boilerplate) and folds Section 508 into the accessibility item, so it matches ICDC's bar exactly.
 >
@@ -387,11 +387,11 @@ User stories are smaller-scope deliverables than epics: they ship and close with
 
 - A one-sentence summary the engineer can read in five seconds and know what's being asked
 - The classic As-a/I-want/So-that framing intact, written as flowing prose
-- An In/Out of Scope split that prevents adjacent-feature creep
+- An Out of Scope list that prevents adjacent-feature creep
 - Testable Acceptance Criteria, one observable behavior each
 - A Testing Requirements section naming the unit tests the engineer writes; integration and manual test cases are QA's
 
-The emoji set deliberately overlaps with the epic templates (🎯 🗺️ ✅) so a reader scanning a story and its parent epic side-by-side sees the same visual anchors. The two unique ones are 👤 (User Story) and 🧪 (Testing Requirements): both unique to the story scale.
+The emoji set overlaps with the epic templates (🎯 ✅) so a reader scanning a story and its parent epic side-by-side sees the same visual anchors. The three unique ones are 👤 (User Story), 🚫 (Out of Scope), and 🧪 (Testing Requirements).
 
 **Section order (5 sections, exactly this sequence)**
 
@@ -401,7 +401,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 2. `h3. 👤 *User Story*`: The classic As-a / I-want / So-that, written as flowing prose. One paragraph, not three bullet lines. Example: *"As an end user with a known list of Participant IDs relevant to my research, I want to paste or upload that list directly into CTDC so that I can seed a cohort without having to rebuild it from scratch using filters."*
 
-3. `h3. 🗺️ *Scope*`: Two sub-blocks, **In Scope** and **Out of Scope**, each as a bullet list. Same shape as the 7b epic template. Out of Scope items describe the excluded work in words; do not cite the Jira key of the story or epic that covers it (add a `Relates` link instead).
+3. `h3. 🚫 *Out of Scope*`: Bullet list of work this story deliberately does not do: adjacent features, behaviors someone might reasonably expect, and questions already settled. Describe each excluded item in words; do not cite the Jira key of the ticket that covers it (add a `Relates` link instead). If there are none, state "None at this time." There is no In Scope list: the Acceptance Criteria are the definition of what the story delivers, and an In Scope list only restates them less precisely.
 
 4. `h3. ✅ *Acceptance Criteria*`: Numbered list. Each item is verifiable by QA on a deployed environment. Use plain English with `*bold*` on key UI labels and component names. Escape every curly brace as `\{...\}` if path parameters or variable names appear. No Performance & Quality sub-block: The quality bar (Section 508 and WCAG 2.1 AA accessibility, CTDC design system conformance, page performance; contract stability, observability, secrets handling, and cross-environment parity for backend work) is a team-wide standard that QA checks on every story and release. It is not written into user stories, tasks, or epics (TPM decision, 2026-10-13).
 
@@ -414,7 +414,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 |---|---|
 | Story Summary | 🎯 |
 | User Story | 👤 *(unique to story scale)* |
-| Scope | 🗺️ |
+| Out of Scope | 🚫 *(unique to story scale)* |
 | Acceptance Criteria | ✅ |
 | Testing Requirements | 🧪 *(unique to story scale)* |
 
@@ -819,7 +819,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
-| User Story | Section 7a | ✅ Drafted v4 (2026-10-13): one functional Acceptance Criteria list (Performance & Quality removed) and unit tests only, identical to ICDC. v3 (2026-10-09): Jira wiki authoring. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use the current shape) |
+| User Story | Section 7a | ✅ Drafted v4 (2026-10-13): Out of Scope replaces Scope; one functional Acceptance Criteria list (Performance & Quality removed) and unit tests only, identical to ICDC. v3 (2026-10-09): Jira wiki authoring. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use the current shape) |
 | Epic (all groupings) | Section 7b | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Definition of Done · Notes; the fourth section was Acceptance Criteria until 2026-10-13), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v4 (2026-10-09): slimmed from 7 to 6 sections (🧩 Design System & Standards removed), 3 standard deliverables, 5-item Definition of Done, Jira wiki authoring; identical shape to ICDC's design task template. v3 (2026-09-04): no ticket keys in the body | CTDC-2044 |
