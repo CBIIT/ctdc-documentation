@@ -1,4 +1,4 @@
-### DO-EPIC. 📥 Data Submission Epic Template (v1)
+### DO-EPIC. 📥 Data Submission Epic Template (v1.2)
 
 > **Use this template for every CTDC study data submission.** One epic per study submission (and per version, when a study submits again). It replaces the Data Submission user story (Section DO-STORY, retired 2026-09-25) and takes study submissions out of the Data Integration epic (CTDC-1664), which grew to over 100 children across every program. CTDC-1664 stays open as the standing epic for cross-study integration work that no single submission owns. The canonical example is **CTDC-2110** (*CTDC Data Submission: CMB v6*), converted from a user story on 2026-09-25 as the pilot.
 
@@ -35,7 +35,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
    | Process Documentation | Link to the submission's Process Documentation in SharePoint; always first; provided by the TPM |
    | Submission Request Form (SRF) | Link; SRF approval triggers Concierge assignment and the SharePoint folder |
    | CRDC Data Submission Request Date | |
-   | Submission ID | Monospace; assigned by the Portal when the submission is created |
+   | Submission ID | Monospace; assigned by the Portal when the submission is created. **One row per submission, one value per cell.** A version delivered as several Portal submissions gets one row each, labeled with the submission's name: `Submission ID: <Submission Name>` (for example `Submission ID: COTC021 Deep WGS`), in the order the submissions were released, matching the one-row-per-submission tables on the IndexD and loading tasks. A single submission keeps the plain `Submission ID` label. |
    | Program | `NA` when the study has no program |
    | Program Short Name | `NA` when the study has no program |
    | Study Name | |
@@ -121,5 +121,6 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Changelog**
 
+- **v1.2 (2026-10-13)**: Submission ID is one row per submission with one value per cell, labeled `Submission ID: <Submission Name>` when a version spans several Portal submissions (matching ICDC). Single-submission epics are unchanged.
 - **v1.1 (2026-10-13)**: Section 6 renamed from Acceptance Criteria to Definition of Done (epics are not tested; Acceptance Criteria belong to user stories). Content unchanged. Existing submission epics are renamed the next time each is edited.
 - **v1 (2026-09-25)**: Initial template, piloted on CTDC-2110 (CMB v6). Replaces the Data Submission user story (DO-STORY, retired) and takes study submissions out of the standing Data Integration epic (CTDC-1664), which stays open for cross-study integration work. Built from CTDC-1664's section structure plus every field found across its 10 user stories; Scope, Stakeholders, Key Definitions, Performance & Quality, Dependencies, Assumptions, Constraints, and Documentation & Compliance dropped in favor of the Process Documentation link. Data Details moved to the Data Loading task's Expected Counts. Chronology excludes data model versions. Title `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`.
