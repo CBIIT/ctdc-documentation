@@ -371,9 +371,11 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 ## 7. 🎫 Ticket Writing Standards
 
-### 7a. 📖 User Story Template (Drafted v3)
+### 7a. 📖 User Story Template (Drafted v4)
 
 > **Use this template for every CTDC user story.** The canonical example is **CTDC-1691 (End User can find specific Participant IDs using an Input Set)**: drafted 2026-05-06 as a child of CTDC-2042 (Local Find: Participant). The template is deliberately scoped at story level, not epic level. It inherits the 7b-shared universal conventions (Markdown authoring, curly-brace escaping, render verification by UI screenshot), so most of the gotchas are covered there.
+>
+> **v4 (2026-10-13): Testing Requirements is unit tests only, matching ICDC.** Integration and manual test scenarios belong to QA, who write their own test cases from the Acceptance Criteria; the story no longer prescribes them.
 >
 > **v3 (2026-10-09): Jira wiki authoring and a 3-item quality bar, matching ICDC.** Section headers are `h3.` wiki headings; the Performance & Quality bar drops the cross-browser parity item (browser targets are boilerplate) and folds Section 508 into the accessibility item, so it matches ICDC's bar exactly.
 >
@@ -387,7 +389,7 @@ User stories are smaller-scope deliverables than epics: they ship and close with
 - The classic As-a/I-want/So-that framing intact, written as flowing prose
 - An In/Out of Scope split that prevents adjacent-feature creep
 - Acceptance Criteria split into Functional and Performance & Quality
-- A dedicated Testing Requirements section so unit/integration/manual coverage is named explicitly, not buried in a P&Q bullet
+- A Testing Requirements section naming the unit tests the engineer writes; integration and manual test cases are QA's
 
 The emoji set deliberately overlaps with the epic templates (🎯 🗺️ ✅) so a reader scanning a story and its parent epic side-by-side sees the same visual anchors. The two unique ones are 👤 (User Story) and 🧪 (Testing Requirements): both unique to the story scale.
 
@@ -408,10 +410,8 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
      2. CTDC design system conformance (colors, typography, spacing, button states)
      3. Performance baseline of the affected page maintained under realistic data volumes
 
-5. `h3. 🧪 *Testing Requirements*`: Three sub-blocks naming the test artifacts the dev needs to produce. Test coverage is a first-class deliverable on this team: Valentina is QA-only and does not write code, so every line of automated test that covers this story has to be written by the engineer. Burying that work in a single P&Q bullet hides the actual scope of what's being asked.
+5. `h3. 🧪 *Testing Requirements*`: One sub-block naming the unit tests the dev needs to produce. Valentina is QA-only and does not write code, so every automated unit test that covers this story has to be written by the engineer. Integration and manual test scenarios are QA's to design from the Acceptance Criteria; the story does not prescribe them.
    - **Unit Tests**: Numbered list of unit test surfaces (parsers, match logic, state reducers, utility functions). Each item is a single observable behavior, testable in isolation.
-   - **Integration Tests**: Numbered list of end-to-end flows that exercise multiple components together (modal flows, file upload flows, post-submit state changes, re-open flows, clear flows, error paths).
-   - **Manual QA Scenarios**: Numbered list of things that are hard to automate but still need verification: tooltip text content, cross-browser visual parity, accessibility audits (keyboard navigation, screen reader announcements, focus management), visual conformance against the design system.
 
 **Standing emoji set (5 entries)**
 
@@ -429,7 +429,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Parent Epic field set on the ticket itself.** Use `customfield_12350` per Section 10. There is no Parent Epic line in the body: the field is the only link.
 - **No Jira ticket keys anywhere in the body.** Design tasks, predecessor stories, and sibling stories are `Relates` issue links; Figma and upstream-package references are remote links or comments. Jira's Links panel is the single source; repeating keys in the text is redundant and goes stale. There is no Notes section.
 - **Acceptance Criteria are testable.** Each Functional item must be a single observable behavior QA can pass/fail in one check. If an item has two clauses joined by "and," consider splitting.
-- **Testing Requirements is the dev's checklist before "Ready for QA."** It is not optional and not a duplicate of P&Q. P&Q says "the work must meet the bar"; Testing Requirements says "these are the test artifacts the dev produces to demonstrate the work meets the bar." Different audiences, different verification paths.
+- **Testing Requirements is the dev's unit test checklist before "Ready for QA."** It is not optional and not a duplicate of P&Q. P&Q says "the work must meet the bar"; Unit Tests names the test artifacts the dev produces. No Integration or Manual QA sub-blocks: QA writes those test cases from the Acceptance Criteria.
 - **Performance & Quality is non-negotiable**: every user-facing story carries the same bar. Don't trim it because the story feels small.
 - **Curly braces escaped as `\{...\}`** anywhere they appear in description text: same rule as epics.
 
@@ -446,7 +446,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 **When to expand vs trim**
 
 - **Story has fewer than 5 functional ACs and no test surface complexity** → keep all 5 sections; the structure earns its keep on small stories by giving the engineer a checklist.
-- **Story is a pure documentation update or copy change with no code path** → Testing Requirements may legitimately be light (manual QA only, no Unit or Integration sub-blocks needed). State so explicitly with "None at this time" under the empty sub-blocks rather than dropping them.
+- **Story is a pure documentation update or copy change with no code path** → Unit Tests says "None at this time"; QA verifies against the Acceptance Criteria.
 - **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the Bug Format pattern adapted for spikes, or write a free-form Task description with explicit "deliverables" rather than "acceptance criteria."
 
 ### 7b. 🏛️ Epic Template (Lean v2)
