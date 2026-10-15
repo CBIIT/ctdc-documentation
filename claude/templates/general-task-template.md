@@ -1,6 +1,6 @@
 ### 🧰 General Task Template (CTDC, v1.2)
 
-> **Use this template for any CTDC task that no other template covers**: backend or API work with no user-facing story of its own, research and spikes, audits and surveys, documentation, and coordination tasks. The canonical example is **to be set by the first CTDC ticket written on it; the ICDC canonical is ICDC-4284**.
+> **Use this template for any CTDC task that no other template covers**: backend or API work with no user-facing story of its own, research and spikes, audits and surveys, documentation, and coordination tasks. The canonical example is **CTDC-2274 (Backend: Serve Curated Properties on Overview Resolvers and Index)**; the ICDC canonical is ICDC-4284.
 >
 > **Status:** v1.2 (2026-10-15): the location bullet is *Repo*, not *System*, and is left out when the work is not in a repo. v1.1 (2026-10-15): the handoff step moves the ticket to QA instead of notifying the TPM. v1 (2026-10-13). Created after several tasks were written in this shape before it was documented. It is the CTDC DevOps task template (7l) with the infrastructure-only sections removed, so a reader moving between the two sees the same sections in the same order. It mirrors ICDC's General Task template (`CBIIT/icdc-documentation → claude/templates/general-task-template.md`); the two are kept in lockstep.
 

@@ -802,7 +802,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | 7c · Bug Format | n/a |
 | 7d · Design Task | CTDC-2044 |
 | 7l · DevOps Task | CTDC-2261 |
-| 7m · General Task | none yet (ICDC canonical: ICDC-4284) |
+| 7m · General Task | CTDC-2274 (ICDC canonical: ICDC-4284) |
 | DO-EPIC · Data Submission Epic | CTDC-2110 (CMB v6) |
 | DO-STORY · Data Submission User Story *(retired 2026-09-25)* | CTDC-1666 *(historical)* |
 | DO-MODEL · Data Modeling for Study Submission | CTDC-2051 *(current link pattern: CTDC-2111 Relates submission epic CTDC-2110)* |
@@ -821,7 +821,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v4 (2026-10-09): slimmed from 7 to 6 sections (🧩 Design System & Standards removed), 3 standard deliverables, 5-item Definition of Done, Jira wiki authoring; identical shape to ICDC's design task template. v3 (2026-09-04): no ticket keys in the body | CTDC-2044 |
 | DevOps Task (7l) | `claude/templates/devops-task-template.md` | ✅ Drafted v1 (2026-10-07): 7 sections (Task Summary · Scope · Environments · Environment Variables · ServiceNow Requests · Workflow · Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>`; ID 7l because 7k is a retired crosswalk letter | CTDC-2261 |
-| General Task (7m) | `claude/templates/general-task-template.md` | ✅ Drafted v1.2 (2026-10-15): location bullet is *Repo* (omitted when the work is not in a repo) instead of *System*; v1.1 (2026-10-15): handoff moves the ticket to QA instead of notifying the TPM; both identical to ICDC. v1 (2026-10-13): 4 sections (Task Summary · Scope · Workflow · Definition of Done) for any task no other template covers; identical to ICDC | none yet |
+| General Task (7m) | `claude/templates/general-task-template.md` | ✅ Drafted v1.2 (2026-10-15): location bullet is *Repo* (omitted when the work is not in a repo) instead of *System*; v1.1 (2026-10-15): handoff moves the ticket to QA instead of notifying the TPM; both identical to ICDC. v1 (2026-10-13): 4 sections (Task Summary · Scope · Workflow · Definition of Done) for any task no other template covers; identical to ICDC | CTDC-2274 (Backend: Serve Curated Properties on Overview Resolvers and Index) |
 
 **Data Operations lane** — templates live in the component library at `claude/templates/`; see also the Data Management Templates (Component Library) section.
 
