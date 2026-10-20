@@ -84,7 +84,7 @@ Two tasks per release, identical except the environment word (**Stage** / **Prod
 
 * *Summary*: per the Release kinds table.
 * *Type*: Task
-* *Epic Link*: the standing epic **CTDC-2007** "CTDC Software Release Deployments".
+* *Epic Link*: the standing epic **CTDC-2007** "CTDC Software Release Deployments", set with `jira_update_issue` on `customfield_12350` (`"CTDC-2007"`). Do not use `jira_link_to_epic`: on `tracker.nci.nih.gov` it reports success without setting the field.
 * *Assignee*: DevOps Lead (`nguca`).
 * *Labels*: `release`, `deployment`, `devops`
 * *Issue links*: the Stage task "blocks" the Production task. Feature release: both tasks "relate to" the feature epic. Monthly release: both tasks "relate to" the scan or feature epics whose work ships.
@@ -124,7 +124,7 @@ h3. ✅ *Definition of Done*
 ## Creating each release's tickets
 
 1. Create the Stage task with a placeholder body, then `jira_update_issue` with the body above and the labels. Repeat for the Production task.
-2. Set the Epic Link to CTDC-2007 on each and confirm with `jira_get_issue`.
+2. Set the Epic Link (`customfield_12350` = `CTDC-2007`) on each and confirm with the JQL `"Epic Link" = CTDC-2007`.
 3. Fill `<release name>` and `<Stage | Production>` in the summary and body, and paste the release's Release Dashboard link. A deployment task without one is incomplete.
 4. Link Stage "Blocks" Production, and link both "Related To" the feature or scan epics the release ships.
 5. Create the Final Design QA epic from its body when the release includes new features or pages.
@@ -134,7 +134,7 @@ h3. ✅ *Definition of Done*
 
 ## Changelog
 
-- **v4 (2026-10-20)**: Moved to the ICDC model: this spec is the only template, and real tickets are cited as canonical examples. The deploy-task template tickets CTDC-2136 and CTDC-2137 are retired (deleted). Two release kinds (monthly, feature) with summary patterns; CTDC-2253 / CTDC-2254 are the canonical feature-release example. "Software release candidate" replaced by the Deployment Package; the Deployment Package Number is defined (the `ctdc-deployment` release tag, owned by the tech lead, kept on the Release Dashboard), and the Definition of Done checks the deployed package against it, with Production required to match the package verified in Stage. Workflow and Definition of Done verify with the `/#/sysinfo` page. Deploy tasks gain the `release`, `deployment`, `devops` labels and ICDC's issue-link rules. Creation steps replace cloning steps.
+- **v4 (2026-10-20)**: Moved to the ICDC model: this spec is the only template, and real tickets are cited as canonical examples. The deploy-task template tickets CTDC-2136 and CTDC-2137 are retired (deleted). Two release kinds (monthly, feature) with summary patterns; CTDC-2253 / CTDC-2254 are the canonical feature-release example. "Software release candidate" replaced by the Deployment Package; the Deployment Package Number is defined (the `ctdc-deployment` release tag, owned by the tech lead, kept on the Release Dashboard), and the Definition of Done checks the deployed package against it, with Production required to match the package verified in Stage. Workflow and Definition of Done verify with the `/#/sysinfo` page. Deploy tasks gain the `release`, `deployment`, `devops` labels and ICDC's issue-link rules. Epic Link is set through `customfield_12350` and confirmed by JQL, since `jira_link_to_epic` reports success without setting it. Creation steps replace cloning steps.
 - **v3 (2026-10-20)**: Deploy tasks, matching the new ICDC Release Ticket Templates (v1.2) so both projects use the same shape: (1) the Tracking table's separate "NCI ServiceNow Ticket" and "URL" columns are merged into one "Service Now Cloud One Ticket Link" column; (2) a ✅ Definition of Done section is added as the fourth section. The Jira template tickets CTDC-2136 and CTDC-2137 need the same two changes.
 - **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
 - **v1 (2026-07-08)**: Initial component. Template tickets created and labeled `template`: CTDC-2135 (Final Design QA epic), CTDC-2136 (Stage deploy task, under CTDC-2007), CTDC-2137 (Prod deploy task, under CTDC-2007). Live Q4 tickets CTDC-2130 / CTDC-2128 / CTDC-2129 reformatted to this house style.
