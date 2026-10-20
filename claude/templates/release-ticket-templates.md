@@ -73,8 +73,8 @@ h3. 🚦 *Workflow*
 # Fill in the Tracking table as information becomes available.
 
 h3. 📋 *Tracking*
-||NCI ServiceNow Ticket||URL||Assignee||Notes about Deployment||
-| | |(CloudOne point of contact)|(nuances or issues encountered)|
+||Service Now Cloud One Ticket Link||Assignee||Notes about Deployment||
+| |(CloudOne point of contact)|(nuances or issues encountered)|
 ```
 
 ---
@@ -91,5 +91,6 @@ h3. 📋 *Tracking*
 
 ## Changelog
 
+- **v3 (2026-10-20)**: Deploy-task Tracking table: the separate "NCI ServiceNow Ticket" and "URL" columns are merged into one "Service Now Cloud One Ticket Link" column, matching the new ICDC Release Ticket Templates (v1.1) so both projects use the same table. The Jira template tickets CTDC-2136 and CTDC-2137 need the same header change.
 - **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
 - **v1 (2026-07-08)**: Initial component. Template tickets created and labeled `template`: CTDC-2135 (Final Design QA epic), CTDC-2136 (Stage deploy task, under CTDC-2007), CTDC-2137 (Prod deploy task, under CTDC-2007). Live Q4 tickets CTDC-2130 / CTDC-2128 / CTDC-2129 reformatted to this house style.
