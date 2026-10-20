@@ -1,38 +1,59 @@
 # 🎟️ Release Ticket Templates
 
-> **Use this component for the three Jira tickets that recur every CTDC software release and must be formatted identically each time: the Final Design QA epic, the Stage deployment task, and the Production deployment task.** Each has a canonical **template ticket** in Jira (labeled `template`) that is cloned per release. This file is the canonical spec; the Jira template tickets are the clone sources. Companion: the Software Release Playbook (`software-release-playbook.md`), whose "Canonical Release Tickets" section links here. For DevOps work that is not a release promotion (upgrades, environment variables, infrastructure changes), use the DevOps Task template (`devops-task-template.md`).
+> **Use this component for the Jira artifacts that recur with every CTDC software release: the Final Design QA epic and the Stage and Production deployment tasks.** This file is the canonical spec and the only template: tickets are created from the bodies below, never cloned from Jira template tickets. Real tickets are cited as canonical examples. Companion: the Software Release Playbook (`software-release-playbook.md`). For DevOps work that is not a release promotion (upgrades, environment variables, infrastructure changes), use the DevOps Task template (`devops-task-template.md`). ICDC's equivalent, kept in lockstep, is `CBIIT/icdc-documentation/claude/templates/release-ticket-templates.md`.
 
 **Why this component**
 
-Three tickets are created for every release. When each is hand-built from memory, formatting drifts release to release (escaped markup, inconsistent sections, stale ticket references). Pinning one canonical template ticket per artifact (cloned, never re-typed) keeps every release's tickets identical in shape, so reviewers and automation can rely on the structure.
+These tickets are created for every release. When each is hand-built from memory, formatting drifts release to release (escaped markup, inconsistent sections, stale ticket references). Keeping one canonical body per artifact here, with real tickets as examples, keeps every release's tickets identical in shape, so reviewers and automation can rely on the structure.
 
 ---
 
-## Template tickets (clone sources)
+## Release kinds
 
-| Purpose | Template ticket | Type | Clones into | Parent / Epic | Default assignee | Label |
-|---|---|---|---|---|---|---|
-| **Final Design QA** | **CTDC-2135** | Epic | a per-release epic `Final Design QA: <YYYY> Q<N> Release Candidate` | standalone (epics don't nest) | TPM (`kuffelgr`) | `template` → swap to the release-line label on the clone |
-| **Stage deployment** | **CTDC-2136** | Task | `Deploy <YYYY> Q<N> software release candidate to Stage`, under CTDC-2007 | Epic **CTDC-2007** "CTDC Software Release Deployments" (standing) | DevOps Lead (`nguca`) | `template` (drop on the clone) |
-| **Prod deployment** | **CTDC-2137** | Task | `Deploy <YYYY> Q<N> software release candidate to Production`, under CTDC-2007 | Epic **CTDC-2007** (standing) | DevOps Lead (`nguca`) | `template` (drop on the clone) |
+| Kind | What ships | Deployment task summary |
+|---|---|---|
+| **Monthly** | Security remediation plus whatever feature work is ready | `Deploy <Month YYYY> monthly release to CTDC <Stage \| Production>` |
+| **Feature** | One feature's scope (for example, RAS) | `Deploy <YYYY> <Feature> release to CTDC <Stage \| Production>` |
 
-Live Q4 examples already following this format: **CTDC-2130** (Final Design QA), **CTDC-2128** (Stage), **CTDC-2129** (Prod).
+## Canonical examples
+
+| Artifact | Canonical example |
+|---|---|
+| Final Design QA epic | **CTDC-2130** |
+| Stage deployment task (feature release) | **CTDC-2253** (2026 RAS release) |
+| Production deployment task (feature release) | **CTDC-2254** (2026 RAS release) |
+| Stage / Production deployment tasks (monthly release) | ICDC's **ICDC-4291** / **ICDC-4292** (same body; CTDC differences noted below) |
 
 ---
 
-## House style (all three)
+## Deployment Package Number
 
-`h3.` section headers, emoji-prefixed, with bold titles; slim shape; italic-label `* *Label*: content` bullets; Jira wiki tables (`||header||` header row, `|cell|` body rows). Bodies are written directly in **Jira wiki markup**: Markdown translation is disabled on the mcp-atlassian connector (`DISABLE_JIRA_MARKUP_TRANSLATION=true`, Sep 2026), so Markdown pushed through `jira_update_issue` renders as literal `###` and `**` characters. Push with the two-step create-then-update pattern, escape literal curly braces as `\{` and `\}`, then confirm the render in the Jira UI: the API echo is not a reliable preview.
+The identifier of what is deployed. It is the `CBIIT/ctdc-deployment` git tag created by the **CTDC Create Release** workflow (`<frontend version>.<build number>`, for example `1.5.0.8.3`), and it is the `release_number` input to the **CTDC Deploy Release** workflow. One tag pins all five service images (frontend, backend, files, authn, interoperation) and the tier configs as they were when the package was created, so deploying the same number to Stage and Production deploys the same code.
+
+* *Owner*: tech lead.
+* *Where it lives*: the Release Dashboard, never the tickets. The deployment tasks' Definition of Done checks the deployed package against it.
+* *Config changes*: tier configs are frozen into the package at creation. A config change made after the package is created needs a new package.
 
 ---
 
-## Final Design QA epic (clone of CTDC-2135)
+## House style (all artifacts)
+
+`h3.` section headers, emoji-prefixed, with bold titles; slim shape; `#` numbered lists; italic-label `* *Label*: content` bullets; Jira wiki tables (`||header||` header row, `|cell|` body rows); `{{ }}` for monospace. Bodies are written directly in **Jira wiki markup**: Markdown translation is disabled on the mcp-atlassian connector (`DISABLE_JIRA_MARKUP_TRANSLATION=true`, Sep 2026), so Markdown pushed through `jira_update_issue` renders as literal `###` and `**` characters. Push with the two-step create-then-update pattern, escape literal curly braces as `\{` and `\}`, then confirm the render in the Jira UI: the API echo is not a reliable preview. Colons, not em dashes. Never cite ticket keys in a body: Jira's links panel carries them.
+
+---
+
+## Final Design QA epic
+
+* *Summary*: `Final Design QA: <release name>`
+* *Type*: Epic (standalone; epics don't nest)
+* *Assignee*: TPM (`kuffelgr`)
+* *Labels*: the release-line label
 
 Four sections: 🎯 Design QA Summary · 🔎 Findings · 🚦 Workflow · ✅ Definition of Done.
 
 ```
 h3. 🎯 *Design QA Summary*
-Conduct a thorough final design review of every new feature and page implemented during this release cycle, verifying design fidelity and Section 508 accessibility compliance before the release candidate is promoted to Stage.
+Conduct a thorough final design review of every new feature and page implemented during this release cycle, verifying design fidelity and Section 508 accessibility compliance before the release is promoted to Stage.
 
 h3. 🔎 *Findings*
 Log each discrepancy below and file it as a bug linked to this epic, grouped by page or feature.
@@ -55,21 +76,32 @@ h3. ✅ *Definition of Done*
 
 ---
 
-## Stage / Prod deploy tasks (clone of CTDC-2136 / CTDC-2137)
+## Stage / Production deployment tasks
 
-Four sections: 🎯 Deployment Summary · 🚦 Workflow · 📋 Tracking · ✅ Definition of Done. Identical except the environment word (**Stage** / **Production**).
+Two tasks per release, identical except the environment word (**Stage** / **Production**) and the Production-only wording marked below.
+
+**Fields**
+
+* *Summary*: per the Release kinds table.
+* *Type*: Task
+* *Epic Link*: the standing epic **CTDC-2007** "CTDC Software Release Deployments".
+* *Assignee*: DevOps Lead (`nguca`).
+* *Labels*: `release`, `deployment`, `devops`
+* *Issue links*: the Stage task "blocks" the Production task. Feature release: both tasks "relate to" the feature epic. Monthly release: both tasks "relate to" the scan or feature epics whose work ships.
+
+**Body**: four sections (🎯 Deployment Summary · 🚦 Workflow · 📋 Tracking · ✅ Definition of Done), Jira wiki markup. `<release name>` is `<Month YYYY> monthly release` or `<YYYY> <Feature> release`.
 
 ```
 h3. 🎯 *Deployment Summary*
-File an NCI ServiceNow ticket so the CloudOne team reserves the date and time to deploy the software release candidate to the CTDC <Stage | Production> environment.
+File an NCI ServiceNow ticket so the CloudOne team reserves the date and time to deploy the <release name> to the CTDC <Stage | Production> environment.
 
-* *Release Dashboard*: paste the link to this release's Release Dashboard here.
+* *Release Dashboard*: [<Release Dashboard name>|<Release Dashboard URL>]
 
 h3. 🚦 *Workflow*
 # Add the TPMs ({{kuffelgr}}, {{singletonss}}) as watchers on the NCI ServiceNow ticket.
 # Create an all-day Outlook calendar invite for the scheduled deployment day (exact time added later) and add the TPM, BE Lead, FE Lead, and CloudOne Engineer.
 # Send the Outlook invite to the assigned CloudOne member and the TPMs.
-# Deploy the build to <Stage | Production> on the scheduled date and notify the TPM.
+# Deploy the Deployment Package <to Stage | verified in Stage to Production> on the scheduled date, confirm the {{/#/sysinfo}} page shows the versions recorded in the Release Dashboard, and notify the TPM.
 # Fill in the Tracking table as information becomes available.
 
 h3. 📋 *Tracking*
@@ -78,26 +110,31 @@ h3. 📋 *Tracking*
 
 h3. ✅ *Definition of Done*
 * *ServiceNow*: the Service Now Cloud One ticket is linked in Tracking and closed by CloudOne as successful.
-* *Deployment*: the build is deployed to <Stage | Production> in the scheduled window.
-* *Verification*: the deployed build is confirmed in <Stage | Production>, and the application loads and returns data.
+* *Deployment Package*: the package deployed matches the Deployment Package Number on the Release Dashboard<Production only: and is the same package verified in Stage>.
+* *Deployment*: the Deployment Package is deployed to <Stage | Production> in the scheduled window.
+* *Verification*: the {{/#/sysinfo}} page on <Stage | Production> shows the versions recorded in the Release Dashboard, and the application loads and returns data.
 * *Release Dashboard*: the <Stage | Production> deployment date is recorded.
 * *Handoff*: TPM notified.
 ```
 
+**CTDC differences from ICDC**: two TPM watchers; verification uses the `/#/sysinfo` page (CTDC has no `/version` endpoint; `/#/sysinfo` lists every microservice's version).
+
 ---
 
-## Cloning per release
+## Creating each release's tickets
 
-1. Clone the template ticket (Jira **••• → Clone**).
-2. Swap `<YYYY> Q<N>` in the summary; update the Release Dashboard link.
-3. Remove the `template` label; set the release-line label on the Final Design QA epic as needed.
-4. Assign: DevOps Lead for the deploy tasks, TPM for the Final Design QA epic.
-5. For the deploy tasks, confirm the clone landed under the standing epic **CTDC-2007**.
+1. Create the Stage task with a placeholder body, then `jira_update_issue` with the body above and the labels. Repeat for the Production task.
+2. Set the Epic Link to CTDC-2007 on each and confirm with `jira_get_issue`.
+3. Fill `<release name>` and `<Stage | Production>` in the summary and body, and paste the release's Release Dashboard link. A deployment task without one is incomplete.
+4. Link Stage "Blocks" Production, and link both "Related To" the feature or scan epics the release ships.
+5. Create the Final Design QA epic from its body when the release includes new features or pages.
+6. Open every ticket in the Jira UI and confirm it renders.
 
 ---
 
 ## Changelog
 
+- **v4 (2026-10-20)**: Moved to the ICDC model: this spec is the only template, and real tickets are cited as canonical examples. The deploy-task template tickets CTDC-2136 and CTDC-2137 are retired (deleted). Two release kinds (monthly, feature) with summary patterns; CTDC-2253 / CTDC-2254 are the canonical feature-release example. "Software release candidate" replaced by the Deployment Package; the Deployment Package Number is defined (the `ctdc-deployment` release tag, owned by the tech lead, kept on the Release Dashboard), and the Definition of Done checks the deployed package against it, with Production required to match the package verified in Stage. Workflow and Definition of Done verify with the `/#/sysinfo` page. Deploy tasks gain the `release`, `deployment`, `devops` labels and ICDC's issue-link rules. Creation steps replace cloning steps.
 - **v3 (2026-10-20)**: Deploy tasks, matching the new ICDC Release Ticket Templates (v1.2) so both projects use the same shape: (1) the Tracking table's separate "NCI ServiceNow Ticket" and "URL" columns are merged into one "Service Now Cloud One Ticket Link" column; (2) a ✅ Definition of Done section is added as the fourth section. The Jira template tickets CTDC-2136 and CTDC-2137 need the same two changes.
 - **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
 - **v1 (2026-07-08)**: Initial component. Template tickets created and labeled `template`: CTDC-2135 (Final Design QA epic), CTDC-2136 (Stage deploy task, under CTDC-2007), CTDC-2137 (Prod deploy task, under CTDC-2007). Live Q4 tickets CTDC-2130 / CTDC-2128 / CTDC-2129 reformatted to this house style.
