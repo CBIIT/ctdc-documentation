@@ -57,7 +57,7 @@ h3. ✅ *Definition of Done*
 
 ## Stage / Prod deploy tasks (clone of CTDC-2136 / CTDC-2137)
 
-Four sections: 🎯 Deployment Summary · 🚦 Workflow · 📋 Tracking · ✅ Definition of Done. Identical except the environment word (**Stage** / **Production**).
+Four sections: 🎯 Deployment Summary · 🚦 Workflow · 📋 Tracking · ✅ Definition of Done. Identical except the environment word (**Stage** / **Production**) and two Production-only phrases that pin Production to the package already verified in Stage (marked below). There is no handoff step or Handoff bullet: the handoff is the ticket's status change in Jira.
 
 ```
 h3. 🎯 *Deployment Summary*
@@ -69,7 +69,7 @@ h3. 🚦 *Workflow*
 # Add the TPMs ({{kuffelgr}}, {{singletonss}}) as watchers on the NCI ServiceNow ticket.
 # Create an all-day Outlook calendar invite for the scheduled deployment day (exact time added later) and add the TPM, BE Lead, FE Lead, and CloudOne Engineer.
 # Send the Outlook invite to the assigned CloudOne member and the TPMs.
-# Deploy the build to <Stage | Production> on the scheduled date and notify the TPM.
+# Deploy the Deployment Package [Production only: verified in Stage] to <Stage | Production> on the scheduled date.
 # Fill in the Tracking table as information becomes available.
 
 h3. 📋 *Tracking*
@@ -78,10 +78,10 @@ h3. 📋 *Tracking*
 
 h3. ✅ *Definition of Done*
 * *ServiceNow*: the Service Now Cloud One ticket is linked in Tracking and closed by CloudOne as successful.
-* *Deployment*: the build is deployed to <Stage | Production> in the scheduled window.
-* *Verification*: the deployed build is confirmed in <Stage | Production>, and the application loads and returns data.
+* *Deployment Package*: the package deployed matches the Deployment Package Number on the Release Dashboard [Production only: and is the same package verified in Stage].
+* *Deployment*: the Deployment Package is deployed to <Stage | Production> in the scheduled window.
+* *Verification*: the deployed package is confirmed in <Stage | Production>, and the application loads and returns data.
 * *Release Dashboard*: the <Stage | Production> deployment date is recorded.
-* *Handoff*: TPM notified.
 ```
 
 ---
@@ -98,6 +98,7 @@ h3. ✅ *Definition of Done*
 
 ## Changelog
 
+- **v4 (2026-10-22)**: Deploy tasks, matching ICDC Release Ticket Templates v1.3: (1) "Deployment Package" replaces "the build" in Workflow step 4 and the Definition of Done; (2) new *Deployment Package* Definition of Done bullet tying the deployed package to the Deployment Package Number on the Release Dashboard, with Production also requiring the same package verified in Stage; (3) removed the *Handoff* Definition of Done bullet and the "notify the TPM" clause from Workflow step 4, since the handoff is the ticket's status change in Jira. The Final Design QA epic is unchanged. The Jira clone sources CTDC-2136 and CTDC-2137 need both the v3 and v4 changes.
 - **v3 (2026-10-20)**: Deploy tasks, matching the new ICDC Release Ticket Templates (v1.2) so both projects use the same shape: (1) the Tracking table's separate "NCI ServiceNow Ticket" and "URL" columns are merged into one "Service Now Cloud One Ticket Link" column; (2) a ✅ Definition of Done section is added as the fourth section. The Jira template tickets CTDC-2136 and CTDC-2137 need the same two changes.
 - **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
 - **v1 (2026-07-08)**: Initial component. Template tickets created and labeled `template`: CTDC-2135 (Final Design QA epic), CTDC-2136 (Stage deploy task, under CTDC-2007), CTDC-2137 (Prod deploy task, under CTDC-2007). Live Q4 tickets CTDC-2130 / CTDC-2128 / CTDC-2129 reformatted to this house style.
