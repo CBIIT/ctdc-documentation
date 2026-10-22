@@ -1,4 +1,4 @@
-### 7l. 🛠️ DevOps Task Template (Drafted v1)
+### 7l. 🛠️ DevOps Task Template (v1.1)
 
 > **Use this template for every CTDC DevOps task**: infrastructure changes, engine or platform upgrades, environment variable changes, bucket or access setup, pipeline and Jenkins work, and security remediation on infrastructure. The canonical example is **CTDC-2261 (DevOps: Update Amazon Aurora RDS Database)**, a compliance-driven engine upgrade across all four tiers with STAGE and PROD routed through CloudOne.
 >
@@ -70,7 +70,7 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
    2. File the NCI ServiceNow request for STAGE at https://service.cancer.gov/ncisp, add the TPMs (`kuffelgr`, `singletonss`) as watchers, and record it in ServiceNow Requests.
    3. CloudOne applies the change to STAGE in the scheduled window; verify and update Environments.
    4. Repeat for PROD only after STAGE is verified.
-   5. Update the tables as each step completes and notify the TPM.
+   5. Update the tables as each step completes.
 
 7. `h3. ✅ *Definition of Done*`: Labeled bullets, the standard set:
    * `* *Tiers*:` every in-scope tier marked Done in Environments
@@ -78,7 +78,6 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
    * `* *ServiceNow*:` every request closed by CloudOne
    * `* *Verification*:` the application is confirmed working in each changed tier
    * `* *Documentation*:` any runbook, README, or deployment config reflecting the change is updated
-   * `* *Handoff*:` TPM notified
 
 **Standing emoji set (7 entries)**
 
@@ -94,6 +93,7 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 
 **Required content rules (DevOps Task specific: universal rules in 7b-shared also apply)**
 
+* *No handoff step or Handoff bullet*: the handoff is the ticket's status change in Jira, so neither the Workflow nor the Definition of Done ends with notifying the TPM.
 * *Never put a secret value in Jira*: not in the description, comments, or attachments. Jira is readable by far more people than the secret should be, and its history keeps every old version forever. Record the variable name and where the value lives; hand the value to CloudOne through the ServiceNow request or the secret store itself.
 * *All four tiers in Environments*: even when only one is in scope.
 * *Upper tiers go through ServiceNow*: no STAGE or PROD row moves to Done without a matching ServiceNow Requests row.
@@ -112,4 +112,5 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 
 **Changelog**
 
+* *v1.1 (2026-10-22)*: Removed the "notify the TPM" clause from the last Workflow step and the *Handoff* Definition of Done bullet; the handoff is the ticket's status change in Jira. ICDC changed in lockstep (v1.2).
 * *v1 (2026-10-07)*: Drafted with CTDC-2261 as the canonical ticket. Same day: ServiceNow Requests slimmed to Tier and ticket URL only (assignee, scheduled date, and notes dropped as duplicating ServiceNow). ID 7l (not 7k, which is the legacy crosswalk letter for DO-DBGAP and is never reused).

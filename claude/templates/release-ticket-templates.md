@@ -44,13 +44,11 @@ h3. 🚦 *Workflow*
 # When the release Slack channel signals QA regression has started in the QA tier, begin Final Design QA on the QA environment.
 # Review every new feature and page for design fidelity and Section 508 compliance.
 # File each discrepancy as a bug linked to this epic; announce it in the release channel.
-# Notify the TPM when Final Design QA is complete.
 
 h3. ✅ *Definition of Done*
 * *Review*: every new feature and page checked for design and 508 compliance.
 * *Findings*: all discrepancies logged and filed as linked bugs.
 * *Blockers*: any release-blocker findings routed to Engineering before promotion.
-* *Handoff*: TPM notified.
 ```
 
 ---
@@ -98,6 +96,7 @@ h3. ✅ *Definition of Done*
 
 ## Changelog
 
+- **v5 (2026-10-22)**: Final Design QA epic: removed the "Notify the TPM" Workflow step and the *Handoff* Definition of Done bullet; the handoff is the ticket's status change in Jira. Applies the same rule v4 applied to the deploy tasks. The clone source CTDC-2135 needs the same change.
 - **v4 (2026-10-22)**: Deploy tasks, matching ICDC Release Ticket Templates v1.3: (1) "Deployment Package" replaces "the build" in Workflow step 4 and the Definition of Done; (2) new *Deployment Package* Definition of Done bullet tying the deployed package to the Deployment Package Number on the Release Dashboard, with Production also requiring the same package verified in Stage; (3) removed the *Handoff* Definition of Done bullet and the "notify the TPM" clause from Workflow step 4, since the handoff is the ticket's status change in Jira. The Final Design QA epic is unchanged. The Jira clone sources CTDC-2136 and CTDC-2137 need both the v3 and v4 changes.
 - **v3 (2026-10-20)**: Deploy tasks, matching the new ICDC Release Ticket Templates (v1.2) so both projects use the same shape: (1) the Tracking table's separate "NCI ServiceNow Ticket" and "URL" columns are merged into one "Service Now Cloud One Ticket Link" column; (2) a ✅ Definition of Done section is added as the fourth section. The Jira template tickets CTDC-2136 and CTDC-2137 need the same two changes.
 - **v2 (2026-10-07)**: House style and both body blocks rewritten in Jira wiki markup (`h3.`, `#` numbered lists, `||header||` tables) to match the connector's disabled Markdown translation; the old note that the MCP converts Markdown server-side was removed. Em dashes replaced. Pointer added to the new DevOps Task template for non-release DevOps work. The Jira template tickets (CTDC-2135, CTDC-2136, CTDC-2137) were not changed.
