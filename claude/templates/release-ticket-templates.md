@@ -81,7 +81,8 @@ One per release, created first; it blocks both deployment tasks.
 * *Summary*: `Identify the <YYYY> Q<N> release candidate Deployment Package`. Hotfix release: `Identify the <YYYY> Q<N> hotfix Deployment Package`.
 * *Type*: Task
 * *Epic Link*: the standing epic CTDC-2007, set with a follow-up `jira_update_issue` on `customfield_12350`.
-* *Assignee* and *Developer* (`customfield_23650`): the Tech Lead, as the TPM directs.
+* *Assignee*: Tech Lead, Nahom Tesfatsion (`nahom.tesfatsion@nih.gov`).
+* *Developer* (`customfield_23650`): `[{"name": "tesfatsionnh"}]`.
 * *Labels*: `release`, `deployment`
 * *Fix Version*: leave empty.
 * *Due Date*: leave empty. Schedule this work so it finishes before the Stage deployment date on the Release Dashboard, leaving time to file the Stage ServiceNow request.
@@ -171,6 +172,7 @@ h3. ✅ *Definition of Done*
 
 ## Changelog
 
+- **v7.1 (2026-10-22)**: Named the Deployment Package task's default Assignee and Developer: Tech Lead Nahom Tesfatsion (`tesfatsionnh`), matching how ICDC names its tech lead.
 - **v7 (2026-10-22)**: Dates live on the Release Dashboard only: release tickets carry no Due Date and no date in their body, because deployment dates change and a copied date goes stale. Ownership table row renamed to "Deployment dates". Matches ICDC v1.5.
 - **v6 (2026-10-22)**: Dropped the clone model to match ICDC. The Jira clone sources (CTDC-2135, CTDC-2136, CTDC-2137) no longer exist; the TPM now creates each release's tickets from this spec, as ICDC does. Restructured to ICDC's shape: "Who fills what" ownership table, per-ticket Fields lists, and "Creating each release's tickets" steps. Added the **Deployment Package task** (Tech Lead identifies every microservice version and records the Deployment Package Number on the Release Dashboard; blocks both deployment tasks), matching ICDC v1.4. Deployment tasks now carry the `release`, `deployment`, and `devops` labels, the Developer field, a Due Date, and Stage "Blocks" Production, all matching ICDC. Workflow step 1 now files the ServiceNow ticket as well as adding watchers, and the Release Dashboard bullet is a link, not an instruction.
 - **v5 (2026-10-22)**: Final Design QA epic: removed the "Notify the TPM" Workflow step and the *Handoff* Definition of Done bullet; the handoff is the ticket's status change in Jira. Applies the same rule v4 applied to the deploy tasks.

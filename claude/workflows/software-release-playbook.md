@@ -77,7 +77,7 @@ Four Jira tickets recur every release. The TPM creates them from the spec in [`r
 | Purpose | Type | Summary pattern | Parent / Epic | Default assignee | Blocks |
 |---|---|---|---|---|---|
 | **Final Design QA** | Epic | `Final Design QA: <YYYY> Q<N> Release Candidate` | standalone epic | TPM (`kuffelgr`) | none |
-| **Deployment Package** | Task | `Identify the <YYYY> Q<N> release candidate Deployment Package` | Epic **CTDC-2007** (standing) | Tech Lead | Stage and Prod deployment |
+| **Deployment Package** | Task | `Identify the <YYYY> Q<N> release candidate Deployment Package` | Epic **CTDC-2007** (standing) | Tech Lead (`tesfatsionnh`) | Stage and Prod deployment |
 | **Stage deployment** | Task | `Deploy <YYYY> Q<N> software release candidate to Stage` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | Prod deployment |
 | **Prod deployment** | Task | `Deploy <YYYY> Q<N> software release candidate to Production` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | none |
 
