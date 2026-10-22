@@ -108,9 +108,9 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 
 * *Lower-tier only work* (a DEV Jenkins job, a QA bucket): ServiceNow Requests says "None at this time"; keep the header.
 * *No variable changes* (an engine upgrade): Environment Variables says "None at this time"; keep the header.
-* *Release promotions*: don't use this template; clone the Stage or Prod deploy task.
+* *Release promotions*: don't use this template; create the release tickets from `release-ticket-templates.md`.
 
 **Changelog**
 
-* *v1.1 (2026-10-22)*: Removed the "notify the TPM" clause from the last Workflow step and the *Handoff* Definition of Done bullet; the handoff is the ticket's status change in Jira. ICDC changed in lockstep (v1.2).
+* *v1.1 (2026-10-22)*: Removed the "notify the TPM" clause from the last Workflow step and the *Handoff* Definition of Done bullet; the handoff is the ticket's status change in Jira. ICDC changed in lockstep (v1.2). Same day: the release-promotions pointer now says to create release tickets from the spec, not clone them.
 * *v1 (2026-10-07)*: Drafted with CTDC-2261 as the canonical ticket. Same day: ServiceNow Requests slimmed to Tier and ticket URL only (assignee, scheduled date, and notes dropped as duplicating ServiceNow). ID 7l (not 7k, which is the legacy crosswalk letter for DO-DBGAP and is never reused).

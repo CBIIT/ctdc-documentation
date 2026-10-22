@@ -70,36 +70,18 @@ In short: **beta = the many internal builds we test on dev/qa; gamma = the one b
 
 ---
 
-## 🎟️ Canonical Release Tickets (clone each release)
+## 🎟️ Release Tickets (created from spec each release)
 
-Three Jira tickets recur every release and **must be formatted identically each time**. Each has a canonical **template ticket** in Jira (labeled `template`) — clone it, don't hand-copy. Full spec: [`release-ticket-templates.md`](../templates/release-ticket-templates.md).
+Four Jira tickets recur every release. The TPM creates them from the spec in [`release-ticket-templates.md`](../templates/release-ticket-templates.md), which holds their fields, bodies, and creation steps; there are no Jira clone-source tickets. ICDC uses the same model.
 
-| Purpose | Clone from (template) | Type | Summary pattern | Parent / Epic | Default assignee | Label |
-|---|---|---|---|---|---|---|
-| **Final Design QA** | **CTDC-2135** | Epic | `Final Design QA: <YYYY> Q<N> Release Candidate` | standalone epic | TPM (`kuffelgr`) | `Task-1.<minor>` |
-| **Stage deployment** | **CTDC-2136** | Task | `Deploy <YYYY> Q<N> software release candidate to Stage` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | — |
-| **Prod deployment** | **CTDC-2137** | Task | `Deploy <YYYY> Q<N> software release candidate to Production` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | — |
-
-Live Q4 instances in this format: CTDC-2130 (Final Design QA), CTDC-2128 (Stage), CTDC-2129 (Prod).
-
-**Final Design QA epic (clone of CTDC-2130)** — the description holds the findings table; each discrepancy is filed as a **bug linked to this epic**, grouped by page/feature:
-
-| Feature | Page | 508 Compliance | Design Discrepancy Comment | Figma Link | JIRA Bug Ticket |
+| Purpose | Type | Summary pattern | Parent / Epic | Default assignee | Blocks |
 |---|---|---|---|---|---|
+| **Final Design QA** | Epic | `Final Design QA: <YYYY> Q<N> Release Candidate` | standalone epic | TPM (`kuffelgr`) | none |
+| **Deployment Package** | Task | `Identify the <YYYY> Q<N> release candidate Deployment Package` | Epic **CTDC-2007** (standing) | Tech Lead | Stage and Prod deployment |
+| **Stage deployment** | Task | `Deploy <YYYY> Q<N> software release candidate to Stage` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | Prod deployment |
+| **Prod deployment** | Task | `Deploy <YYYY> Q<N> software release candidate to Production` | Epic **CTDC-2007** (standing) | DevOps (`nguca`) | none |
 
-**Stage / Prod deploy tasks (clone of CTDC-2128 / CTDC-2129)** — identical description template, only the environment word changes:
-
-> File an NCI ServiceNow ticket so the CloudOne team reserves the date/time to deploy the RC to the CTDC **\<Stage | Production\>** environment. **Link to the Release Dashboard.**
->
-> **Requirements:**
-> 1. Add the TPMs (`kuffelgr`, `singletonss`) as **watchers** on the ServiceNow ticket.
-> 2. Create an **all-day Outlook invite** for the deployment day (exact time TBD) and add the TPM, BE Lead, FE Lead, and CloudOne Engineer.
-> 3. Send the Outlook invite to the assigned CloudOne member + TPMs.
-> 4. Fill in the tracking table as information arrives.
->
-> Tracking table columns: **NCI Service Now Ticket · URL · Assignee · Notes about Deployment**
-
-Both deploy tasks are **children of the standing epic CTDC-2007** — clone the Stage + Prod pair each release and link them there. (The deploy tasks carry no label; the Final Design QA epic carries the current release-line label.)
+Live Q4 2026 examples: CTDC-2130 (Final Design QA), CTDC-2128 (Stage), CTDC-2129 (Prod). The Deployment Package task was added after that release.
 
 ---
 
@@ -411,3 +393,4 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 | v5 | Confirmed facts: board **641** (1137 retired); no BA — bug triage is **TPM + co-TPM (Steph Singleton)**; release notes at `crdc-ctdc-starter-kit/releases`; FE repo = `crdc-ctdc-ui` (`main`), Interoperation = `crdc-ctdc-interoperation` (`main`), DMN Core = `Data-Model-Navigator` (`main`); full courtesy-email list confirmed (FNL: Todd Pihl, John Otridge, Mark Jensen · CBIIT: Erika Kim, Tanja Davidsen, Esmeralda Casas-Silva). | Gina Kuffel |
 | v6 | Added **Canonical Release Tickets** section (clone-each-release reference for CTDC-2130 Final Design QA epic, CTDC-2128 Stage deploy, CTDC-2129 Prod deploy), captured live from Jira: types, summary patterns, standing parent epic CTDC-2007, default assignees, and description templates. | Gina Kuffel |
 | v7 | Created dedicated Jira **template tickets** (CTDC-2135 Final Design QA epic, CTDC-2136 Stage deploy, CTDC-2137 Prod deploy — labeled `template`, deploy tasks under CTDC-2007) and reformatted the live Q4 tickets (2128/2129/2130) to the house style; canonical table now points at the templates and links the `release-ticket-templates.md` spec. | Gina Kuffel |
+| v8 | Dropped the Jira clone-source tickets (CTDC-2135/2136/2137 no longer exist): the **Release Tickets** section now points to `release-ticket-templates.md` (v6), from which the TPM creates each release's tickets, matching ICDC. Added the **Deployment Package** task, which blocks both deployment tasks. Removed the duplicated, outdated deploy-task body that predated the v3 Tracking table. | Gina Kuffel |
