@@ -1,8 +1,8 @@
 # 🎟️ Release Ticket Templates
 
-> **Use this component for the Jira artifacts that recur with every CTDC software release: the Final Design QA epic (one per release), and the Deployment Package task and Stage and Production deployment tasks (one of each per release) under the standing deployments epic.** This file is the canonical spec. The TPM creates each release's tickets from it; there are no Jira clone-source tickets. Companion: the Software Release Playbook (`../workflows/software-release-playbook.md`), whose "Release Tickets" section links here. For DevOps work that is not a release promotion (upgrades, environment variables, infrastructure changes), use the DevOps Task template (`devops-task-template.md`).
+> **Use this component for the Jira artifacts that recur with every CTDC software release: the Final Design QA epic (one per release), the Deployment Package task and Stage and Production deployment tasks (one of each per release), and the standing release epic (one per federal fiscal year) they sit under.** This file is the canonical spec. The TPM creates each release's tickets from it; there are no Jira clone-source tickets. Companion: the Software Release Playbook (`../workflows/software-release-playbook.md`), whose "Release Tickets" section links here. For DevOps work that is not a release promotion (upgrades, environment variables, infrastructure changes), use the DevOps Task template (`devops-task-template.md`).
 >
-> Canonical CTDC examples: **CTDC-2007** (standing deployments epic), **CTDC-2130** (2026 Q4 Final Design QA), **CTDC-2128** (2026 Q4 Stage deployment), **CTDC-2129** (2026 Q4 Production deployment). ICDC's equivalent, kept in lockstep, is `CBIIT/icdc-documentation/claude/templates/release-ticket-templates.md`.
+> Canonical CTDC examples: **CTDC-2295** (standing release epic, FY27), **CTDC-2130** (2026 Q4 Final Design QA), **CTDC-2128** (2026 Q4 Stage deployment), **CTDC-2129** (2026 Q4 Production deployment). ICDC's equivalent, kept in lockstep, is `CBIIT/icdc-documentation/claude/templates/release-ticket-templates.md`.
 
 **Why this component**
 
@@ -15,6 +15,10 @@ Stage and Production get separate tasks because they are separate events: each h
 **Dates live on the Release Dashboard, never in the tickets.** Deployment dates move, and a date copied into a ticket goes stale silently. Release tickets carry no Due Date and no date in their body; the Release Dashboard is the one place a deployment date is set and changed.
 
 The tickets are written from this spec rather than cloned from Jira template tickets. Clone sources drift out of step with the spec and need their own upkeep; one spec, read at creation time, cannot drift.
+
+**Where the Release Dashboards live**
+
+One Excel Release Dashboard per release, named `CTDC <release> Release Dashboard.xlsx`, under `CTDC Software Development / CTDC Software Releases / CTDC Release Dashboards` on the NCI-CBIIT-FNL-CTDC SharePoint site.
 
 **Who fills what**
 
@@ -30,9 +34,36 @@ The release tickets are created by the TPM with their structure and links in pla
 
 ---
 
-## Standing deployments epic
+## Standing release epic
 
-**CTDC-2007, "CTDC Software Release Deployments"**, is the permanent parent of every Deployment Package, Stage, and Production task. Do not create a new one per release.
+One per federal fiscal year (October through September), so the epic stays small enough to scan and closes cleanly at year end. Matches ICDC.
+
+* *Summary*: `CTDC Quarterly Releases - FY<YY>`
+* *Type*: Epic
+* *Assignee*: DevOps Lead or TPM, as the TPM directs
+* *Labels*: `release`, `deployment`, `devops`
+
+Body (Jira wiki markup):
+
+```
+h3. 🎯 *Purpose*
+Tracks the quarterly CTDC software release cycle for federal FY<YY> (October <YYYY> through September <YYYY+1>). The Deployment Package, Stage, and Production tasks for each release live under this epic.
+
+h3. 📅 *Cadence*
+* *Scheduled release*: about one per quarter, on the dates set in the Release Roadmap and the Release Dashboard.
+* *Hotfix release*: an out-of-band release with its own Deployment Package and deployment tasks when a fix cannot wait for the next scheduled release.
+
+h3. 📦 *Release Scope*
+Each release's contents are its Jira Fix Versions, applied by developers on their own tickets. This epic holds only the release tasks.
+
+h3. 🗂️ *Release Dashboards*
+* *Location*: {{CTDC Software Development / CTDC Software Releases / CTDC Release Dashboards}} on the NCI-CBIIT-FNL-CTDC SharePoint site, one dashboard per release.
+
+h3. ✅ *Closure*
+Closes after the last FY<YY> release is deployed to Production.
+```
+
+The Final Design QA epic stays standalone (epics don't nest); only the Deployment Package and deployment tasks sit under the fiscal-year epic.
 
 ---
 
@@ -80,7 +111,7 @@ One per release, created first; it blocks both deployment tasks.
 
 * *Summary*: `Identify the <YYYY> Q<N> release candidate Deployment Package`. Hotfix release: `Identify the <YYYY> Q<N> hotfix Deployment Package`.
 * *Type*: Task
-* *Epic Link*: the standing epic CTDC-2007, set with a follow-up `jira_update_issue` on `customfield_12350`.
+* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `jira_update_issue` on `customfield_12350`.
 * *Assignee*: Tech Lead, Nahom Tesfatsion (`nahom.tesfatsion@nih.gov`).
 * *Developer* (`customfield_23650`): `[{"name": "tesfatsionnh"}]`.
 * *Labels*: `release`, `deployment`
@@ -117,7 +148,7 @@ Two tasks per release, identical except the environment word (**Stage** / **Prod
 
 * *Summary*: `Deploy <YYYY> Q<N> software release candidate to <Stage | Production>`. Hotfix release: `Deploy <YYYY> Q<N> hotfix release candidate to <Stage | Production>`.
 * *Type*: Task
-* *Epic Link*: the standing epic CTDC-2007, set with a follow-up `jira_update_issue` on `customfield_12350`.
+* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `jira_update_issue` on `customfield_12350`.
 * *Assignee*: DevOps Lead, Charles Ngu (`charles.ngu@nih.gov`).
 * *Developer* (`customfield_23650`): `[{"name": "nguca"}]`. The field rejects a bare username string.
 * *Labels*: `release`, `deployment`, `devops`
@@ -137,7 +168,7 @@ h3. 🚦 *Workflow*
 # File the NCI ServiceNow ticket at https://service.cancer.gov/ncisp and add the TPMs ({{kuffelgr}}, {{singletonss}}) as watchers.
 # Create an all-day Outlook calendar invite for the scheduled deployment day (exact time added later) and add the TPMs, BE Lead, FE Lead, and CloudOne Engineer.
 # Send the Outlook invite to the assigned CloudOne member and the TPMs.
-# Deploy the Deployment Package [Production only: verified in Stage] to <Stage | Production> on the scheduled date.
+# Deploy the Deployment Package [Production only: verified in Stage] to <Stage | Production> on the scheduled date and confirm the {{/#/sysinfo}} page shows the versions recorded in the Release Dashboard.
 # Fill in the Tracking table as information becomes available.
 
 h3. 📋 *Tracking*
@@ -148,7 +179,7 @@ h3. ✅ *Definition of Done*
 * *ServiceNow*: the Service Now Cloud One ticket is linked in Tracking and closed by CloudOne as successful.
 * *Deployment Package*: the package deployed matches the Deployment Package Number on the Release Dashboard [Production only: and is the same package verified in Stage].
 * *Deployment*: the Deployment Package is deployed to <Stage | Production> in the scheduled window.
-* *Verification*: the deployed package is confirmed in <Stage | Production>, and the application loads and returns data.
+* *Verification*: the {{/#/sysinfo}} page on <Stage | Production> shows the versions recorded in the Release Dashboard, and the application loads and returns data.
 * *Release Dashboard*: the <Stage | Production> deployment date is recorded.
 ```
 
@@ -163,15 +194,18 @@ h3. ✅ *Definition of Done*
 ## Creating each release's tickets
 
 1. Create the Final Design QA epic, the Deployment Package task, and the Stage and Production tasks, each with a placeholder body; then `jira_update_issue` each with the body above and labels. Leave Due Date empty.
-2. On the three tasks, set the epic link (`customfield_12350` to CTDC-2007) and Developer (`customfield_23650`), and confirm both with `jira_get_issue`.
+2. On the three tasks, set the epic link (`customfield_12350` to the fiscal year's release epic) and Developer (`customfield_23650`), and confirm both with `jira_get_issue`.
 3. Swap `<YYYY> Q<N>` and `<Stage | Production>` in the summaries and bodies, resolve the two `[Production only: ...]` phrases (keep the words on Production, delete them on Stage), and paste the release's Release Dashboard link. The Release Dashboard must always be linked; a release task without one is incomplete.
 4. Link the Deployment Package task "Blocks" the Stage task and "Blocks" the Production task, and the Stage task "Blocks" the Production task.
 5. Open all four tickets in the Jira UI and confirm they render.
+
+At the start of each fiscal year, create the new standing release epic before that year's first release tickets.
 
 ---
 
 ## Changelog
 
+- **v8 (2026-10-22)**: One standing release epic per federal fiscal year, matching ICDC: `CTDC Quarterly Releases - FY<YY>` (FY27 is CTDC-2295). The permanent epic CTDC-2007 is closed; its one open child, CTDC-2254, moved to CTDC-2295. Recorded where Release Dashboards live. Deployment verification now checks the `/#/sysinfo` page against the Release Dashboard versions, as CTDC-2254 already did, matching ICDC's version check.
 - **v7.1 (2026-10-22)**: Named the Deployment Package task's default Assignee and Developer: Tech Lead Nahom Tesfatsion (`tesfatsionnh`), matching how ICDC names its tech lead.
 - **v7 (2026-10-22)**: Dates live on the Release Dashboard only: release tickets carry no Due Date and no date in their body, because deployment dates change and a copied date goes stale. Ownership table row renamed to "Deployment dates". Matches ICDC v1.5.
 - **v6 (2026-10-22)**: Dropped the clone model to match ICDC. The Jira clone sources (CTDC-2135, CTDC-2136, CTDC-2137) no longer exist; the TPM now creates each release's tickets from this spec, as ICDC does. Restructured to ICDC's shape: "Who fills what" ownership table, per-ticket Fields lists, and "Creating each release's tickets" steps. Added the **Deployment Package task** (Tech Lead identifies every microservice version and records the Deployment Package Number on the Release Dashboard; blocks both deployment tasks), matching ICDC v1.4. Deployment tasks now carry the `release`, `deployment`, and `devops` labels, the Developer field, a Due Date, and Stage "Blocks" Production, all matching ICDC. Workflow step 1 now files the ServiceNow ticket as well as adding watchers, and the Release Dashboard bullet is a link, not an instruction.
