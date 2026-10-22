@@ -40,13 +40,14 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
    * *AWS Account ID*: {{101183076466}}
    * *Release Package bucket*: {{nci-cbiit-clinicaltrialdatacommons-metadata}}
 
-   ||Submission||Release Package||Sample GUID||
-   |CMB v6 Clinical|[<timestamp>-<submission-id>/|<S3 console URL>]|dg.4DFC/<guid>|
-   |CMB v6 Imaging|[<timestamp>-<submission-id>/|<S3 console URL>]|dg.4DFC/<guid>|
+   ||Submission||CRDC Submission ID||Release Package||Sample GUID||
+   |CMB v6 Clinical|<submission-id>|[<timestamp>-<submission-id>/|<S3 console URL>]|dg.4DFC/<guid>|
+   |CMB v6 Imaging|<submission-id>|[<timestamp>-<submission-id>/|<S3 console URL>]|dg.4DFC/<guid>|
    ```
 
    **Columns:**
    - *Submission*: the submission's name in the CRDC Submission Portal, first on purpose because it is the handle everyone uses. Use the same name as the paired Data Loading Task's table so the two tickets line up. If the Portal name is unknown, use a descriptive label and confirm it with the Data Concierge.
+   - *CRDC Submission ID*: issued by the CRDC Submission Portal. Plain text, no `{{ }}`. Use the same value as the paired Data Loading Task's row so the two tickets line up on the ID as well as the name.
    - *Release Package*: the directory name within the Release Package bucket, rendered as a clickable S3-console link. It holds that submission's indexd.tsv manifest. PLACEHOLDER until the study is released from the Portal.
    - *Sample GUID*: the GUID actually tested in that submission's spot-check (see Verification). PLACEHOLDER until the spot-check runs; whoever runs it enters the tested GUID here.
 
@@ -60,7 +61,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 
    **Only submissions being indexed get a row.** Every row is implicitly indexed, so there is no Index? column. Metadata-only submissions (publication corrections, study-detail refreshes) have nothing to register and are left out; they appear on the paired Data Loading Task, which lists every submission.
 
-   **Not in the table**: CRDC Submission ID (it is embedded in the Release Package directory name, and the Data Loading Task carries it); intake batch (the CRINTAKE links in the Links panel show which handoff covered what); GUID prefix (always `dg.4DFC/`); manifest path (it's in the Release Package); data model version (belongs on the Data Loading Task); object files location (the manifest's `url` column has it); consent group / ACL value (the manifest's `acl` column has it, already reconciled by DO-DBGAP).
+   **Not in the table**: intake batch (the CRINTAKE links in the Links panel show which handoff covered what); GUID prefix (always `dg.4DFC/`); manifest path (it's in the Release Package); data model version (belongs on the Data Loading Task); object files location (the manifest's `url` column has it); consent group / ACL value (the manifest's `acl` column has it, already reconciled by DO-DBGAP).
 
 3. `h3. 🚦 *Registration Workflow*`: Numbered `#` list in three phases, each introduced by a bold label. Put a blank line after the heading and after each bold phase label so the lists render cleanly. Never hardcode a submission or manifest count; refer to "each submission in the table" so the table stays the single source of truth.
 
@@ -163,6 +164,7 @@ No CTDC registration has been written in the v8/v9 shape yet: CTDC-2060 (AHEP073
 
 **Changelog**
 
+- **v11 (2026-10-22)**: Restored the **CRDC Submission ID** column, after Submission: **Submission, CRDC Submission ID, Release Package, Sample GUID**. The ID is the key the Data Hub and the CRDC Submission Portal use, and having it in its own column keeps the IndexD table lined up with the Data Loading Task's table, which already carries it. Lockstep with ICDC IndexD v8.
 - **v10 (2026-10-22)**: Table slimmed to three columns: **Submission, Release Package, Sample GUID**. Dropped CRDC Submission ID (embedded in the Release Package directory name and carried by the Data Loading Task), Index? (every row is implicitly indexed, so metadata-only submissions no longer get a row), and Intake batch (the CRINTAKE links carry it). Lockstep with ICDC IndexD v7. The Sample GUID cell records the GUID actually tested in the spot-check, entered when the spot-check runs (PLACEHOLDER until then).
 - **v9 (2026-10-22)**: Realigned with ICDC IndexD v6 (same layout and rules; platform specifics differ). The indexing team is the **DCF** throughout (was "CTDS/DCFS"). The deliberative anchor is the **submission epic** throughout (was the retired parent user story). `Relates` link to **each submission's DHDM tracker** (was one study-specific tracker). Added the explicit no-ticket-keys, no-em-dash, and comment-formatting rules. Loading is described as Prefect, not Jenkins. "Study update" replaces "data update". CTDC-2060 retired as canonical (pre-v8 shape). History moved to this changelog.
 - **v8.1 (2026-10-09)** (no shape change): CRINTAKE tickets are linked with a native "Related To" issue link, not a remote link; CTDC-2078's `Supports` link was converted the same day.
