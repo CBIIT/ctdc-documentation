@@ -107,7 +107,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 **When NOT to use this template**
 
 - **IndexD registration (minting GUIDs)** → IndexD Registration Task template (Section DO-INDEX).
-- **Data loading (promoting the submission through Jenkins)** → Data Loading Task template (Section DO-LOAD).
+- **Data loading (promoting the submission through the Prefect data loading pipeline)** → Data Loading Task template (Section DO-LOAD).
 - **Data modeling** → Data Modeling for Study Submission (Section DO-MODEL) for study-driven changes, or Data Model Update Task (Section DO-INTMODEL) for internally-driven changes.
 - **Software development work** → the software development template family.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal, or the shared Prefect platform itself) → owned by CRDC platform teams; out of CTDC scope. CTDC runs the established `dbgap_validatation_prod` deployment but does not own the platform.

@@ -84,7 +84,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Not on the epic (and where it lives instead)**
 
-- **Aggregate counts** (participants, diagnoses, therapies, biospecimens, files, data volume): the **Expected Counts** table on the Data Loading task (DO-LOAD v9), filled from the Release Package and checked by testers at each tier.
+- **Aggregate counts** (participants, diagnoses, therapies, biospecimens, files, data volume): the Release Packages; testers check the Data Loading task (DO-LOAD) against them at each tier. Not restated on the epic or the task.
 - **Node, property, CDE, and permissible value detail; base data types; mapping files**: the CDE Request Workbook and the submission data modeling task.
 - **Planning documents** (SOW deliverables, submission documentation): the Process Documentation in SharePoint.
 - **Data model versions**: the submission data modeling task and the `ctdc-model` repo.

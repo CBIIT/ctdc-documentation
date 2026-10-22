@@ -38,17 +38,17 @@ Every study submission (and every new version of a study) is its own **submissio
 7. **Released**: the Release Package lands in the metadata bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`); hand it off to engineering and add the milestone to the epic's Submission Chronology.
 8. **dbGaP validation**: ▶ **Create the dbGaP Validation task (DO-DBGAP).** Run the established `dbgap_validatation_prod` Prefect deployment (Prefect Cloud `crdc-workspace`, `FNLCRDCPrefectCurators` account) with the CRDC Submission ID as `submission_id` and `check_consent_group` toggled on; attach the results screenshot and resolve any consent-group / ACL mismatches. Nothing is handed off for indexing or loading until the run is clean; that gate is a process rule, so the Jira links stay `Relates`.
 9. **Indexing**: ▶ **Create the IndexD Registration task (DO-INDEX).** Runs **in parallel** with loading.
-10. **Dev load**: ▶ **Create the Data Loading task (DO-LOAD)** and fill its **Expected Counts** table once from the Release Package. Load metadata to **Dev only** (the object files are not in the bucket yet) and spot-check the study with the submitter.
+10. **Dev load**: ▶ **Create the Data Loading task (DO-LOAD)**, one Submission & Artifacts row per submission. Load metadata to **Dev only** (the object files are not in the bucket yet) and spot-check the study with the submitter.
 11. **Marked Complete**: once Dev testing passes, the submission is marked Complete in the Portal, which moves the object files into the data bucket (`nci-crdc-data-bucket-prod`).
 12. **Megazip** (when the study's files should download as one zip per data file type): ▶ **Create the Megazip task (DO-ZIP)**, preferably before the QA load so downloads resolve.
-13. **QA, Stage, and Prod loads**: continue on the same Data Loading task, one Jenkins job per tier. Testers check counts against Expected Counts at every tier and initial Testing Signoff. Nothing loads directly to Prod.
+13. **QA, Stage, and Prod loads**: continue on the same Data Loading task, promoted to each tier by OpenSearch backup and restore after the single Prefect data loading run. Testers check counts against the Release Packages at every tier and initial Testing Signoff. Nothing loads directly to Prod.
 14. **Verify and close**: Production Verification Testing (PVT) or Post-Deployment Testing (PDT) confirms the study renders and its files download. Close each task, then close the submission epic with resolution `Completed`. The next version of the study gets its own epic.
 
 ## Standing rules
 
 - **The epic holds identity; tasks execute.** Study identity, risks, and chronology live on the submission epic, never duplicated on child tasks. Open questions go in Jira comments.
 - **The chronology records submission milestones and decisions only**, never data model versions (the modeling task and the `ctdc-model` repo track those).
-- **Counts live on the Data Loading task** (Expected Counts), not on the epic.
+- **Counts live in the Release Packages**, not on the epic or the Data Loading task.
 - **dbGaP validation gates indexing and loading as a process rule**, not a Jira `Blocks` link.
 - **Indexing never blocks loading**: they run in parallel.
 - **Reloads are always a new Data Loading task**, never folded into a modeling ticket.
@@ -57,4 +57,4 @@ Every study submission (and every new version of a study) is its own **submissio
 
 ## Canonical example
 
-**CTDC-2110** (*CTDC Data Submission: CMB v6*), the pilot converted on 2026-09-25. Children: CTDC-2233 (dbGaP validation), CTDC-2206 (indexing), CTDC-2205 (loading, first with Expected Counts), CTDC-2207 (megazip). Modeling: CTDC-2111 under the Submission Data Modeling epic, `Relates` to CTDC-2110.
+**CTDC-2110** (*CTDC Data Submission: CMB v6*), the pilot converted on 2026-09-25. Children: CTDC-2233 (dbGaP validation), CTDC-2206 (indexing), CTDC-2205 (loading), CTDC-2207 (megazip). Modeling: CTDC-2111 under the Submission Data Modeling epic, `Relates` to CTDC-2110.

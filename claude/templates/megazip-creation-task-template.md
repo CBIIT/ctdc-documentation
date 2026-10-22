@@ -19,7 +19,7 @@ The work is three operations the team already runs separately, on one ticket: **
 - **Object files**: live in the **data bucket** `nci-crdc-data-bucket-prod`, in a directory named by a UUID. The directory is **not** written anywhere except inside `indexd.tsv`: each `urls` value looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`, and the directory is the segment after the bucket name. The megazips are written into this same directory, next to the individual files.
 - **Megazip filename**: `<study>_<data_file_type>.zip`, spaces replaced by underscores, **no program prefix** (`AHOD0831_Radiology_Images.zip`, not `NCTN_AHOD0831_...`). `<study>` is the study short name from the submission epic; `<data_file_type>` is the value from `file.tsv`.
 - **IndexD**: GUIDs are self-minted (UUID + `dg.4DFC/`), one per megazip; the manifest is authored by the team and handed off through the DCF Google Drive folder (`https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`) and a CRINTAKE ticket (`tracker.nci.nih.gov/projects/CRINTAKE/`), exactly like every other CTDC file. Spot-check at `https://nci-crdc.datacommons.io/index/<GUID>`.
-- **Loading**: one file-metadata loading file covering every megazip, run through the dedicated Jenkins data-loading job per tier (Dev, QA, Stage, Prod).
+- **Loading**: one file-metadata loading file covering every megazip, run once through the Prefect data loading pipeline, then promoted to each tier (Dev, QA, Stage, Prod) by OpenSearch backup and restore.
 
 **Section order (4 sections, exactly this sequence)**
 
@@ -57,10 +57,10 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
    4. When CTDS reports done, resolve each GUID at `https://nci-crdc.datacommons.io/index/<GUID>`. A pass returns a record whose `urls` points at that megazip and whose `size` and `hashes` are non-empty. If any fails, comment on the CRINTAKE ticket and do not load.
 
    *Load*
-   1. Run the Jenkins *Dev* data-loading job with the megazip loading file. Confirm every megazip shows on the Study Details page.
-   2. Run *QA*. Tester confirms each megazip downloads from the Study Details page.
-   3. Run *Stage*. Tester confirms download.
-   4. Run *Prod*. Tester confirms download. *Prod signoff closes the ticket.*
+   1. Run the Prefect data loading pipeline with the megazip loading file and restore the OpenSearch backup to *Dev*. Confirm every megazip shows on the Study Details page.
+   2. Restore to *QA*. Tester confirms each megazip downloads from the Study Details page.
+   3. Restore to *Stage*. Tester confirms download.
+   4. Restore to *Prod*. Tester confirms download. *Prod signoff closes the ticket.*
 
 4. `h3. ✅ *Testing Signoff*`: The completion record. **Prod signoff is the trigger to transition the ticket to Closed.**
 
