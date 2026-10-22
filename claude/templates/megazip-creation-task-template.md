@@ -54,7 +54,7 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
    1. For each megazip, generate a UUID, prepend `dg.4DFC/`, and record the GUID in the megazip table.
    2. Author one `indexd.tsv` with a row per megazip (GUID, size, md5, url) and upload it to the [DCF Google Drive folder](https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb).
    3. File a [CRINTAKE](https://tracker.nci.nih.gov/projects/CRINTAKE/) ticket naming the manifest, and link it back to this ticket.
-   4. When CTDS reports done, resolve each GUID at `https://nci-crdc.datacommons.io/index/<GUID>`. A pass returns a record whose `urls` points at that megazip and whose `size` and `hashes` are non-empty. If any fails, comment on the CRINTAKE ticket and do not load.
+   4. When the DCF reports done, resolve each GUID at `https://nci-crdc.datacommons.io/index/<GUID>`. A pass returns a record whose `urls` points at that megazip and whose `size` and `hashes` are non-empty. If any fails, comment on the CRINTAKE ticket and do not load.
 
    *Load*
    1. Run the Prefect data loading pipeline with the megazip loading file and restore the OpenSearch backup to *Dev*. Confirm every megazip shows on the Study Details page.
