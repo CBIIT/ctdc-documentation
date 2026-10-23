@@ -110,8 +110,8 @@ Not every component bumps every release; the dashboard **Release Info** tab reco
 |---|---|---|
 | **Front-End (FE)** | `CBIIT/crdc-ctdc-ui` (`main`) | React/Bento app; `x.y.z`, blocker fixes bump patch (`z+1`) |
 | **Back-End (BE)** | `CBIIT/crdc-ctdc-backend` (`master`) | GraphQL API layer |
-| **File Service** | `CBIIT/crdc-ctdc-files` | Signed-URL file delivery (IndexD) |
-| **Auth** | `CBIIT/crdc-ctdc-authn` | Fence-brokered OAuth2 login |
+| **File Service** | `CBIIT/crdc-ctdc-files` | Pre-signed URL file delivery; controlled-access downloads are authorized with the user's RAS Passport, and the CRDC Data Commons Framework (DCF) issues the pre-signed URL (since 1.2.0.5) |
+| **Auth** | `CBIIT/crdc-ctdc-authn` | NIH Researcher Auth Service (RAS) login at IAL2, sessions, and RAS Passport handling (since 1.2.0.4; replaced the eRA Commons login) |
 | **Interoperation** | `CBIIT/crdc-ctdc-interoperation` (`main`) | Cross-commons interoperation service |
 | **DMN Core** | `CBIIT/Data-Model-Navigator` (`main`) | Data Model Navigator (embedded); shared Bento component |
 | **DMN Standalone** | *(confirm — likely the same `Data-Model-Navigator` repo, standalone build)* | Data Model Navigator (standalone) |
@@ -119,7 +119,7 @@ Not every component bumps every release; the dashboard **Release Info** tab reco
 
 **Release Info tab fields:** Expected Production Release Date · Build Date · Release Package Number · FE/BE/File Service/Auth/Interoperation versions · OpenSearch backup version · DMN Standalone · DMN Core · Release Blockers Identified · Regression Test Status on QA.
 
-**Where release notes live:** the merged quarterly `fix_version` generates notes published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**.
+**Where release notes live:** the merged quarterly `fix_version` generates notes published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**, written from the [Release Notes Template](../templates/release-notes-template.md).
 
 ---
 
@@ -151,6 +151,7 @@ The TPM is the single authorization pivot; no untested build jumps a tier.
 | **Team Charter** | SharePoint (Build, Deploy & Release Process) | The rules (top authority) |
 | **This playbook** | `claude/workflows/software-release-playbook.md` | The runbook (process) |
 | **Release ticket templates** | `claude/templates/release-ticket-templates.md` | Clone-source spec for the recurring release tickets |
+| **Release notes template** | `claude/templates/release-notes-template.md` | Scope derivation, structure, and style for the GitHub release notes |
 | **Release Roadmap deck** | `.pptx`, produced at kickoff | The **schedule**: freeze dates + sprint plan |
 | **Release Dashboard** | Cloned per release from `CTDC_Release_Dashboard_MASTER.xlsx` | The per-release **instrument** |
 | **Per-RC Slack channel** | `#ctdc-<year>-q<N>-release` | RC coordination, build announcements, and **bug reporting/triage while a RC is being prepared** |
@@ -263,7 +264,7 @@ One linear ladder, no skips: `dev → qa → stage → prod`.
 1. **Engineering:** create the **GitHub tag** for the Release Notes.
 2. **Engineering:** merge the RC into **`main`** (tagged) **and `develop`**; **delete the release branch**.
 3. **Engineering:** OpenSearch restore **only if required**; verify data alignment.
-4. **TPM:** **merge the internal-release `fix_version`s in Jira** into the finalized quarterly version; generate + publish **release notes** to GitHub.
+4. **TPM:** **merge the internal-release `fix_version`s in Jira** into the finalized quarterly version; generate + publish **release notes** to GitHub from the [Release Notes Template](../templates/release-notes-template.md).
 5. **TPM:** run the **Release Tagging Hygiene Checklist** (SKILL.md §13). **Verify before you count** — script tallies over raw Jira JSON, `resolutiondate` as the authoritative completion signal.
 6. **TPM:** courtesy email to the full leadership list — **FNL:** Todd Pihl, John Otridge, Mark Jensen; **CBIIT:** Erika Kim, Tanja Davidsen, Esmeralda Casas-Silva (Emi, CTDC Federal Lead).
 7. **TPM:** production announcement in the NCI CRDC `#tech_channel` (SKILL.md §14).
@@ -395,3 +396,4 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 | v7 | Created dedicated Jira **template tickets** (CTDC-2135 Final Design QA epic, CTDC-2136 Stage deploy, CTDC-2137 Prod deploy — labeled `template`, deploy tasks under CTDC-2007) and reformatted the live Q4 tickets (2128/2129/2130) to the house style; canonical table now points at the templates and links the `release-ticket-templates.md` spec. | Gina Kuffel |
 | v8 | Dropped the Jira clone-source tickets (CTDC-2135/2136/2137 no longer exist): the **Release Tickets** section now points to `release-ticket-templates.md` (v6), from which the TPM creates each release's tickets, matching ICDC. Added the **Deployment Package** task, which blocks both deployment tasks. Removed the duplicated, outdated deploy-task body that predated the v3 Tracking table. | Gina Kuffel |
 | v9 | Release tickets now sit under one standing release epic per federal fiscal year (FY27: CTDC-2295), matching ICDC; the permanent epic CTDC-2007 is closed. | Gina Kuffel |
+| v10 | Scope table updated for the RAS release (v1.5.0): Auth is now NIH RAS login (no longer Fence-brokered OAuth2), and File Service authorizes controlled-access downloads with the RAS Passport through DCF. Added the Release Notes Template (`claude/templates/release-notes-template.md`) and linked it from Scope, Artifacts, and Phase 8. | Gina Kuffel |
