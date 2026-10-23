@@ -20,7 +20,7 @@ Managing CRDC submissions, modeling the shape of CTDC's data, and loading data i
 
 - **Loading data**: taking a CRDC submission's *contents* into CTDC's databases. Four work patterns, all children of the submission epic through the Epic Link and linked to each other with `Relates`, never `Blocks`:
   - **Consent-group gate**: running the `dbgap_validatation_prod` Prefect deployment against the released submission so its consent group / ACL values reconcile with dbGaP before anything is indexed or loaded. Use the **dbGaP Validation Task** (DO-DBGAP).
-  - **IndexD registration**: minting GUIDs for the submission's files through the external DCF handoff. Runs in parallel with the load; file downloads resolve once the GUIDs are minted and spot-checked. Use the **IndexD Registration Task** (DO-INDEX).
+  - **IndexD registration**: registering the submission's Data Hub-generated file GUIDs through the external DCF handoff. Runs in parallel with the load; file downloads resolve once the GUIDs are registered and spot-checked. Use the **IndexD Registration Task** (DO-INDEX).
   - **End-to-end load**: promoting metadata through Dev, QA, Stage, and Prod with one Prefect data loading run and an OpenSearch backup and restore into each tier, checking counts against the Release Packages at each tier. Use the **Data Loading Task** (DO-LOAD).
   - **Megazip**: bundling the study's object files into one `.zip` per `data_file_type`, self-minting a GUID for each, indexing, and loading them so each file type downloads in one click. Use the **Megazip Creation Task** (DO-ZIP).
 - **Modeling data**: changing the *shape* of what CTDC's databases can hold. **Every model change records in a CDE Request Workbook; there is no "no workbook" path.** The two work patterns split on the *driver* of the change, and the driver selects which workbook holds the term-level truth:
@@ -141,7 +141,7 @@ When the user asks Claude to draft a ticket or run a recurring workflow:
 1. **First, decide which lane the work is in**: software development or data management. If data management, decide which sub-function and work pattern. Use this decision tree:
    - *Is a new study submission (or a new version of a study) starting?* → **Data Submission Epic (DO-EPIC)**; every task below for that submission hangs off it
    - *Has the submission been released and does it need its consent groups reconciled against dbGaP before indexing or loading?* → **dbGaP Validation Task (DO-DBGAP)**
-   - *Are the files in this submission still pending IndexD GUID minting via the external DCF team?* → **IndexD Registration Task (DO-INDEX)**
+   - *Are the files in this submission still pending IndexD GUID registration via the external DCF team?* → **IndexD Registration Task (DO-INDEX)**
    - *Is new data being loaded into the existing schema?* (new study, new files for an existing study) → **Data Loading Task (DO-LOAD)**
    - *Does the study need one downloadable zip per data file type?* → **Megazip Creation Task (DO-ZIP)**
    - *Is the schema changing because an incoming **study submission** needs new properties / enums / permissible values, with that study's CDE Request Workbook as the spec?* → **Data Modeling for Study Submission (DO-MODEL)**: study-driven; records in the study's workbook (owned by the study's Data Concierge)

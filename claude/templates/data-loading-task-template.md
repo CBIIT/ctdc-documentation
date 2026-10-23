@@ -1,6 +1,6 @@
 ### DO-LOAD. 📦 Data Loading Task Template (v10)
 
-> **Use this template for every CTDC data management task that loads a CRDC submission into CTDC (either a new study or a study update to an existing study) and promotes it through Dev → QA → Stage → Prod.** Canonical example: the AHEP0731 load (CTDC-2063). This template covers the **loading-data** sub-function of the team's data management work. It is **not** for changes to the data model itself; schema changes use the **Data Modeling for Study Submission** template (Section DO-MODEL) or the **Data Model Update Task** template (Section DO-INTMODEL). It is also **not** for the paired IndexD registration that mints the file GUIDs this load consumes; that uses the **IndexD Registration Task** template (Section DO-INDEX). Kept in lockstep with ICDC's Data Loading Task template (v2); the differences are the platform specifics in the anatomy below. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that loads a CRDC submission into CTDC (either a new study or a study update to an existing study) and promotes it through Dev → QA → Stage → Prod.** Canonical example: the AHEP0731 load (CTDC-2063). This template covers the **loading-data** sub-function of the team's data management work. It is **not** for changes to the data model itself; schema changes use the **Data Modeling for Study Submission** template (Section DO-MODEL) or the **Data Model Update Task** template (Section DO-INTMODEL). It is also **not** for the paired IndexD registration that registers the file GUIDs this load consumes; that uses the **IndexD Registration Task** template (Section DO-INDEX). Kept in lockstep with ICDC's Data Loading Task template (v2); the differences are the platform specifics in the anatomy below. See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -139,7 +139,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **When NOT to use this template**
 
-- **IndexD registration (minting GUIDs)** → IndexD Registration Task template (DO-INDEX), the parallel sibling.
+- **IndexD registration (registering GUIDs)** → IndexD Registration Task template (DO-INDEX), the parallel sibling.
 - **Data modeling** → Data Modeling for Study Submission (DO-MODEL) for study-driven changes, or Data Model Update Task (DO-INTMODEL) for internally-driven changes.
 - **Software development** → software development template family.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.

@@ -3,7 +3,7 @@
 > **Parent change (2026-09-25).** Each study submission is now tracked as a **submission epic** (Section DO-EPIC, `data-submission-epic-template.md`), which replaces the Data Submission user story (DO-STORY, retired) and the Data Integration epic (CTDC-1664) as the default parent. CTDC-1664 stays open as the standing epic for cross-study integration work that no single submission owns. Wherever this template says "parent submission user story" or "parent user story", read **submission epic**: this task is a child of that epic via the Epic Link (`customfield_12350`), not a `Relates` link, and the epic is the home for study identity, open questions, and risks. The title token is `<Program Short Name> <Study Short Name> <version>`, omitting parts that do not apply (for example `CMB v6`, `NCTN AHOD0831`).
 
 
-> **Use this template for every CTDC data management task that validates a released study submission against dbGaP before it is indexed or loaded: running the established `dbgap_validatation_prod` Prefect deployment to confirm the submission's consent group / ACL values reconcile with the consent groups registered in dbGaP.** The canonical example is **CTDC-2141** (*dbGaP Validation: <Study Name vN>*), drafted 2026-07-09 as the first ticket of this pattern. This template covers a node in the data-submission workflow that sits **after the study is released in the CRDC Submission Portal (workflow step 7) and before the paired IndexD Registration (Section DO-INDEX) and Data Loading (Section DO-LOAD) tasks run**: a consent-group gate. It is **not** the IndexD registration that mints file GUIDs (DO-INDEX), and **not** the load that promotes the submission through Jenkins (DO-LOAD); it is the validation that gates both. See "When NOT to use this template" at the end.
+> **Use this template for every CTDC data management task that validates a released study submission against dbGaP before it is indexed or loaded: running the established `dbgap_validatation_prod` Prefect deployment to confirm the submission's consent group / ACL values reconcile with the consent groups registered in dbGaP.** The canonical example is **CTDC-2141** (*dbGaP Validation: <Study Name vN>*), drafted 2026-07-09 as the first ticket of this pattern. This template covers a node in the data-submission workflow that sits **after the study is released in the CRDC Submission Portal (workflow step 7) and before the paired IndexD Registration (Section DO-INDEX) and Data Loading (Section DO-LOAD) tasks run**: a consent-group gate. It is **not** the IndexD registration that registers file GUIDs (DO-INDEX), and **not** the load that promotes the submission through Jenkins (DO-LOAD); it is the validation that gates both. See "When NOT to use this template" at the end.
 
 **Why this template**
 
@@ -72,7 +72,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **Required content rules**
 
-- **Scope is dbGaP consent-group validation only.** Running the `dbgap_validatation_prod` Prefect deployment with `check_consent_group` on. **IndexD registration** (minting GUIDs) uses the IndexD Registration Task template (Section DO-INDEX). **Data loading** uses the Data Loading Task template (Section DO-LOAD). **Schema or model changes** use a modeling template (Section DO-MODEL or DO-INTMODEL). See "When NOT to use this template."
+- **Scope is dbGaP consent-group validation only.** Running the `dbgap_validatation_prod` Prefect deployment with `check_consent_group` on. **IndexD registration** (registering GUIDs) uses the IndexD Registration Task template (Section DO-INDEX). **Data loading** uses the Data Loading Task template (Section DO-LOAD). **Schema or model changes** use a modeling template (Section DO-MODEL or DO-INTMODEL). See "When NOT to use this template."
 - **No Acceptance Criteria section.** This is operational SOP work; the completion bar is the clean validation run with the screenshot attached (Section 4). AC belongs on user stories, not on Tasks.
 - **No Open Questions / Risks section.** Open questions and risks live on the parent submission user story, not on this Task.
 - **One Task per released submission / version.** Reuse the submission epic's title token (`<Program Short Name> <Study Short Name> <version>`); a reload under a new release is its own new validation task, paired with its own loading task.
@@ -106,7 +106,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **When NOT to use this template**
 
-- **IndexD registration (minting GUIDs)** → IndexD Registration Task template (Section DO-INDEX).
+- **IndexD registration (registering GUIDs)** → IndexD Registration Task template (Section DO-INDEX).
 - **Data loading (promoting the submission through the Prefect data loading pipeline)** → Data Loading Task template (Section DO-LOAD).
 - **Data modeling** → Data Modeling for Study Submission (Section DO-MODEL) for study-driven changes, or Data Model Update Task (Section DO-INTMODEL) for internally-driven changes.
 - **Software development work** → the software development template family.
