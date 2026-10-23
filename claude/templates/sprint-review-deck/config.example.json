@@ -167,7 +167,7 @@
   },
   "team": {
     "shoutout": "Ambar Rana built 6 of the 16 closed tickets: the COTC026, COTC030, PRECINCT02 and COTC021 Low Pass WGS loads, the PRECINCT02 submission review and the /v1/graphql introspection fix. Philip Musk ran the study close-out and closed 8. Charles Ngu landed the Prefect permissions and the Production hotfix. Toyo Udosen shipped the Announcements backend and Homepage section.",
-    "whyDisagree": "The Assignee on a closed ICDC ticket is whoever moved it to Closed: this sprint that was mostly Philip (study close-out) and Valentina (QA). Credit comes from the Developer field (customfield_23650); coordination work such as resubmissions and IndexD carries no Developer by design. Counts are as of Oct 9, so they include four tickets closed after Sprint 52 opened."
+    "creditNote": "Credit comes from the Jira Developer field (customfield_23650): the person who did the work. The Assignee is usually whoever moved the ticket to Closed, often QA, so it is not charted. A ticket with two developers counts for each; coordination work such as IndexD registration has no Developer by design."
   },
   "carry": {
     "bigNote": "Fourteen of them are already waiting on review.",
