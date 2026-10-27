@@ -15,7 +15,7 @@ The work is three operations the team already runs separately, on one ticket: **
 
 **The two buckets (read once before drafting)**
 
-- **Release package**: lives in the **metadata bucket** `nci-cbiit-clinicaltrialdatacommons-metadata`, in a directory named `<timestamp>-<submission-id>/`. It holds `file.tsv` (metadata, including the `data_file_type` column) and `indexd.tsv` (the manifest whose `urls` column points at the real files). The directory is created when the study is released from the CRDC Submission Portal and is recorded on the study's DO-DBGAP ticket (and usually its DO-INDEX ticket); **copy it from there rather than asking**.
+- **Release package**: lives in the **metadata bucket** `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`, in a directory named `<timestamp>-<submission-id>/`. It holds `file.tsv` (metadata, including the `data_file_type` column) and `indexd.tsv` (the manifest whose `urls` column points at the real files). The directory is created when the study is released from the CRDC Submission Portal and is recorded on the study's DO-DBGAP ticket (and usually its DO-INDEX ticket); **copy it from there rather than asking**.
 - **Object files**: live in the **data bucket** `nci-crdc-data-bucket-prod`, in a directory named by a UUID. The directory is **not** written anywhere except inside `indexd.tsv`: each `urls` value looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`, and the directory is the segment after the bucket name. The megazips are written into this same directory, next to the individual files.
 - **Megazip filename**: `<study>_<data_file_type>.zip`, spaces replaced by underscores, **no program prefix** (`AHOD0831_Radiology_Images.zip`, not `NCTN_AHOD0831_...`). `<study>` is the study short name from the submission epic; `<data_file_type>` is the value from `file.tsv`.
 - **IndexD**: GUIDs are self-minted (UUID + `dg.4DFC/`), one per megazip; the manifest is authored by the team and handed off through the DCF Google Drive folder (`https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`) and a CRINTAKE ticket (`tracker.nci.nih.gov/projects/CRINTAKE/`), exactly like every other CTDC file. Spot-check at `https://nci-crdc.datacommons.io/index/<GUID>`.
@@ -31,7 +31,7 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
 
    ||Field||Value||
    |CRDC Submission ID|`<submission-id>`|
-   |Release Package (metadata bucket)|`s3://nci-cbiit-clinicaltrialdatacommons-metadata/<timestamp>-<submission-id>/`|
+   |Release Package (metadata bucket)|`s3://nci-cbiit-clinicaltrialdatacommons-metadata-nonprod/<timestamp>-<submission-id>/`|
    |Object Files Directory (data bucket)|`s3://nci-crdc-data-bucket-prod/`PLACEHOLDER (Workflow step 1)|
 
    One row per distinct `data_file_type` in `file.tsv` (Workflow step 2):
@@ -42,7 +42,7 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
 3. `h3. 🚦 *Workflow*`: Four phases, `#` numbered lists under a bold phase label (numbering restarts per phase).
 
    *Read the release package*
-   1. The release package lives in the metadata bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`); the object files live in a different bucket (`nci-crdc-data-bucket-prod`). Open `indexd.tsv` in the release package and look at the `urls` column. Each row looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`; the directory is the segment after the bucket name (`663e6a44-f212-4673-a2ae-af2854557e3f` in that example). Record it in the Artifacts table.
+   1. The release package lives in the metadata bucket (`nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`); the object files live in a different bucket (`nci-crdc-data-bucket-prod`). Open `indexd.tsv` in the release package and look at the `urls` column. Each row looks like `s3://nci-crdc-data-bucket-prod/663e6a44-f212-4673-a2ae-af2854557e3f/<file>.zip`; the directory is the segment after the bucket name (`663e6a44-f212-4673-a2ae-af2854557e3f` in that example). Record it in the Artifacts table.
    2. Open `file.tsv` in the same release package and list the distinct `data_file_type` values. There is one megazip per value, named `<study>_<data_file_type>.zip` with spaces replaced by underscores (for example `AHOD0831_Radiology_Images.zip`). Add one row per value to the megazip table. No program prefix in the name.
 
    *Create*

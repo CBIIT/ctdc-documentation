@@ -19,7 +19,7 @@ The validation is **internal automation, not an external handoff and not a Jenki
 - **`dbgap_validatation_prod` deployment**: the established, versioned Prefect deployment that performs the dbGaP validation. The deployment name is reproduced verbatim (including its current spelling) so it matches the Prefect UI exactly; do not "correct" it in the ticket.
 - **`submission_id` parameter**: the CRDC Submission ID issued by the CRDC Submission Portal; identifies the released package the flow validates. Entered on the custom run.
 - **`check_consent_group` parameter**: the boolean toggle that turns on consent group / ACL reconciliation against dbGaP. **Always toggled on** for this gate; it is the check the whole task exists to run.
-- **Release Package**: the per-release directory in the CTDC metadata S3 bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`), created when the study is released from the CRDC Submission Portal. Holds the metadata loading TSVs and the `indexd.tsv` manifest whose `acl` column carries each file's consent group.
+- **Release Package**: the per-release directory in the CTDC metadata S3 bucket (`nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`), created when the study is released from the CRDC Submission Portal. Holds the metadata loading TSVs and the `indexd.tsv` manifest whose `acl` column carries each file's consent group.
 - **dbGaP accession (phsXXXXXX)**: the study's registration in dbGaP; defines the authorized consent groups the released package's ACLs must match. It lives on the parent submission user story; the validation task repeats it only as the validation anchor.
 - **Paired downstream tasks**: the **IndexD Registration Task (DO-INDEX)** and the **Data Loading Task (DO-LOAD)**. This validation is the consent-group gate for both as a matter of process: a failing run holds the handoff to engineering. In Jira the three tasks are linked with `Relates`, not `Blocks` (see Required content rules).
 
@@ -34,8 +34,8 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
    | Field | Value | Notes |
    |---|---|---|
    | CRDC Submission ID | *(Submission Portal ID)* | Issued by the CRDC Submission Portal; one per submission. Entered as the `submission_id` parameter on the Prefect run. |
-   | AWS Account ID | `101183076466` | Constant for CTDC: the CTDC data commons AWS account. |
-   | AWS S3 Bucket | `nci-cbiit-clinicaltrialdatacommons-metadata` | Constant for CTDC: the metadata bucket that holds every release package. |
+   | AWS Account ID | `265135454114` | Constant for CTDC: the CTDC non-prod AWS account, which holds the metadata bucket. |
+   | AWS S3 Bucket | `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod` | Constant for CTDC: the metadata bucket that holds every release package. |
    | Release Package | *(directory name)* | Directory name only, within the AWS S3 Bucket above. Created when the study is released from the CRDC Submission Portal; PLACEHOLDER until release. |
    | dbGaP Accession | *(phsXXXXXX)* | The study's dbGaP accession whose registered consent groups the job reconciles against. Lives on the parent submission user story; repeated here only as the validation anchor. |
    | Prefect Deployment | `dbgap_validatation_prod` | The established deployment in the Prefect Cloud `crdc-workspace`, run under the `FNLCRDCPrefectCurators` account. |
@@ -92,7 +92,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **Writing-and-publishing workflow**
 
-1. Confirm the study has been **released** in the CRDC Submission Portal and its Release Package directory exists in `nci-cbiit-clinicaltrialdatacommons-metadata`. Validation before release is premature; the Release Package is the thing being validated. Surface any open questions on the parent submission user story, not on the Task.
+1. Confirm the study has been **released** in the CRDC Submission Portal and its Release Package directory exists in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`. Validation before release is premature; the Release Package is the thing being validated. Surface any open questions on the parent submission user story, not on the Task.
 2. Confirm this is dbGaP consent-group validation, not indexing (DO-INDEX), loading (DO-LOAD), or modeling (DO-MODEL/DO-INTMODEL).
 3. Identify the submission epic (Section DO-EPIC) and each submission's Data Hub tracker (DHDM-XXX). The epic is set as the Epic Link at creation; the DHDM tracker goes on via a `Relates` link.
 4. Identify the paired IndexD Registration (DO-INDEX) and Data Loading (DO-LOAD) tasks (or note they will follow); this validation `Relates` to both.

@@ -17,7 +17,7 @@ This template owns only the loading-data sub-function, tuned for loading into a 
 
 **Pipeline & store anatomy (read once before drafting)**
 
-- **Source artifacts**: each CRDC submission produces its own **Release Package** (metadata loading TSVs plus the indexd.tsv manifest) in the CTDC metadata S3 bucket (`nci-cbiit-clinicaltrialdatacommons-metadata`), in a per-release directory created when the study is released from the CRDC Submission Portal. One study load can span several submissions, so one load can consume several Release Packages.
+- **Source artifacts**: each CRDC submission produces its own **Release Package** (metadata loading TSVs plus the indexd.tsv manifest) in the CTDC metadata S3 bucket (`nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`), in a per-release directory created when the study is released from the CRDC Submission Portal. One study load can span several submissions, so one load can consume several Release Packages.
 - **Loading pipeline**: **Prefect**, run **once** per load; there is no Jenkins step for data loading.
 - **Loader**: `CBIIT/crdc-ctdc-dataloader`, run by the Prefect pipeline.
 - **Stores**: the pipeline loads the study through a **local Neo4j** into a **single Memgraph** (the canonical metadata store). Each tier's **OpenSearch** instance, which the frontend reads from, is then populated by **backup and restore**.
@@ -32,8 +32,8 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 2. `h3. 📦 *Submission & Artifacts*`: Required. Two bare-value constant bullets, then a table with **one row per CRDC submission** the load consumes. No intro sentence, no explanatory text on the constants. Study identity lives on the submission epic via the native Links panel, not here.
 
    ```
-   * *AWS Account ID*: {{101183076466}}
-   * *Release Package bucket*: {{nci-cbiit-clinicaltrialdatacommons-metadata}}
+   * *AWS Account ID*: {{265135454114}}
+   * *Release Package bucket*: {{nci-cbiit-clinicaltrialdatacommons-metadata-nonprod}}
 
    ||Submission||CRDC Submission ID||Release Package||
    |<Portal submission name>|<submission-id>|[<timestamp>-<submission-id>/|<S3 console URL>]|
@@ -48,7 +48,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
    **Clickable Release Package links**: render each as a Jira wiki link `[<timestamp>-<submission-id>/|<url>]`. A wiki link inside a table cell renders correctly on this instance. URL format, with the `prefix=` value being the same directory URL-encoded (colons as `%3A`):
 
    ```
-   https://us-east-1.console.aws.amazon.com/s3/buckets/nci-cbiit-clinicaltrialdatacommons-metadata?region=us-east-1&prefix=<URL-ENCODED-DIR>/&showversions=false
+   https://us-east-1.console.aws.amazon.com/s3/buckets/nci-cbiit-clinicaltrialdatacommons-metadata-nonprod?region=us-east-1&prefix=<URL-ENCODED-DIR>/&showversions=false
    ```
 
    **Every submission gets a row**, including metadata-only submissions with no object files: the load still consumes their Release Package. A submission that arrives after the ticket is written is added as a new row, never as narrative elsewhere in the body.
@@ -126,7 +126,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **Writing-and-publishing workflow**
 
-1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata`. The paired IndexD registration runs in parallel and need not be complete. Surface any open questions on the submission epic, not the Task.
+1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`. The paired IndexD registration runs in parallel and need not be complete. Surface any open questions on the submission epic, not the Task.
 2. Confirm this is a data load, not a model update or software development. If the schema is changing, a modeling Task (DO-INTMODEL/DO-MODEL) lands first.
 3. Identify the submission epic (set as the Epic Link at creation) and the paired IndexD Registration Task (add via a native `Relates` link after creation, never `Blocks`).
 4. Create via `jira_create_issue` with `issue_type = "Task"`, the title from the convention above, a placeholder description, the parent epic via `customfield_12350`, and the Developer via `customfield_23650`. Add no label. Leave Unassigned.
