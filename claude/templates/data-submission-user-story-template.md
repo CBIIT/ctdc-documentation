@@ -88,7 +88,7 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 - Issue type **User Story**; priority **Major**; component **Data**; labels **`Data-Concierge`** plus the WBS line (`Task-1.2.1.x`).
 - Leave **Unassigned** at creation unless directed.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
 
 **Writing-and-publishing workflow**
 

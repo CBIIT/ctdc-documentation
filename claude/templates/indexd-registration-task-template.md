@@ -120,7 +120,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Parent Epic field set via `customfield_12350`** to the study's submission epic (Section DO-EPIC). CTDC-1664 stays open only for cross-study integration work no single submission owns.
 - **`Data-Concierge` label is mandatory** on this task, set at creation via `labels`. The paired Data Loading Task carries no label.
 - **Leave the ticket Unassigned at creation.** The Developer field is not required: indexing is Data Concierge coordination, not engineering.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog or place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **`Relates` link to each submission's Data Hub tracking ticket (DHDM-XXX).** DHDM tracks per submission, so a multi-submission registration links several DHDM tickets.
 - **`Relates` link to the paired Data Loading Task** when it exists (registration as inward issue, load as outward). Never `Blocks`: the two run in parallel.
 - **Native "Related To" link to each CRINTAKE ticket** once it is filed (`jira_create_issue_link`, registration as inward issue). A free-text CRINTAKE key is not sufficient, a remote link is reserved for targets outside this Jira, and `Supports` is never used.
@@ -154,7 +154,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Data loading** → Data Loading Task template (DO-LOAD), the parallel sibling.
 - **Data modeling** → Data Modeling for Study Submission (DO-MODEL) or Data Model Update Task (DO-INTMODEL).
 - **Software development** → software development template family.
-- **Megazip creation** (bundling a study's object files into one downloadable archive, then indexing and loading it) → Megazip Creation Task template (DO-ZIP).
+- **Megazip creation** (bundling a study's object files into one downloadable archive, submitting its metadata, and indexing it) → Megazip Creation Task template (DO-ZIP), which carries its own indexing steps.
 - **Other upstream artifact creation** (for example a standalone metadata loading file) → no dedicated template; file a standalone Task under the submission epic and link it natively.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
 

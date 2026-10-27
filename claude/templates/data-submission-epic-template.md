@@ -17,7 +17,8 @@ The structure is CTDC-1664's long-form data epic, scoped to one submission, merg
 | dbGaP validation (DO-DBGAP) | `PREFECT dbGaP Validation: <token>` |
 | IndexD registration (DO-INDEX) | `Data Indexing: <token>` |
 | Data loading (DO-LOAD) | `Data Loading: <token>` |
-| Megazip (DO-ZIP) | `Create, Index, and Load Megazip files for <token>` |
+| Megazip (DO-ZIP) | `Create, Submit, and Index Megazip files for <token>` |
+| Megazip load (DO-LOAD) | `Data Loading: <token> Megazips` |
 | Submission data modeling (DO-MODEL) | `Submission Data Modeling: <token>` |
 
 **Card line + section order (card line, then 9 sections, exactly this sequence)**
@@ -60,7 +61,7 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
    5. Consent groups are validated against dbGaP.
    6. Files are registered in IndexD through DCF.
    7. Metadata loads to Dev for initial testing; the submission is then marked Complete, which moves the object files into the bucket.
-   8. A megazip is built for each data file type.
+   8. A megazip is built for each data file type, submitted to the Portal as metadata only, indexed, and loaded.
    9. Data loads to QA, Stage, and Prod, with testing at each tier.
    10. Production Verification Testing (PVT) or Post-Deployment Testing (PDT) confirms the study and its file downloads.
 6. `h3. ✅ *Definition of Done*`: The closure conditions: what must be true to close the epic, written as outcomes. The epic itself is not tested; verification happens on the child tasks. Standard set: released and marked Complete with the Release Package with engineering; consent groups pass dbGaP validation before indexing and loading; every file registered in IndexD and its GUID resolves; loaded Dev, QA, Stage, Prod with signoff and nothing loaded directly to Prod; one megazip per data file type downloads; the study renders correctly in Production and its files download for authorized users; the CDE Request Workbook records the released model version. Add submission-specific outcomes (for example new model fields rendering) as needed.
