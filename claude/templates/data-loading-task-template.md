@@ -116,7 +116,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Developer field is required.** Set `customfield_23650` to the engineer who runs the load.
 - **Leave the ticket Unassigned at creation** per standing convention.
 - **The Data Loading task carries no label**: the load is performed by engineering; the `Data-Concierge` label belongs to the paired IndexD Registration (Index) task.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **`Relates` link to each submission's Data Hub tracking ticket (DHDM-XXX).** DHDM tracks per submission, so a load spanning several submissions links several DHDM tickets.
 - **`Relates` link to the paired IndexD Registration Task** when one exists: the two run in parallel; do **not** use `Blocks`. The non-blocking relationship is conveyed by the link, not restated in the body.
 - **No other ticket keys in the body.** The epic, the DHDM trackers, the paired IndexD task, and sibling tasks are carried by the Epic Link and the native Links panel.

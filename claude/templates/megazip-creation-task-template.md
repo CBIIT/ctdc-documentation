@@ -28,7 +28,7 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
 
 1. `h3. 🎯 *Summary*`: One or two sentences, then the standing "How this ticket works" line. Example: *"Bundle each CMB v6 data file type into one megazip, submit its metadata through the CRDC Submission Portal, and index it, so the linked loading ticket can load it and each file type downloads as one file from the Study Details page. The individual files stay in the bucket."* Then, verbatim: *"How this ticket works: each workflow section has one owner. Read your inputs from the Artifacts table, record your outputs there (never on another ticket), mark your row in the Handoff Log, and reassign the ticket to the next owner. The assignee is always the person holding the work."*
 
-2. `h3. 📦 *Artifacts*`: Two Jira-wiki tables. The first holds the study-level and submission values with a **Filled by** column; the second has one row per megazip and is filled in as the work progresses, followed by a one-line italic note naming who fills which columns.
+2. `h3. 📦 *Artifacts*`: Two Jira-wiki tables. The first holds the study-level and submission values with a **Filled by** column; the second has one row per megazip and is filled in as the work progresses. Each workflow section says which columns its owner fills, so the megazip table needs no separate ownership note.
 
    ||Field||Value||Filled by||
    |CRDC Submission ID|`<submission-id>`|Data Concierge|
@@ -41,8 +41,6 @@ Each header is a Jira wiki `h3.` heading in the emoji + bold form shown.
 
    ||data_file_type||File List (attached)||Files||Megazip File||md5||size||GUID||
    |`<data_file_type>`|`<study>_<version>_<data_file_type>_megazip_file_list.tsv`|`<count>`|`<study>_<data_file_type>_<version>.zip`| | | |
-
-   _File List, Files and Megazip File: Data Concierge (section 1). md5 and size: DevOps (section 2). GUID: Data Concierge (section 3)._
 
 3. `h3. 🔁 *Handoff Log*`: One row per workflow section; the section owner fills Completed and Initials when handing off.
 
@@ -104,7 +102,7 @@ Create it at the same time as this ticket, from the Data Loading Task template (
 - **Release package is inferred, not requested.** It is already recorded on the study's DO-DBGAP ticket (and usually DO-INDEX); copy it into the Artifacts table at creation. If neither carries it, the study has not been released and this ticket is premature.
 - **Title:** `Create, Submit, and Index Megazip files for <token>`, where `<token>` is the submission epic's `<Program Short Name> <Study Short Name> <version>` (plural "files"; no data type in the title).
 - **Issue type Task; Parent Epic via `customfield_12350`** (the study's submission epic, Section DO-EPIC); **no label; no component**; priority Major to match the family. Assign to the Data Concierge at creation, since section 1 is theirs.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog and never place it in a numbered development sprint.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled.
 - **Links: `Relates` to every other task for the study** (DO-DBGAP, DO-INDEX, DO-LOAD, the paired megazip DO-LOAD, and the DHDM tracker; the submission epic is the parent via the Epic Link), plus a native "Related To" issue link to the CRINTAKE ticket once filed (`jira_create_issue_link`; CRINTAKE is on the same Jira instance, so not a remote link). **Never `Blocks` or `Supports`. No link to any feature user story.**
 - **No AWS Account ID row, no "To be created" rows, no Notes column.** If a value is not typed into a command, a file, or a form, it does not belong in the table.
 - **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`. Edit descriptions through the connector or the Text tab: Jira's visual editor rewrites URLs inside `{{ }}` into broken links.
@@ -115,7 +113,7 @@ Create it at the same time as this ticket, from the Data Loading Task template (
 2. Create this ticket via `jira_create_issue` (Task, placeholder description, `customfield_12350`, priority Major, assigned to the Data Concierge, no label, no component).
 3. Push the body via `jira_update_issue`.
 4. Create the paired load ticket from DO-LOAD (`Data Loading: <token> Megazips`) with the same epic link, sprint, and no component.
-5. Add both tickets to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+5. Add both tickets to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`. A TPM pulls them into a numbered sprint when the work is scheduled.
 6. Add `Relates` links: this ticket to the paired load ticket and to every study task and the DHDM tracker.
 7. Verify the render in the UI.
 

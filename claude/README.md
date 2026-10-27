@@ -78,7 +78,7 @@ Application pages updating when new data is loaded is the application working as
 |---|---|---|---|---|
 | **DO-INTMODEL · Data Model Update Task** | [`data-model-update-template.md`](./templates/data-model-update-template.md) | Modeling data: internally / CTDC-driven | ✅ Drafted v14 (2026-07-20): any SemVer level (additive through breaking); 5 sections (🎯 Modeling Summary · 📚 CDE Request Workbook · 🔍 DM Federal Lead & SME Review · 🪜 Steps to Completion · 🧪 Verification Surfaces); milestone tracker, no specifics, no counts; records in the internal CTDC CDE Request Workbook; the DM Federal Lead & SME Review (caDSR II Help Desk Request Form plus DHDM Jira Issue) gates `prod` | CTDC-2068 (Program curation properties) |
 
-**Sprint rule.** Every ticket created from a DO task template goes into the standing `CTDC Data Related` sprint (board 641, sprint id 8612) at creation. Epics are not placed in sprints.
+**Sprint rule.** Every ticket created from a DO task template goes into the standing `CTDC Data Related` sprint (board 641, sprint id 8612) at creation; a TPM pulls it into a numbered sprint when the work is scheduled. Epics are not placed in sprints.
 
 ---
 
