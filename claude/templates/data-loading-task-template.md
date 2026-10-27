@@ -55,10 +55,10 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
    **Why one row per submission** (the v10 change): one load can span several CRDC submissions, each with its own Release Package. The v9 four-row field/value table allowed several Submission IDs in one cell and relied on matching positions against the Release Package cell. On ICDC, which used the same table, that drifted: a late fourth submission never made it into the lists (ICDC-4195). A row per submission keeps each Submission ID beside its own Release Package and makes a late arrival a single new row. This mirrors the IndexD Registration Task table (DO-INDEX v8), so the paired tickets read the same way.
 
-3. `h3. 🚦 *Loading Workflow*`: Numbered list of the end-to-end promotion, grouped with a bold label. The Prefect data loading pipeline runs **once**; each tier is then populated by an OpenSearch backup and restore. Steps state the outcome to reach, not how the pipeline gets there.
+3. `h3. 🚦 *Loading Workflow*`: Numbered list of the end-to-end promotion, grouped with a bold label. The Prefect data loading pipeline runs **once, on the Dev tier only**; QA, Stage and Prod are then populated by an OpenSearch backup and restore. Steps state the outcome to reach, not how the pipeline gets there.
 
    **Load**
-   1. Run the Prefect data loading pipeline (once, for all tiers).
+   1. Run the Prefect data loading pipeline (Dev tier only). QA, Stage and Prod receive the data through the OpenSearch backup restores below.
 
    **Dev**
    2. Restore the OpenSearch backup to Dev.
@@ -108,7 +108,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Scope is loading-data work only.** Schema/model changes use a modeling template (DO-INTMODEL/DO-MODEL). IndexD registration uses the IndexD Registration Task template (DO-INDEX). Software development uses the software development family. See "When NOT to use this template."
 - **No Acceptance Criteria, Open Questions / Risks, Verification Surfaces, Per-Environment Verification, Expected Counts, or Notes sections.** Data loading is operational SOP work; the completion bar is the Testing Signoff table. Risks belong on the submission epic.
 - **One Task per end-to-end load**: Dev through Prod, not one ticket per environment. The Testing Signoff table is the single source of truth for where the load is in the pipeline.
-- **The Prefect data loading pipeline runs once; each tier is populated by OpenSearch backup and restore.** No Jenkins step.
+- **The Prefect data loading pipeline runs once, on the Dev tier only; each tier is populated by OpenSearch backup and restore.** No Jenkins step.
 - **No handoff wording in the workflow** ("assign for QA testing", "assign for Prod verification"): the handoff is the ticket's status change in Jira.
 - **Issue type is Task.** Do not use Story or Subtask.
 - **Title convention:** `Data Loading: <Program Short Name> <Study Short Name> <version>`: reuse the exact token from the submission epic title (Section DO-EPIC) verbatim, omitting parts that do not apply, for example `Data Loading: CMB v6`.
