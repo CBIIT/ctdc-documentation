@@ -21,7 +21,7 @@ The five antipatterns this template prevents:
 **Service & handoff anatomy (read once before drafting)**
 
 - **CRDC IndexD**: the service (`github.com/uc-cdis/indexd`), operated by the DCF. Registers 128-bit GUIDs (`dg.4DFC/00006197-6407-5014-8175-c82efdf6cf0f`) and resolves each to its physical S3 location and access-control metadata (`acl` / `authz`), which is what lets the DCF serve files through presigned URLs. **The DCF does not mint the GUIDs**: the CRDC Data Hub generates them when it processes a submission, and they ship in each Release Package's indexd.tsv. One centralized instance serves the whole CRDC; there is no Dev/QA/Stage/Prod separation for registration.
-- **Source artifacts**: each CRDC submission produces its own Release Package (metadata) in `nci-cbiit-clinicaltrialdatacommons-metadata`, and each Release Package carries its own indexd.tsv manifest. Object files are typically in `nci-crdc-data-bucket-prod`.
+- **Source artifacts**: each CRDC submission produces its own Release Package (metadata) in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`, and each Release Package carries its own indexd.tsv manifest. Object files are typically in `nci-crdc-data-bucket-prod`.
 - **DCF Google Drive**: the drop-off for the extracted manifests; the DCF monitors it. CTDC folder: `https://drive.google.com/drive/u/2/folders/1ZVsv2vFEcTPBT2IYsaOb_XCjpWjjMGTb`.
 - **CRINTAKE Jira board**: `tracker.nci.nih.gov/projects/CRINTAKE/`, the DCF's intake queue. A CRINTAKE ticket tells the DCF the manifests are ready and is where they report completion.
 - **Resolution endpoint**: `https://nci-crdc.datacommons.io/index/<guid>`, used for the verification spot-checks.
@@ -37,8 +37,8 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 2. `h3. 📦 *Submission & Artifacts*`: Required. Two bare-value constant bullets, then a table with **one row per CRDC submission being indexed** (every submission that carries object files). No intro sentence, no explanatory text on the constants.
 
    ```
-   * *AWS Account ID*: {{101183076466}}
-   * *Release Package bucket*: {{nci-cbiit-clinicaltrialdatacommons-metadata}}
+   * *AWS Account ID*: {{265135454114}}
+   * *Release Package bucket*: {{nci-cbiit-clinicaltrialdatacommons-metadata-nonprod}}
 
    ||Submission||CRDC Submission ID||Release Package||Sample GUID||
    |CMB v6 Clinical|<submission-id>|[<timestamp>-<submission-id>/|<S3 console URL>]|dg.4DFC/<guid>|
@@ -54,7 +54,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
    **Clickable Release Package links**: `[<timestamp>-<submission-id>/|<url>]`, which renders correctly inside a table cell. The `prefix=` value is the directory URL-encoded (colons as `%3A`):
 
    ```
-   https://us-east-1.console.aws.amazon.com/s3/buckets/nci-cbiit-clinicaltrialdatacommons-metadata?region=us-east-1&prefix=<URL-ENCODED-DIR>/&showversions=false
+   https://us-east-1.console.aws.amazon.com/s3/buckets/nci-cbiit-clinicaltrialdatacommons-metadata-nonprod?region=us-east-1&prefix=<URL-ENCODED-DIR>/&showversions=false
    ```
 
    **Why one row per submission**: one study update can span several CRDC submissions, each with its own Release Package and manifest. A field/value table with semicolon-separated cells relied on matching positions across rows; on ICDC-4193 a late-arriving submission had nowhere to go and hardcoded counts went stale. A row per submission makes each submission self-contained and a late arrival a single new row.
@@ -66,7 +66,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 3. `h3. 🚦 *Registration Workflow*`: Numbered `#` list in three phases, each introduced by a bold label. Put a blank line after the heading and after each bold phase label so the lists render cleanly. Never hardcode a submission or manifest count; refer to "each submission in the table" so the table stays the single source of truth.
 
    **Pre-registration**
-   1. For each submission in the table, extract the indexd.tsv manifest from its Release Package in `nci-cbiit-clinicaltrialdatacommons-metadata`. Validate that every row carries a non-empty `acl` and that it is uniform across the manifest, the row count matches the file count, every row's `url` is well-formed (a format check is enough), and the GUIDs use the `dg.4DFC/` prefix.
+   1. For each submission in the table, extract the indexd.tsv manifest from its Release Package in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`. Validate that every row carries a non-empty `acl` and that it is uniform across the manifest, the row count matches the file count, every row's `url` is well-formed (a format check is enough), and the GUIDs use the `dg.4DFC/` prefix.
 
    **External handoff**
    2. Upload each manifest to the DCF Google Drive folder for indexing; keep the Release Package filenames.
@@ -120,7 +120,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Parent Epic field set via `customfield_12350`** to the study's submission epic (Section DO-EPIC). CTDC-1664 stays open only for cross-study integration work no single submission owns.
 - **`Data-Concierge` label is mandatory** on this task, set at creation via `labels`. The paired Data Loading Task carries no label.
 - **Leave the ticket Unassigned at creation.** The Developer field is not required: indexing is Data Concierge coordination, not engineering.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog or place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **`Relates` link to each submission's Data Hub tracking ticket (DHDM-XXX).** DHDM tracks per submission, so a multi-submission registration links several DHDM tickets.
 - **`Relates` link to the paired Data Loading Task** when it exists (registration as inward issue, load as outward). Never `Blocks`: the two run in parallel.
 - **Native "Related To" link to each CRINTAKE ticket** once it is filed (`jira_create_issue_link`, registration as inward issue). A free-text CRINTAKE key is not sufficient, a remote link is reserved for targets outside this Jira, and `Supports` is never used.
@@ -131,7 +131,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 
 **Writing-and-publishing workflow**
 
-1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata` and the consent codes are reconciled (DO-DBGAP). If the Release Packages don't exist yet, the ticket can still be created with PLACEHOLDER cells. Surface open questions on the submission epic, not the Task.
+1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod` and the consent codes are reconciled (DO-DBGAP). If the Release Packages don't exist yet, the ticket can still be created with PLACEHOLDER cells. Surface open questions on the submission epic, not the Task.
 2. Confirm this is IndexD registration, not data loading or modeling.
 3. Identify the submission epic, each submission's DHDM tracker, and the paired Data Loading Task.
 4. Create via `jira_create_issue` with `issue_type = "Task"`, the title from the convention above, a short placeholder description, the parent epic via `customfield_12350`, and the `Data-Concierge` label. Leave it Unassigned.
@@ -154,7 +154,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Data loading** → Data Loading Task template (DO-LOAD), the parallel sibling.
 - **Data modeling** → Data Modeling for Study Submission (DO-MODEL) or Data Model Update Task (DO-INTMODEL).
 - **Software development** → software development template family.
-- **Megazip creation** (bundling a study's object files into one downloadable archive, then indexing and loading it) → Megazip Creation Task template (DO-ZIP).
+- **Megazip creation** (bundling a study's object files into one downloadable archive, submitting its metadata, and indexing it) → Megazip Creation Task template (DO-ZIP), which carries its own indexing steps.
 - **Other upstream artifact creation** (for example a standalone metadata loading file) → no dedicated template; file a standalone Task under the submission epic and link it natively.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
 

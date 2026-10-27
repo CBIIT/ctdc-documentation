@@ -124,7 +124,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **One Task per end-to-end model update**: develop branch through Prod, not one ticket per repo. Native Jira issue links carry the multi-repo and cross-ticket relationships.
 - **Issue type is Task** on this tracker. Do not use Story or Subtask.
 - **Parent Epic field set on the ticket itself** via `customfield_12350` when a release-level epic exists.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog and never place it in a numbered development sprint; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
 - **The model SOP is authoritative for procedure.** This template tracks the change; the SOP at `https://github.com/CBIIT/ctdc-model/blob/prod/SOP_CTDC_Data_Model_Contribution.md` describes how to do it, and the DM Updates Kanban SOP is authoritative for the caDSR/ServiceNow request and the DM Federal Lead & Subject Matter Expertise Review steps.
 - **Curly braces escaped as `\{...\}`** anywhere they appear in description text: same rule as every other Jira description on this tracker.
 
