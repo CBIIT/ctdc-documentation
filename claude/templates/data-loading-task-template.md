@@ -143,7 +143,7 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Data modeling** → Data Modeling for Study Submission (DO-MODEL) for study-driven changes, or Data Model Update Task (DO-INTMODEL) for internally-driven changes.
 - **Software development** → software development template family.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
-- **Pure file-creation tickets** (making a megazip, generating a metadata loading file) → upstream artifact-creation tasks that feed this load; tracked separately.
+- **Pure file-creation tickets** (making a megazip, generating a metadata loading file) → upstream artifact-creation tasks that feed this load; tracked separately. Megazips are created, submitted, and indexed on a Megazip Creation Task (DO-ZIP), and their release package is then loaded with **this** template on a paired ticket titled `Data Loading: <token> Megazips`, whose tier checks confirm every megazip downloads from the Study Details page and any existing megazip still downloads.
 
 If a submission needs schema changes before it can load, that's a modeling Task (DO-INTMODEL/DO-MODEL) the load is blocked on; if it needs IndexD registration, that's the paired IndexD Registration Task (DO-INDEX) running in parallel. Both are separate tickets carried by native Jira links.
 

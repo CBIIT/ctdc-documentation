@@ -14,6 +14,7 @@ Every study submission (and every new version of a study) is its own **submissio
 | **IndexD Registration** task | **DO-INDEX** | Child of the submission epic; `Data-Concierge` label | 1 per registration handoff |
 | **Data Loading** task | **DO-LOAD** | Child of the submission epic; no label | 1 per load event |
 | **Megazip** task: one zip per `data_file_type` | **DO-ZIP** | Child of the submission epic; no label | 1 per study, when files should download as bundles |
+| **Megazip load** task | **DO-LOAD** | Child of the submission epic; no label | 1 per DO-ZIP task, paired with it |
 
 **Title token.** The epic title is `CTDC Data Submission: <Program Short Name> <Study Short Name> <version>`, omitting any part that does not apply (CMB has no program: `CTDC Data Submission: CMB v6`). Every task reuses the same token verbatim:
 
@@ -23,7 +24,8 @@ Every study submission (and every new version of a study) is its own **submissio
 | DO-DBGAP | `PREFECT dbGaP Validation: <token>` |
 | DO-INDEX | `Data Indexing: <token>` |
 | DO-LOAD | `Data Loading: <token>` |
-| DO-ZIP | `Create, Index, and Load Megazip files for <token>` |
+| DO-ZIP | `Create, Submit, and Index Megazip files for <token>` |
+| DO-LOAD (megazips) | `Data Loading: <token> Megazips` |
 
 **Links.** Tasks under the submission epic link to each other with `Relates`, never `Blocks`. No `Supports` links: the Epic Link replaces them. New tickets stay **unassigned** unless directed; data-management tasks don't need the Developer field. Every task goes into the standing `CTDC Data Related` sprint (board 641, id 8612) at creation; the epic is not placed in a sprint.
 
@@ -41,7 +43,7 @@ Every study submission (and every new version of a study) is its own **submissio
 9. **Indexing**: ▶ **Create the IndexD Registration task (DO-INDEX).** Runs **in parallel** with loading.
 10. **Dev load**: ▶ **Create the Data Loading task (DO-LOAD)**, one Submission & Artifacts row per submission. Load metadata to **Dev only** (the object files are not in the bucket yet) and spot-check the study with the submitter.
 11. **Marked Complete**: once Dev testing passes, the submission is marked Complete in the Portal, which moves the object files into the data bucket (`nci-crdc-data-bucket-prod`).
-12. **Megazip** (when the study's files should download as one zip per data file type): ▶ **Create the Megazip task (DO-ZIP)**, preferably before the QA load so downloads resolve.
+12. **Megazip** (when the study's files should download as one zip per data file type, after the submission is Complete): ▶ **Create the Megazip task (DO-ZIP)** and ▶ **its paired megazip load task (DO-LOAD)**. The Data Concierge splits `file.tsv` into file lists, DevOps generates the megazips, the Data Concierge submits their metadata to the Portal (metadata-only) and indexes them, and the megazip release package is loaded on the paired task. A short gap with no megazip download after the study load is acceptable.
 13. **QA, Stage, and Prod loads**: continue on the same Data Loading task, promoted to each tier by OpenSearch backup and restore after the single Prefect data loading run. Testers check counts against the Release Packages at every tier and initial Testing Signoff. Nothing loads directly to Prod.
 14. **Verify and close**: Production Verification Testing (PVT) or Post-Deployment Testing (PDT) confirms the study renders and its files download. Close each task, then close the submission epic with resolution `Completed`. The next version of the study gets its own epic.
 
@@ -58,4 +60,4 @@ Every study submission (and every new version of a study) is its own **submissio
 
 ## Canonical example
 
-**CTDC-2110** (*CTDC Data Submission: CMB v6*), the pilot converted on 2026-09-25. Children: CTDC-2233 (dbGaP validation), CTDC-2206 (indexing), CTDC-2205 (loading), CTDC-2207 (megazip). Modeling: CTDC-2111 under the Submission Data Modeling epic, `Relates` to CTDC-2110.
+**CTDC-2110** (*CTDC Data Submission: CMB v6*), the pilot converted on 2026-09-25. Children: CTDC-2233 (dbGaP validation), CTDC-2206 (indexing), CTDC-2205 (loading), CTDC-2207 (megazip, v4) with its megazip load CTDC-2297. Modeling: CTDC-2111 under the Submission Data Modeling epic, `Relates` to CTDC-2110.

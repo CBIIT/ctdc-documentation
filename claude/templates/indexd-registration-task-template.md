@@ -154,7 +154,7 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Data loading** → Data Loading Task template (DO-LOAD), the parallel sibling.
 - **Data modeling** → Data Modeling for Study Submission (DO-MODEL) or Data Model Update Task (DO-INTMODEL).
 - **Software development** → software development template family.
-- **Megazip creation** (bundling a study's object files into one downloadable archive, then indexing and loading it) → Megazip Creation Task template (DO-ZIP).
+- **Megazip creation** (bundling a study's object files into one downloadable archive, submitting its metadata, and indexing it) → Megazip Creation Task template (DO-ZIP), which carries its own indexing steps.
 - **Other upstream artifact creation** (for example a standalone metadata loading file) → no dedicated template; file a standalone Task under the submission epic and link it natively.
 - **CRDC platform changes** (Fence, IndexD, Submission Portal upgrades) → owned by CRDC platform teams; out of CTDC scope.
 
