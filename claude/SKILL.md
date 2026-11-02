@@ -17,19 +17,21 @@ description: "Operational knowledge base for the CTDC Sprint Command Center Clau
 
 This SKILL.md contains **operational knowledge** — workflows, SOPs, templates, and domain context. It is loaded by Claude when relevant to a task.
 
-**Behavioral guardrails** (like Docker recovery and scope boundaries) are mirrored in the **Claude.ai Project Instructions** for the Sprint Command Center project. When updating one, update the other.
+**Behavioral guardrails** (like Jira access recovery and scope boundaries) are mirrored in the **Claude.ai Project Instructions** for the Sprint Command Center project. When updating one, update the other.
 
 ---
 
-## 1. 🐳 Session Recovery & Infrastructure
+## 1. 🌐 Session Recovery & Infrastructure
 
-### Docker / MCP Recovery
+### 🌐 Jira Access Recovery
 
-If any MCP tool (Jira/Atlassian, Asana, etc.) is unavailable or returns a connection error, **Docker is not running** on the user's machine. Do not attempt workarounds, do not ask for manual data. Surface the issue immediately:
+Jira (`https://tracker.nci.nih.gov`, Jira Data Center) is reached through **Claude in Chrome** using the user's own signed-in session; the REST API v2 is called with `fetch('/rest/api/2/...')` from inside a signed-in tracker tab. There is no Atlassian MCP and no Docker container (both retired 2026-11-02; see `claude/architecture/jira-atlassian-mcp-legacy.md`).
 
-> "🐳 **Docker doesn't appear to be running.** The Jira/Atlassian MCP container needs to be active. Please start Docker and restore the container, then let me know when it's back up and I'll pick up right where we left off."
+If Jira can't be reached (no browser tools, the extension is disconnected, or pages redirect to the NIH login page), do not attempt workarounds and do not ask for pasted ticket data. Surface the issue immediately:
 
-Wait for the user to confirm Docker is running before retrying any Jira operations.
+> "🌐 I can't reach Jira right now. Please make sure Chrome is open with the Claude in Chrome extension connected, and that you're signed in to tracker.nci.nih.gov. Let me know when it's ready and I'll pick up right where we left off."
+
+Wait for the user to confirm before retrying any Jira operations. A `GET /rest/api/2/myself` response can be served from the browser cache, so confirm a session with a fetch that uses `cache: 'no-store'` from a real tracker page rather than by opening that URL directly.
 
 ---
 
@@ -77,7 +79,7 @@ project = CTDC AND sprint in openSprints() ORDER BY priority DESC
 ```
 project = CTDC AND sprint = "CTDC Sprint 25"
 ```
-> **Always verify the sprint name matches the sprint you intend to review.** Use `jira_get_sprints_from_board` with board ID `641` to confirm start/end dates align with your meeting date. Active sprint is different from the sprint being reviewed.
+> **Always verify the sprint name matches the sprint you intend to review.** Use `GET /rest/agile/1.0/board/641/sprint?state=active` to confirm start/end dates align with your meeting date. Active sprint is different from the sprint being reviewed.
 
 ### Blocked Items
 ```
@@ -212,7 +214,7 @@ Files are stored as: `CTDC-XXXX-summary-v{MAJOR}.{MINOR}.docx`
 
 ### 5e. How Claude Generates Epic Summary Docs
 
-1. Pull epic + all child tickets from Jira via `jira_search` (use JQL: `"Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX`)
+1. Pull epic + all child tickets from Jira via `GET /rest/api/2/search` (use JQL: `"Epic Link" = CTDC-XXXX OR parent = CTDC-XXXX`)
 2. Populate all template sections from ticket data
 3. Generate `.docx` using `docx` npm package (US Letter, Arial, NIH Blue/Red branding)
 4. Validate the file
@@ -279,7 +281,7 @@ Run these checks before each standup:
 **Always verify Jira totals in code before building charts, narrative, or deck content.** Never hand-count from a JSON dump.
 
 **Required workflow:**
-1. Pull the sprint/release/epic tickets with a single `jira_search`
+1. Pull the sprint/release/epic tickets with a single `GET /rest/api/2/search` call (page with `startAt`)
 2. Write a short Node or Python script that reads the raw JSON, tallies by status / type / assignee, and prints counts
 3. Use those verified counts to populate the deck, doc, or Slack message
 4. Never guess or eyeball the totals from chat or JSON
@@ -287,7 +289,7 @@ Run these checks before each standup:
 **Why this matters:** Confusing "In Progress" with "In Progress + Ready for Review + Ready for QA + Testing" is easy when they're all `In Progress` category. Confusing "Reopened" with "Open" is easy. Hand-counting a 40-ticket sprint across 8 statuses is where mistakes land in stakeholder materials.
 
 **Also verify before building:**
-- **Sprint name** — the sprint being reviewed is NOT the active sprint (active = next one). Use `jira_get_sprints_from_board` with board `641` to confirm dates match the meeting date.
+- **Sprint name**: the sprint being reviewed is NOT the active sprint (active = next one). Use `GET /rest/agile/1.0/board/641/sprint` to confirm dates match the meeting date.
 - **Ticket counts per metric** — total, done, carry-over, by status, by type, by assignee. All should sum correctly.
 - **Release scope** — cross-reference GitHub release notes against Jira `fixVersion` query. Gaps reveal tagging hygiene issues.
 
@@ -449,7 +451,7 @@ Data management ticket templates live in the component library at **`claude/temp
 
 **Submission Portal states → load & megazip sequencing.** The CRDC Submission Portal moves **Released → Complete**. At **Released**, the release package (metadata) is generated: per-file indexing (DO-INDEX) runs downstream, and the study's metadata is loaded **to Dev only** (object files not yet in the bucket) so the team can spot-check the study in the application and iterate with the submitter. Only after Dev testing passes is the submission marked **Complete**, the trigger that moves the physical object files into the AWS S3 bucket. The **megazip (DO-ZIP)** is then created (it needs the files in the bucket) and submitted to the Portal as a metadata-only submission; its own release package is loaded on a paired DO-LOAD ticket (`Data Loading: <token> Megazips`), and a short gap with no megazip download after the study load is acceptable. **QA, Stage, and Prod loads all occur after Complete.** The megazip task links to its paired megazip load and to the study's Index/Load tasks with `Relates`, never `Blocks`.
 
-**Sprint rule (2026-09-17).** Every ticket created from a DO-* template goes into the standing `CTDC Data Related` sprint (board 641, sprint id 8612) at creation, via `jira_add_issues_to_sprint`. Never leave one in the backlog, and do not put one in a numbered development sprint at creation; a TPM pulls one into a sprint when the work is scheduled. Links within a study's task family are always `Relates`.
+**Sprint rule (2026-09-17).** Every ticket created from a DO-* template goes into the standing `CTDC Data Related` sprint (board 641, sprint id 8612) at creation, via `POST /rest/agile/1.0/sprint/8612/issue`. Never leave one in the backlog, and do not put one in a numbered development sprint at creation; a TPM pulls one into a sprint when the work is scheduled. Links within a study's task family are always `Relates`.
 
 **Decision tree** (matches `claude/README.md`):
 
@@ -568,6 +570,8 @@ Tracks the status of every CTDC ticket template — software-development lane an
 |---|---|---|---|---|---|
 | **DO-INTMODEL** | Data Model Update Task | `claude/templates/data-model-update-template.md` | Modeling — internally / CTDC-driven | ✅ Drafted v14 (2026-07-20) — all internally-driven model changes, any SemVer level (additive through breaking); **5-section shape** (DO-MODEL diverged to 6 sections at v11 by adding a study-only ⭐ Data Concierge section — DO-INTMODEL deliberately stays 5-section, as an internally-driven update has no study Data Concierge); re-synced to finalized CTDC-2068 in lockstep with DO-MODEL: Section 3 row 3 is now the **caDSR II Help Desk Request Form** (owner: Data Concierge), replacing "ServiceNow Ticket / DM Fed Lead"; Steps to Completion expanded to the fuller canonical workflow with conditional watcher logic (DM Fed Lead added on the Jira issue when no CDEs/PVs change, on the caDSR ticket when they do); milestone tracker — no specifics, no counts; records in the internal CTDC CDE Request Workbook (owned by the project, no individual owner); DM Federal Lead & SME Review (caDSR II Help Desk Request Form + DHDM Jira Issue) gates prod | CTDC-2068 (Program curation properties — canonical pilot) |
 
+> **Reading the lessons below (9b onward).** They are dated history. Entries written before 2026-11-02 name Atlassian MCP tools (`jira_get_issue`, `jira_update_issue`) and, before 2026-09-24, the MCP's Markdown conversion; neither applies now. Current mechanics are in Section 10 and in `claude/templates/epic-templates.md` (7b-shared); the MCP crosswalk is in `claude/architecture/jira-atlassian-mcp-legacy.md`.
+
 ### 9b. Lessons Learned from 2026-04-30 Normalization Pass
 
 - **Wiki source is not ground truth for rendering.** Only a UI screenshot from the user reveals whether a Jira description renders correctly. The wiki source returned by `jira_get_issue` looks identical for working and broken tickets.
@@ -634,33 +638,33 @@ Method notes worth repeating:
 
 ## 10. 🗃️ Jira Custom Field Reference
 
-> **Atlassian MCP retired (2026-11-02).** Tool names such as `jira_update_issue` below date from the MCP connector. Jira is now called through the REST API v2 from a signed-in Claude in Chrome tab; `claude/architecture/jira-atlassian-mcp-legacy.md` maps each MCP tool to its REST call and keeps the MCP-only quirks in case the connector is reinstated.
+> **How calls are made (since 2026-11-02).** Every call below is a Jira REST API v2 request made with `fetch` from a signed-in `tracker.nci.nih.gov` tab in Claude in Chrome. Write requests (`POST`/`PUT`) need the headers `X-Atlassian-Token: no-check` and `Content-Type: application/json`. The Atlassian MCP call shapes these replaced, and the MCP-only quirks, are kept in `claude/architecture/jira-atlassian-mcp-legacy.md` in case the connector is reinstated.
 >
-> **Critical.** The NCI tracker (`tracker.nci.nih.gov`) has non-standard field configurations. Standard Jira field IDs and the `jira_link_to_epic` tool do NOT work reliably. Always use the confirmed field IDs below.
+> **Critical.** The NCI tracker (`tracker.nci.nih.gov`) has non-standard field configurations. Standard Jira field IDs do NOT work reliably. Always use the confirmed field IDs below.
 >
 > These fields are confirmed on **Task** and **Epic** issue types in both **CTDC** and **ICDC** projects — they are consistent across both.
 
-### ✅ Confirmed Writable Fields (via `jira_update_issue`)
+### ✅ Confirmed Writable Fields (via `PUT /rest/api/2/issue/<KEY>`)
 
 | Field Name | Custom Field ID | Value Format | Notes |
 |---|---|---|---|
 | **Epic Link** | `customfield_12350` | `"CTDC-XXXX"` (plain string) | Set via `fields` parameter. Confirmed working on Task type. Re-parent existing children by setting this on each child, not on the epic. Verified on CTDC-1691 re-parent to CTDC-2042, 2026-05-06. |
-| **Epic Name** | `customfield_12351` | `"Epic display name"` (plain string) | The Epic Name field is separate from Summary on this tracker. Set this on epic creation via `additional_fields`. Verified on CTDC-2042 creation, 2026-05-06. |
+| **Epic Name** | `customfield_12351` | `"Epic display name"` (plain string) | The Epic Name field is separate from Summary on this tracker. Set this in `fields` on epic creation. Verified on CTDC-2042 creation, 2026-05-06. |
 | **Developer** | `customfield_23650` | `[{"name": "username"}]` (array of objects) | Multi-value user picker. Set via `fields` parameter. |
 
 ### ⚠️ Known Gotcha — Batch Read Inconsistency
 
-**`jira_search` batch queries sometimes return `null` for populated custom fields.** This was observed with `customfield_23650` (Developer) on CTDC-1718 — the batch query returned `null`, but a single-ticket `jira_get_issue` confirmed the field was populated with `huangn4`.
+**Batch search results sometimes return `null` for populated custom fields.** This was observed with `customfield_23650` (Developer) on CTDC-1718: the batch query returned `null`, but a single-ticket read confirmed the field was populated with `huangn4`.
 
-**Rule:** When a custom field appears empty in a batch `jira_search` result, **always verify with a single-ticket `jira_get_issue` call before acting on it as "empty."** Flagging a field as empty in a stakeholder document (or asking the user to investigate) is a real cost — don't pay it on a false negative.
+**Rule:** When a custom field appears empty in a batch `GET /rest/api/2/search` result, **always verify with a single-ticket `GET /rest/api/2/issue/<KEY>` before acting on it as "empty."** Flagging a field as empty in a stakeholder document (or asking the user to investigate) is a real cost: don't pay it on a false negative.
 
 ### ⚠️ Description Field — Escape Curly Braces
 
-**Curly braces `{...}` in description text are treated as Jira-wiki macro syntax** and corrupt parser state for the surrounding block when the macro name is unknown. Symptoms include adjacent headers rendering as literal `h3.` text, bullets losing list context, and entire sections disappearing. **Fix:** escape every curly brace in description text as `\{...\}`. See Section 7b-shared "MCP write notes" for the full diagnostic and workflow. Other fields (priority, summary, custom fields, status, labels) are not routed through the wiki renderer and are unaffected.
+**Curly braces `{...}` in description text are treated as Jira-wiki macro syntax** and corrupt parser state for the surrounding block when the macro name is unknown. Symptoms include adjacent headers rendering as literal `h3.` text, bullets losing list context, and entire sections disappearing. **Fix:** escape every curly brace in description text as `\{...\}`. See "Write notes" in `claude/templates/epic-templates.md` (7b-shared) for the full diagnostic and workflow. Other fields (priority, summary, custom fields, status, labels) are not routed through the wiki renderer and are unaffected.
 
 ### ⚠️ Comment Body Quirks
 
-Comment bodies (added via `jira_add_comment` or `jira_transition_issue` with a `comment` parameter) pass through the same Jira-wiki renderer as descriptions:
+Comment bodies (added with `POST /rest/api/2/issue/<KEY>/comment`, or with a `comment` in the `update` block of a transition) pass through the same Jira-wiki renderer as descriptions:
 
 - **Plus signs (`+`) get silently stripped** — interpreted as inserted-text markup. Use "and" or "plus" instead, or escape with backslash.
 - **Curly braces** must be escaped as `\{...\}` per the description rule above.
@@ -669,7 +673,7 @@ Verified on CTDC-1658 closure comment, 2026-05-06.
 
 ### 🧯 Closing Tickets via Transitions
 
-The NCI tracker workflow has two relevant gotchas when closing tickets via the MCP:
+The NCI tracker workflow has two relevant gotchas when closing tickets through the API:
 
 **Resolution naming:** Use `Won't Fix`, not `Won't Do`. The newer `Won't Do` resolution does not exist on this older Jira instance. `Duplicate` is also valid for genuine duplicates. Both have been verified on the `Open → Close` transition (id 191).
 
@@ -681,7 +685,7 @@ The NCI tracker workflow has two relevant gotchas when closing tickets via the M
 | `Testing Hold` | 731 (`Move to Closed`) | No — accepts `null` | Issue closes with no resolution recorded. Follow up with a manual UI edit if reporting hygiene matters. |
 | Any (Epic) | 31 (`Closed`) | No: the shared epic workflow (since 2026-10-01) has no resolution screen, and none is wanted | Epics close with status only; the closing comment says delivered or retired. Replaces the old `In Progress` → 231 (`Close`, resolution `Completed`) path verified on CTDC-1802, 2026-09-14. Verified on CTDC-2237 and ICDC-31, 2026-10. |
 
-**Discovery pattern:** there is no API that enumerates allowed resolutions per transition. Discover by trial. When closing, pick the most semantically appropriate resolution first; fall back to `Won't Fix` if it fails. After a successful transition, the resolution field is **not editable** via `jira_update_issue` ("Field 'resolution' cannot be set") — you must set it during the transition itself, or accept the gap.
+**Discovery pattern:** there is no API that enumerates allowed resolutions per transition. Discover by trial. When closing, pick the most semantically appropriate resolution first; fall back to `Won't Fix` if it fails. After a successful transition, the resolution field is **not editable** via `PUT /rest/api/2/issue/<KEY>` ("Field 'resolution' cannot be set"): you must set it during the transition itself, or accept the gap.
 
 ### ❌ Fields That Do NOT Work via API on This Instance
 
@@ -691,80 +695,66 @@ The NCI tracker workflow has two relevant gotchas when closing tickets via the M
 | `customfield_10100` | Not on edit screen for CTDC Tasks — "cannot be set" error |
 | `customfield_18250` | "Developer Legacy" — single user picker, not rendered on Task screens |
 | `customfield_10657` | Visible in UI but blocked on REST API edit screen for Tasks |
-| `jira_link_to_epic` tool | Calls succeed but epic link does not appear in the UI |
 
 ### 📝 Usage Examples
 
-**Set Epic Link:**
-```json
-jira_update_issue(
-  issue_key = "CTDC-2010",
-  fields = {"customfield_12350": "CTDC-2008"}
-)
+Run from a signed-in `tracker.nci.nih.gov` tab with the JavaScript tool. Every example uses:
+
+```js
+const H = {'Content-Type': 'application/json', 'X-Atlassian-Token': 'no-check'};
 ```
 
-**Set Developer:**
-```json
-jira_update_issue(
-  issue_key = "CTDC-2010",
-  fields = {"customfield_23650": [{"name": "millerer"}]}
-)
+**Set Epic Link and Developer** (either field can be sent alone):
+```js
+await fetch('/rest/api/2/issue/CTDC-2010', {method: 'PUT', headers: H, body: JSON.stringify({fields: {
+  customfield_12350: 'CTDC-2008',
+  customfield_23650: [{name: 'millerer'}]
+}})});
 ```
 
-**Set Both at Once:**
-```json
-jira_update_issue(
-  issue_key = "CTDC-2010",
-  fields = {
-    "customfield_12350": "CTDC-2008",
-    "customfield_23650": [{"name": "millerer"}]
-  }
-)
+**Create an Epic with Epic Name and a placeholder description, then push the body:**
+```js
+const r = await fetch('/rest/api/2/issue', {method: 'POST', headers: H, body: JSON.stringify({fields: {
+  project: {key: 'CTDC'},
+  issuetype: {name: 'Epic'},
+  summary: 'CTDC Local Find (Participant)',
+  customfield_12351: 'CTDC Local Find (Participant)',
+  description: 'Description being applied in a follow-up update.',
+  priority: {name: 'Major'},
+  labels: ['Task-1.3.7.3']
+}})});
+const {key} = await r.json();
+// Then immediately:
+await fetch('/rest/api/2/issue/' + key, {method: 'PUT', headers: H, body: JSON.stringify({fields: {
+  description: '<full Jira wiki body>'
+}})});
 ```
 
-**Create Epic with Epic Name and Placeholder Description:**
-```json
-jira_create_issue(
-  project_key = "CTDC",
-  summary = "CTDC Local Find (Participant)",
-  issue_type = "Epic",
-  assignee = "tesfatsionnh",
-  description = "_Description being applied via update — see next revision._",
-  additional_fields = {"priority": {"name": "Major"}, "labels": ["Task-1.3.7.3"]}
-)
-
-# Then immediately:
-jira_update_issue(
-  issue_key = "CTDC-XXXX",
-  fields = {"description": "<full Markdown body>"},
-  additional_fields = {"customfield_12351": "CTDC Local Find (Participant)"}
-)
+**Close a ticket with resolution and a comment:**
+```js
+await fetch('/rest/api/2/issue/CTDC-826/transitions', {method: 'POST', headers: H, body: JSON.stringify({
+  transition: {id: '191'},
+  fields: {resolution: {name: "Won't Fix"}},
+  update: {comment: [{add: {body: 'Closed as stale per CTDC Local Find epic restart 2026-05-06...'}}]}
+})});
 ```
 
-**Close a ticket with resolution:**
-```json
-jira_transition_issue(
-  issue_key = "CTDC-826",
-  transition_id = "191",
-  fields = {"resolution": {"name": "Won't Fix"}},
-  comment = "Closed as stale per CTDC Local Find epic restart 2026-05-06..."
-)
-```
+A successful `PUT` or transition returns HTTP 204 with no body; read the ticket back with `GET /rest/api/2/issue/<KEY>` to verify.
 
 ### 🔍 How to Discover New Fields
 
 When a field is set manually in the Jira UI and the API equivalent is unknown:
-1. Pull the ticket with `fields = "*all"` before and after the manual edit
+1. Pull the ticket with `GET /rest/api/2/issue/<KEY>?fields=*all` before and after the manual edit
 2. Diff the `customfield_XXXXX` values — the one that changed from `null` to a value is the writable field
 3. Note the value format (string vs. object vs. array) and replicate it exactly
 
 ### 🔗 Issue Link Type Names
 
-When linking issues with `jira_create_issue_link`, this tracker uses the following confirmed link type names. Some commonly-tried names do NOT exist here.
+When linking issues with `POST /rest/api/2/issueLink`, this tracker uses the following confirmed link type names. Some commonly-tried names do NOT exist here.
 
 | Link Type | Status | Notes |
 |---|---|---|
-| `Blocks` | ✅ Works | Use this to express "ticket A blocks ticket B" — pass A as `inward_issue_key`, B as `outward_issue_key` |
+| `Blocks` | ✅ Works | Use this to express "ticket A blocks ticket B": send A as `inwardIssue` and B as `outwardIssue`: `{"type": {"name": "Blocks"}, "inwardIssue": {"key": "A"}, "outwardIssue": {"key": "B"}}` |
 | `is blocked by` | ❌ Fails | "No issue link type with name 'is blocked by' found" — use `Blocks` with the issue order reversed instead |
 
 **Rule of thumb:** When a link operation needs to express a blocking relationship, always use `Blocks` and reason about which issue is the inward (the blocker) vs the outward (the blocked). Don't try to use the inverse phrasing — it fails on this instance.
@@ -882,7 +872,7 @@ Each prep sheet contains:
 
 ### 12c. Goal Scorecard Framing
 
-Always pull the sprint goal from Jira (`jira_get_sprints_from_board`, then check the `goal` field on the sprint object). Score each goal against the real outcome in the sprint:
+Always pull the sprint goal from Jira (`GET /rest/agile/1.0/board/641/sprint`, then check the `goal` field on the sprint object). Score each goal against the real outcome in the sprint:
 
 | Marker | Meaning |
 |---|---|
