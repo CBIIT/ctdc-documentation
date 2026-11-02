@@ -43,9 +43,13 @@ One per federal fiscal year (October through September), so the epic stays small
 * *Assignee*: DevOps Lead or TPM, as the TPM directs
 * *Labels*: `release`, `deployment`, `devops`
 
+**Card line first.** Line 1 of the body is the card line: one plain sentence, 140 characters or fewer, no markup, emoji, or ticket keys, followed by one blank line and then the 🎯 heading. It is what the Federal Leadership epic Kanban board shows on the card, the same rule as the lean epic template.
+
 Body (Jira wiki markup):
 
 ```
+Tracks every CTDC quarterly software release in federal FY<YY>, from Deployment Package through Production.
+
 h3. 🎯 *Purpose*
 Tracks the quarterly CTDC software release cycle for federal FY<YY> (October <YYYY> through September <YYYY+1>). The Deployment Package, Stage, and Production tasks for each release live under this epic.
 
@@ -205,6 +209,7 @@ At the start of each fiscal year, create the new standing release epic before th
 
 ## Changelog
 
+- **v8.1 (2026-11-02)**: Standing release epic gains a card line (line 1 of the body), matching ICDC. CTDC releases stay quarterly.
 - **v8 (2026-10-22)**: One standing release epic per federal fiscal year, matching ICDC: `CTDC Quarterly Releases - FY<YY>` (FY27 is CTDC-2295). The permanent epic CTDC-2007 is closed; its one open child, CTDC-2254, moved to CTDC-2295. Recorded where Release Dashboards live. Deployment verification now checks the `/#/sysinfo` page against the Release Dashboard versions, as CTDC-2254 already did, matching ICDC's version check.
 - **v7.1 (2026-10-22)**: Named the Deployment Package task's default Assignee and Developer: Tech Lead Nahom Tesfatsion (`tesfatsionnh`), matching how ICDC names its tech lead.
 - **v7 (2026-10-22)**: Dates live on the Release Dashboard only: release tickets carry no Due Date and no date in their body, because deployment dates change and a copied date goes stale. Ownership table row renamed to "Deployment dates". Matches ICDC v1.5.

@@ -2,7 +2,7 @@
 
 ## 7b. 🏛️ Epic Template (Lean v2)
 
-> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security), except the two standing data modeling epics, which use the data variant in 7b-D, and data submission epics, which use the Data Submission Epic template (DO-EPIC). The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
+> **Use this template for every CTDC epic**, whatever its grouping (application page, microservice, feature, product, infrastructure, security), except the two standing data modeling epics, which use the data variant in 7b-D, data submission epics, which use the Data Submission Epic template (DO-EPIC), the monthly Invicti scan epics (`invicti-scan-epic-template.md`), and the standing release epic for each fiscal year (`release-ticket-templates.md`). Those templates keep their own sections, and every one of them also starts with the card line (item 0 below). The canonical example is **CTDC-1802 (CTDC Export to the Cancer Genomics Cloud)**, rewritten to this shape and Closed on 2026-09-14.
 >
 > **v2.1 (2026-10-13): section 4 is the Definition of Done, not Acceptance Criteria.** Acceptance Criteria are testable conditions on a user story; an epic is not tested, it closes when its children are done. Section 4 now states three to five closure conditions and no longer carries a quality-bar item (that bar lives on every child story). Applies to 7b-D and the Data Submission Epic (DO-EPIC) as well. ICDC adopted the identical shape the same day.
 >

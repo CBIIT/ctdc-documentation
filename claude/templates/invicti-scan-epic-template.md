@@ -1,14 +1,16 @@
-### 🛡️ Invicti Scan Remediation Epic Template (CTDC, v1.1, 2026-10-22)
+### 🛡️ Invicti Scan Remediation Epic Template (CTDC, v1.2, 2026-11-02)
 
 > **Use this template for the epic that represents one monthly Invicti scan cycle of CTDC environments.** One epic per month, covering every environment scanned that month. The epic is the intake record; it owns only the finding tasks that were **first observed** in this cycle plus one verification task. Carryover findings stay on their original tasks and are linked, never cloned. Surrounding workflow: the Invicti monthly scan SOP (`CBIIT/icdc-documentation → claude/sops/invicti-monthly-scan-sop.md`), applied with CTDC hosts, roles, and Slack channel until a CTDC copy exists.
 >
-> **Status:** v1.1 (2026-10-22): first CTDC version, created in lockstep with ICDC's Invicti Scan Remediation Epic template (`CBIIT/icdc-documentation → claude/templates/invicti-scan-epic-template.md`) at its v1.1. Version numbers track the ICDC template; the two are kept in lockstep.
+> **Status:** v1.2 (2026-11-02): card line added as line 1 of the body, the same rule as every other CTDC epic; kept in lockstep with ICDC. v1.1 (2026-10-22): first CTDC version, created in lockstep with ICDC's Invicti Scan Remediation Epic template (`CBIIT/icdc-documentation → claude/templates/invicti-scan-epic-template.md`) at its v1.1. Version numbers track the ICDC template; the two are kept in lockstep.
 
 **Issue type**: Epic. **Summary**: `CTDC Security Vulnerabilities - <Month YYYY> Invicti Scan Remediation`. **Assignee**: left Unassigned at creation; the ESI tech lead assigns during triage. **Labels**: `invicti-scan`, `security`, `vulnerability-remediation`, plus `prod-environment` and/or `stage-environment`. **Attachments**: the Invicti PDF for each environment scanned.
 
-**Section order (8 sections, exactly this sequence)**
+**Card line + section order (card line, then 8 sections, exactly this sequence)**
 
 Each header is `h3. {emoji} *Title*` with the emoji shown. Omit a section only when it has no content for the month (for example no Dispositions); keep the rest in order. Tables use Jira-wiki `||header||` syntax. Bullets use `* *Label*: content`. No em dashes. No Jira keys in the body except in the Carryover and Resolved tables, where the key is the data.
+
+0. **Card line**: the first line of the description, with no header. One plain sentence, 140 characters or fewer, no markup, emoji, or ticket keys, then one blank line before the 🎯 heading. It is what the Federal Leadership epic Kanban board shows on the card. Example: *Remediates every finding from the <Month YYYY> Invicti scan of CTDC environments by each finding's SLA due date.*
 
 1. `h3. 🎯 *Overview*`
 
@@ -71,6 +73,7 @@ Each header is `h3. {emoji} *Title*` with the emoji shown. Omit a section only w
 
 **Required content rules**
 
+* *Card line first*: line 1 of the body is the card line (item 0), then a blank line.
 * *One epic per month, all environments*: do not split Prod and Stage into separate epics. Environment is a table column and a label.
 * *Tasks only for New findings*: never re-create a carryover finding. If the same finding is observed on a new environment, add the environment to the existing task and re-evaluate its due date against the more restrictive tier.
 * *Every child task carries a due date*: the epic is not "built" until this is true.
