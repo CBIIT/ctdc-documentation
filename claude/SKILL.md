@@ -371,9 +371,9 @@ Retro board URL: [varies per sprint — confirm with TPM]
 
 ## 7. 🎫 Ticket Writing Standards
 
-### 7a. 📖 User Story Template (Drafted v4.1)
+### 7a. 📖 User Story Template (Drafted v4.2)
 
-The user story template lives in `claude/templates/user-story-template.md`: four sections (👤 User Story · ✅ Acceptance Criteria · 🚫 Out of Scope · 🧪 Testing Requirements), canonical CTDC-1691. It mirrors ICDC's `user-story-template.md` and is kept in lockstep.
+The user story template lives in `claude/templates/user-story-template.md`: three sections (👤 User Story · ✅ Acceptance Criteria · 🚫 Out of Scope), canonical CTDC-1691. It mirrors ICDC's `user-story-template.md` and is kept in lockstep.
 
 ### 7b. 🏛️ Epic Template (Lean v2.1)
 
@@ -541,7 +541,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 
 | Template | Section / File | Status | Canonical Example |
 |---|---|---|---|
-| User Story (7a) | `claude/templates/user-story-template.md` | ✅ Drafted v4 (2026-10-13): 4 sections; Story Summary removed; Out of Scope replaces Scope; one functional Acceptance Criteria list (Performance & Quality removed) and unit tests only, identical to ICDC. v3 (2026-10-09): Jira wiki authoring. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use the current shape) |
+| User Story (7a) | `claude/templates/user-story-template.md` | ✅ Drafted v4.2 (2026-11-02): 3 sections; Testing Requirements removed (QA owns all testing). v4 (2026-10-13): Story Summary removed; Out of Scope replaces Scope; one functional Acceptance Criteria list (Performance & Quality removed) and unit tests only, identical to ICDC. v3 (2026-10-09): Jira wiki authoring. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use the current shape) |
 | Epic (all groupings) (7b) | `claude/templates/epic-templates.md` | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Definition of Done · Notes; the fourth section was Acceptance Criteria until 2026-10-13), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
 | Bug Format | Section 7c | ✅ Lightweight format | n/a |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v4 (2026-10-09): slimmed from 7 to 6 sections (🧩 Design System & Standards removed), 3 standard deliverables, 5-item Definition of Done, Jira wiki authoring; identical shape to ICDC's design task template. v3 (2026-09-04): no ticket keys in the body | CTDC-2044 |

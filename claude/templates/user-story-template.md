@@ -1,8 +1,10 @@
 <!-- Extracted from claude/SKILL.md on 2026-11-02 so CTDC packages its templates the same way ICDC does. This is the canonical home for this content. -->
 
-## 7a. 📖 User Story Template: CTDC (Drafted v4.1)
+## 7a. 📖 User Story Template: CTDC (Drafted v4.2)
 
 > **Use this template for every CTDC user story.** The canonical example is **CTDC-1691 (End User can find specific Participant IDs using an Input Set)**: drafted 2026-05-06 as a child of CTDC-2042 (Local Find: Participant). The template is deliberately scoped at story level, not epic level. It inherits the 7b-shared universal conventions (Jira wiki authoring, curly-brace escaping, render verification by UI screenshot), so most of the gotchas are covered there.
+>
+> **v4.2 (2026-11-02): three sections; Testing Requirements removed, matching ICDC.** QA designs and owns all testing from the Acceptance Criteria, so the story does not prescribe how the work is tested; unit test coverage is a team-wide engineering standard, not restated per story.
 >
 > **v4.1 (2026-11-02): moved out of SKILL.md into this file; issue-type and Assignee rules added to match ICDC; Jira calls are REST API v2 requests through Claude in Chrome (the Atlassian MCP was retired).**
 >
@@ -19,11 +21,10 @@ User stories are smaller-scope deliverables than epics: they ship and close with
 - The classic As-a/I-want/So-that framing intact, written as flowing prose
 - An Out of Scope list that prevents adjacent-feature creep
 - Testable Acceptance Criteria, one observable behavior each
-- A Testing Requirements section naming the unit tests the engineer writes; integration and manual test cases are QA's
 
-The ✅ emoji is shared with the epic templates so a reader scanning a story and its parent epic side-by-side sees the same anchor. The three unique ones are 👤 (User Story), 🚫 (Out of Scope), and 🧪 (Testing Requirements).
+The ✅ emoji is shared with the epic templates so a reader scanning a story and its parent epic side-by-side sees the same anchor. The two unique ones are 👤 (User Story) and 🚫 (Out of Scope).
 
-**Section order (4 sections, exactly this sequence)**
+**Section order (3 sections, exactly this sequence)**
 
 Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Author in Jira wiki markup (7b-shared, "Authoring format"). Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header: same rule as the epic templates.
 
@@ -33,17 +34,13 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 3. `h3. 🚫 *Out of Scope*`: Bullet list of work this story deliberately does not do: adjacent features, behaviors someone might reasonably expect, and questions already settled. Describe each excluded item in words; do not cite the Jira key of the ticket that covers it (add a `Relates` link instead). If there are none, state "None at this time." There is no In Scope list: the Acceptance Criteria are the definition of what the story delivers, and an In Scope list only restates them less precisely.
 
-4. `h3. 🧪 *Testing Requirements*`: One sub-block naming the unit tests the dev needs to produce. Valentina is QA-only and does not write code, so every automated unit test that covers this story has to be written by the engineer. Integration and manual test scenarios are QA's to design from the Acceptance Criteria; the story does not prescribe them.
-   - **Unit Tests**: Numbered list of unit test surfaces (parsers, match logic, state reducers, utility functions). Each item is a single observable behavior, testable in isolation.
-
-**Standing emoji set (4 entries)**
+**Standing emoji set (3 entries)**
 
 | Section | Emoji |
 |---|---|
 | User Story | 👤 *(unique to story scale)* |
 | Acceptance Criteria | ✅ |
 | Out of Scope | 🚫 *(unique to story scale)* |
-| Testing Requirements | 🧪 *(unique to story scale)* |
 
 **Required content rules (Story specific: universal rules in 7b-shared also apply)**
 
@@ -53,14 +50,14 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Parent Epic field set on the ticket itself.** Use `customfield_12350` per Section 10. There is no Parent Epic line in the body: the field is the only link.
 - **No Jira ticket keys anywhere in the body.** Design tasks, predecessor stories, and sibling stories are `Relates` issue links; Figma and upstream-package references are remote links or comments. Jira's Links panel is the single source; repeating keys in the text is redundant and goes stale. There is no Notes section.
 - **Acceptance Criteria are testable.** Each Functional item must be a single observable behavior QA can pass/fail in one check. If an item has two clauses joined by "and," consider splitting.
-- **Testing Requirements is the dev's unit test checklist before "Ready for QA."** It is not optional. No Integration or Manual QA sub-blocks: QA writes those test cases from the Acceptance Criteria.
+- **No testing section.** QA designs and owns all test cases, written from the Acceptance Criteria; the story does not prescribe how the work is tested. Unit test coverage is a team-wide engineering standard, like the quality bar, and is not restated per story (TPM decision, 2026-11-02).
 - **Curly braces escaped as `\{...\}`** anywhere they appear in description text: same rule as epics.
 
 **Writing-and-publishing workflow**
 
 1. Pull the existing ticket via `GET /rest/api/2/issue/<KEY>` to capture the original requirements text: preserve the substance, restructure the form. Fix typos and tighten wordings; don't drop requirements.
 2. Confirm the parent epic link via `customfield_12350` on the ticket itself; if missing, set it before pushing the description.
-3. Draft the description in Jira wiki markup with all 4 sections in order, applying the section emojis and content rules above.
+3. Draft the description in Jira wiki markup with all 3 sections in order, applying the section emojis and content rules above.
 4. Push the description via `PUT /rest/api/2/issue/<KEY>`, passed as `{"description": "..."}` in `fields`; read it back and confirm it starts with `h3.`, not `###`.
 5. Add `Relates` issue links to the design task and any predecessor or sibling stories via `POST /rest/api/2/issueLink`.
 6. Verify the rendered description with a UI screenshot from the user: wiki source is unreliable as a render preview (per 7b-shared).
@@ -68,6 +65,6 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 **When to expand vs trim**
 
-- **Story has fewer than 5 functional ACs and no test surface complexity** → keep all 4 sections; the structure earns its keep on small stories by giving the engineer a checklist.
-- **Story is a pure documentation update or copy change with no code path** → Unit Tests says "None at this time"; QA verifies against the Acceptance Criteria.
+- **Story has fewer than 5 functional ACs** → keep all 3 sections; the structure earns its keep on small stories by giving the engineer and QA a checklist.
+- **Story is a pure documentation update or copy change with no code path** → same 3 sections; QA verifies against the Acceptance Criteria.
 - **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the Bug Format pattern adapted for spikes, or write a free-form Task description with explicit "deliverables" rather than "acceptance criteria."
