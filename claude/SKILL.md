@@ -634,6 +634,8 @@ Method notes worth repeating:
 
 ## 10. 🗃️ Jira Custom Field Reference
 
+> **Atlassian MCP retired (2026-11-02).** Tool names such as `jira_update_issue` below date from the MCP connector. Jira is now called through the REST API v2 from a signed-in Claude in Chrome tab; `claude/architecture/jira-atlassian-mcp-legacy.md` maps each MCP tool to its REST call and keeps the MCP-only quirks in case the connector is reinstated.
+>
 > **Critical.** The NCI tracker (`tracker.nci.nih.gov`) has non-standard field configurations. Standard Jira field IDs and the `jira_link_to_epic` tool do NOT work reliably. Always use the confirmed field IDs below.
 >
 > These fields are confirmed on **Task** and **Epic** issue types in both **CTDC** and **ICDC** projects — they are consistent across both.
