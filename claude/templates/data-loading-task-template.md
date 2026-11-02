@@ -116,22 +116,22 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 - **Developer field is required.** Set `customfield_23650` to the engineer who runs the load.
 - **Leave the ticket Unassigned at creation** per standing convention.
 - **The Data Loading task carries no label**: the load is performed by engineering; the `Data-Concierge` label belongs to the paired IndexD Registration (Index) task.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `POST /rest/agile/1.0/sprint/<sprintId>/issue` right after creation.
 - **`Relates` link to each submission's Data Hub tracking ticket (DHDM-XXX).** DHDM tracks per submission, so a load spanning several submissions links several DHDM tickets.
 - **`Relates` link to the paired IndexD Registration Task** when one exists: the two run in parallel; do **not** use `Blocks`. The non-blocking relationship is conveyed by the link, not restated in the body.
 - **No other ticket keys in the body.** The epic, the DHDM trackers, the paired IndexD task, and sibling tasks are carried by the Epic Link and the native Links panel.
 - **Submission & Artifacts table is mandatory and complete.** One row per submission the load consumes, metadata-only submissions included, every column populated. Use PLACEHOLDER explicitly when a value is pending upstream; never leave a cell blank or fold several submissions into one cell.
 - **Run records go in a comment, not the description.** Post Prefect flow-run links as a plain-text comment grouped by environment, one line per submission.
-- **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
+- **Jira wiki authoring** (nothing converts Markdown, so what is sent is stored exactly; see `epic-templates.md`, 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
 
 **Writing-and-publishing workflow**
 
 1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod`. The paired IndexD registration runs in parallel and need not be complete. Surface any open questions on the submission epic, not the Task.
 2. Confirm this is a data load, not a model update or software development. If the schema is changing, a modeling Task (DO-INTMODEL/DO-MODEL) lands first.
 3. Identify the submission epic (set as the Epic Link at creation) and the paired IndexD Registration Task (add via a native `Relates` link after creation, never `Blocks`).
-4. Create via `jira_create_issue` with `issue_type = "Task"`, the title from the convention above, a placeholder description, the parent epic via `customfield_12350`, and the Developer via `customfield_23650`. Add no label. Leave Unassigned.
-5. Push the full body via `jira_update_issue`, authored in Jira wiki markup (stored exactly as sent; no server-side conversion).
-6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+4. Create via `POST /rest/api/2/issue` with `"issuetype": {"name": "Task"}`, the title from the convention above, a placeholder description, the parent epic via `customfield_12350`, and the Developer via `customfield_23650`. Add no label. Leave Unassigned.
+5. Push the full body via `PUT /rest/api/2/issue/<KEY>`, authored in Jira wiki markup (stored exactly as sent; no server-side conversion).
+6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `POST /rest/agile/1.0/sprint/<sprintId>/issue`.
 7. Add the `Relates` links (each submission's DHDM tracker, paired IndexD task, and the other tasks for the study).
 8. Verify the rendered description with a UI screenshot.
 9. As each environment completes, the tester adds date and initials to Testing Signoff; post the Prefect run links as a comment.

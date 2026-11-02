@@ -82,11 +82,11 @@ Each header is `h3. {emoji} *Title*` with the emoji shown. Omit a section only w
 **Writing-and-publishing workflow**
 
 1. Finish intake and reconciliation per the SOP before drafting. The Carryover and Resolved tables need the prior epic's task list.
-2. `jira_create_issue` with `issue_type = "Epic"`, the summary above, a placeholder description, and labels. Leave Unassigned.
-3. `jira_update_issue` with the full body.
+2. `POST /rest/api/2/issue` with `"issuetype": {"name": "Epic"}`, the summary above, a placeholder description, and labels. Leave Unassigned.
+3. `PUT /rest/api/2/issue/<KEY>` with the full body.
 4. Attach the PDFs.
 5. Create the finding tasks and the verification task (see the finding template), linking each with `{"customfield_12350": "<epic key>"}` in a separate update call.
-6. `jira_create_issue_link` (`Relates`) from the epic to each Carryover task.
+6. `POST /rest/api/2/issueLink` (`Relates`) from the epic to each Carryover task.
 7. Post the Slack intake summary to the CTDC security channel, never the general project channel.
 
 **Canonical example**

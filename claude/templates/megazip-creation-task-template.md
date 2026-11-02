@@ -107,17 +107,17 @@ Create it at the same time as this ticket, from the Data Loading Task template (
 - **Title:** `Create, Submit, and Index Megazip files for <token>`, where `<token>` is the submission epic's `<Program Short Name> <Study Short Name> <version>` (plural "files"; no data type in the title).
 - **Issue type Task; Parent Epic via `customfield_12350`** (the study's submission epic, Section DO-EPIC); **no label; no component**; priority Major to match the family. Assign to the Data Concierge at creation, since section 1 is theirs.
 - **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled.
-- **Links: `Relates` to every other task for the study** (DO-DBGAP, DO-INDEX, DO-LOAD, the paired megazip DO-LOAD, and the DHDM tracker; the submission epic is the parent via the Epic Link), plus a native "Related To" issue link to the CRINTAKE ticket once filed (`jira_create_issue_link`; CRINTAKE is on the same Jira instance, so not a remote link). **Never `Blocks` or `Supports`. No link to any feature user story.**
+- **Links: `Relates` to every other task for the study** (DO-DBGAP, DO-INDEX, DO-LOAD, the paired megazip DO-LOAD, and the DHDM tracker; the submission epic is the parent via the Epic Link), plus a native "Related To" issue link to the CRINTAKE ticket once filed (`POST /rest/api/2/issueLink`; CRINTAKE is on the same Jira instance, so not a remote link). **Never `Blocks` or `Supports`. No link to any feature user story.**
 - **No AWS Account ID row, no "To be created" rows, no Notes column.** If a value is not typed into a command, a file, or a form, it does not belong in the table.
-- **Jira wiki authoring** (connector Markdown translation is off, so what is sent is stored exactly; see SKILL.md 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`. Edit descriptions through the connector or the Text tab: Jira's visual editor rewrites URLs inside `{{ }}` into broken links.
+- **Jira wiki authoring** (nothing converts Markdown, so what is sent is stored exactly; see `epic-templates.md`, 7b-shared, "Authoring format"): `h3. {emoji} *Title*` headers; `* *Label*: content` labeled lines; `*` bullets and `#` numbered lists at column 0; `*bold*`; `{{monospace}}`; tables `||header||` / `|cell|`; links `[text|url]`; curly braces escaped as `\{...\}`. Blank line after every heading. After pushing, read the description back and confirm it starts with `h3.`, not `###`. Edit descriptions through the connector or the Text tab: Jira's visual editor rewrites URLs inside `{{ }}` into broken links.
 
 **Writing-and-publishing workflow**
 
 1. Confirm the study's DO-DBGAP ticket is Closed and carries the release package directory; copy it. Read the Object Files Directory from the `urls` column of the release package's `indexd.tsv`.
-2. Create this ticket via `jira_create_issue` (Task, placeholder description, `customfield_12350`, priority Major, assigned to the Data Concierge, no label, no component).
-3. Push the body via `jira_update_issue`.
+2. Create this ticket via `POST /rest/api/2/issue` (Task, placeholder description, `customfield_12350`, priority Major, assigned to the Data Concierge, no label, no component).
+3. Push the body via `PUT /rest/api/2/issue/<KEY>`.
 4. Create the paired load ticket from DO-LOAD (`Data Loading: <token> Megazips`) with the same epic link, sprint, and no component.
-5. Add both tickets to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`. A TPM pulls them into a numbered sprint when the work is scheduled.
+5. Add both tickets to the `CTDC Data Related` sprint (id 8612) via `POST /rest/agile/1.0/sprint/<sprintId>/issue`. A TPM pulls them into a numbered sprint when the work is scheduled.
 6. Add `Relates` links: this ticket to the paired load ticket and to every study task and the DHDM tracker.
 7. Verify the render in the UI.
 

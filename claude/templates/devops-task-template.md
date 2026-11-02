@@ -98,7 +98,7 @@ Each header is a Jira wiki `h3.` heading using the emoji + bold title format sho
 * *All four tiers in Environments*: even when only one is in scope.
 * *Upper tiers go through ServiceNow*: no STAGE or PROD row moves to Done without a matching ServiceNow Requests row.
 * *Issue type is Task*: not Story or Subtask.
-* *Body is Jira wiki markup*: Markdown translation is disabled on the connector (Sep 2026). Use `h3.`, `||header||` tables, and `* *Label*: content` bullets; escape literal curly braces as `\{` and `\}`.
+* *Body is Jira wiki markup*: nothing converts Markdown, so it is stored exactly as sent. Use `h3.`, `||header||` tables, and `* *Label*: content` bullets; escape literal curly braces as `\{` and `\}`.
 * *No Jira ticket keys in the body*: related work goes in Jira's issue links.
 * *Colons, not em dashes*.
 * *Left unassigned on creation*: unless the TPM directs otherwise. CTDC DevOps engineers are Charles Ngu (`nguca`, DevOps Lead) and Michael Fleming (`flemingme`).

@@ -23,7 +23,7 @@ The structure is CTDC-1664's long-form data epic, scoped to one submission, merg
 
 **Card line + section order (card line, then 9 sections, exactly this sequence)**
 
-Each section header is an `h3.` Jira wiki heading using the emoji + bold title format shown. Author in Jira wiki markup (see SKILL.md 7b-shared, "Authoring format").
+Each section header is an `h3.` Jira wiki heading using the emoji + bold title format shown. Author in Jira wiki markup (see `epic-templates.md`, 7b-shared, "Authoring format").
 
 0. **Card line** (no header): one plain sentence, 140 characters or fewer, for the Federal Leadership epic Kanban card. Same rule as every CTDC epic (SKILL.md 7b item 0).
 1. `h3. 🎯 *Epic Summary*`: One short paragraph. What this submission brings into CTDC and why, written as a goal (not as a user story). Example (CTDC-2110): *"Integrate the Cancer Moonshot Biobank (CMB) v6 submission into CTDC: guide the submission through the CRDC Submission Portal, obtain the Release Package, and see the data validated, indexed, loaded, and verified so the study is correctly integrated and its files are downloadable in Production."*
@@ -113,10 +113,10 @@ Each section header is an `h3.` Jira wiki heading using the emoji + bold title f
 
 **Writing-and-publishing workflow**
 
-1. **Existing Data Submission user story:** convert it in the Jira UI (**Move → Issue type: Epic**, which asks for an Epic Name); this keeps the key, history, comments, and links. **New submission:** `jira_create_issue` with `issue_type = "Epic"`, a one-line placeholder description, and the Epic Name in `customfield_12351`.
+1. **Existing Data Submission user story:** convert it in the Jira UI (**Move → Issue type: Epic**, which asks for an Epic Name); this keeps the key, history, comments, and links. **New submission:** `POST /rest/api/2/issue` with `"issuetype": {"name": "Epic"}`, a one-line placeholder description, and the Epic Name in `customfield_12351`.
 2. Set the summary and Epic Name to the title convention; set labels `Task-1.2.1` and `Data-Concierge`, priority Major, component Data.
-3. Push the full description via `jira_update_issue` (raw Jira wiki in `additional_fields` as `{"description": "..."}`).
-4. Set the Epic Link on each child task via `jira_update_issue` `additional_fields` `{"customfield_12350": "<EPIC>"}` and confirm with JQL `"Epic Link" = <EPIC>`; rename children to the title token.
+3. Push the full description via `PUT /rest/api/2/issue/<KEY>` (raw Jira wiki in `fields` as `{"description": "..."}`).
+4. Set the Epic Link on each child task via `PUT /rest/api/2/issue/<KEY>` `fields` `{"customfield_12350": "<EPIC>"}` and confirm with JQL `"Epic Link" = <EPIC>`; rename children to the title token.
 5. Remove any `Supports` links left from the user story era; switch the submission data modeling task's link to `Relates`.
 6. Verify the render in the Jira UI.
 

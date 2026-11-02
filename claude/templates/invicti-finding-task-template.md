@@ -77,10 +77,10 @@ Each header is `h3. {emoji} *Title*` with the emoji shown. All five are required
 **Writing-and-publishing workflow**
 
 1. Triage per the SOP: severity, environments, root cause, remedy, disposition candidate, due date.
-2. `jira_create_issue` with `issue_type = "Task"`, the summary above, a placeholder description, labels, priority. Leave Unassigned.
-3. `jira_update_issue` with the full body and the `sla-due-YYYY-MM-DD` label.
-4. `jira_update_issue` with `{"customfield_12350": "<epic key>"}` to link the parent epic (separate call; the `epicKey` parameter does not work reliably).
-5. If a companion deployment-config task is needed, create it the same way, then `jira_create_issue_link` with `link_type = "Blocks"`, `inward_issue_key = <companion>`, `outward_issue_key = <finding task>` (verified on ICDC: this renders as the finding task "is blocked by" the companion).
+2. `POST /rest/api/2/issue` with `"issuetype": {"name": "Task"}`, the summary above, a placeholder description, labels, priority. Leave Unassigned.
+3. `PUT /rest/api/2/issue/<KEY>` with the full body and the `sla-due-YYYY-MM-DD` label.
+4. `PUT /rest/api/2/issue/<KEY>` with `{"customfield_12350": "<epic key>"}` to link the parent epic (separate call; never rely on an `epicKey`-style shortcut).
+5. If a companion deployment-config task is needed, create it the same way, then `POST /rest/api/2/issueLink` with `{"type": {"name": "Blocks"}, "inwardIssue": {"key": "<companion>"}, "outwardIssue": {"key": "<finding task>"}}` (verified on ICDC: this renders as the finding task "is blocked by" the companion).
 6. Post the PR link as a plain-text comment when it opens; QA closes the task with resolution Fixed after confirming on the observed tier(s).
 
 **Worked example (ICDC, September 2026 High)**

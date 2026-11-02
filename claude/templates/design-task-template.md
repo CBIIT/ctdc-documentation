@@ -20,7 +20,7 @@ The emoji set borrows shared anchors from the user story and epic templates (ðŸŽ
 
 **Section order (6 sections, exactly this sequence)**
 
-Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Author the description in Jira wiki markup (see SKILL.md 7b-shared, "Authoring format"). Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header: same rule as every other CTDC template.
+Each section header is a Jira wiki `h3.` heading using the emoji + bold title format shown. Author the description in Jira wiki markup (see `epic-templates.md`, 7b-shared, "Authoring format"). Don't omit, reorder, or merge sections. If a section genuinely has no content, state so explicitly ("None at this time") rather than dropping the header: same rule as every other CTDC template.
 
 1. `h3. ðŸŽ¯ *Design Summary*`: Two to three sentences. What's being designed, on which surface, for which user need, and the exemplar if one is used. Example: *"Design the sidebar autocomplete search box for Local Find on the Explore Dashboard. The search box lets researchers type a partial Participant ID and select from autocomplete suggestions, populating the dashboard with a single-Participant cohort."*
 
@@ -77,8 +77,8 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 **Writing-and-publishing workflow**
 
 1. Confirm the user story has been written (and ideally normalized into the 7a User Story Template) before drafting the design task. The design task's deliverables must enable the user story's AC; if the AC isn't stable, the design task scope isn't stable either.
-2. Create the design task via `jira_create_issue` with `issue_type = "Task"`, a placeholder description, the parent epic linked via `customfield_12350` in `additional_fields`, and the designer assigned.
-3. Push the full description with `jira_update_issue`, authored in Jira wiki markup and passed as `{"description": "..."}` in `additional_fields`. Read it back to confirm it stored as wiki markup.
+2. Create the design task via `POST /rest/api/2/issue` with `"issuetype": {"name": "Task"}`, a placeholder description, the parent epic linked via `customfield_12350` in `fields`, and the designer assigned.
+3. Push the full description with `PUT /rest/api/2/issue/<KEY>`, authored in Jira wiki markup and passed as `{"description": "..."}` in `fields`. Read it back to confirm it stored as wiki markup.
 4. Add a "Relates" issue link between the design task and its parent user story.
 5. If a sibling design task exists for a sibling user story, add a "Relates" link between the two design tasks as well.
 6. Verify the rendered description with a UI screenshot from the user: wiki source is unreliable as a render preview (per 7b-shared).

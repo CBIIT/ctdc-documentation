@@ -111,7 +111,7 @@ One per release, created first; it blocks both deployment tasks.
 
 * *Summary*: `Identify the <YYYY> Q<N> release candidate Deployment Package`. Hotfix release: `Identify the <YYYY> Q<N> hotfix Deployment Package`.
 * *Type*: Task
-* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `jira_update_issue` on `customfield_12350`.
+* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `PUT /rest/api/2/issue/<KEY>` on `customfield_12350`.
 * *Assignee*: Tech Lead, Nahom Tesfatsion (`nahom.tesfatsion@nih.gov`).
 * *Developer* (`customfield_23650`): `[{"name": "tesfatsionnh"}]`.
 * *Labels*: `release`, `deployment`
@@ -148,7 +148,7 @@ Two tasks per release, identical except the environment word (**Stage** / **Prod
 
 * *Summary*: `Deploy <YYYY> Q<N> software release candidate to <Stage | Production>`. Hotfix release: `Deploy <YYYY> Q<N> hotfix release candidate to <Stage | Production>`.
 * *Type*: Task
-* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `jira_update_issue` on `customfield_12350`.
+* *Epic Link*: the current fiscal year's standing release epic, set with a follow-up `PUT /rest/api/2/issue/<KEY>` on `customfield_12350`.
 * *Assignee*: DevOps Lead, Charles Ngu (`charles.ngu@nih.gov`).
 * *Developer* (`customfield_23650`): `[{"name": "nguca"}]`. The field rejects a bare username string.
 * *Labels*: `release`, `deployment`, `devops`
@@ -193,8 +193,8 @@ h3. ✅ *Definition of Done*
 
 ## Creating each release's tickets
 
-1. Create the Final Design QA epic, the Deployment Package task, and the Stage and Production tasks, each with a placeholder body; then `jira_update_issue` each with the body above and labels. Leave Due Date empty.
-2. On the three tasks, set the epic link (`customfield_12350` to the fiscal year's release epic) and Developer (`customfield_23650`), and confirm both with `jira_get_issue`.
+1. Create the Final Design QA epic, the Deployment Package task, and the Stage and Production tasks, each with a placeholder body; then `PUT /rest/api/2/issue/<KEY>` each with the body above and labels. Leave Due Date empty.
+2. On the three tasks, set the epic link (`customfield_12350` to the fiscal year's release epic) and Developer (`customfield_23650`), and confirm both with `GET /rest/api/2/issue/<KEY>`.
 3. Swap `<YYYY> Q<N>` and `<Stage | Production>` in the summaries and bodies, resolve the two `[Production only: ...]` phrases (keep the words on Production, delete them on Stage), and paste the release's Release Dashboard link. The Release Dashboard must always be linked; a release task without one is incomplete.
 4. Link the Deployment Package task "Blocks" the Stage task and "Blocks" the Production task, and the Stage task "Blocks" the Production task.
 5. Open all four tickets in the Jira UI and confirm they render.

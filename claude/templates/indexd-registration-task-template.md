@@ -30,7 +30,7 @@ The five antipatterns this template prevents:
 
 **Section order (4 sections, exactly this sequence)**
 
-Each section header is a Jira wiki `h3.` heading with the emoji and a bold title, for example `h3. 🎯 *Registration Summary*`. Keep the sections in this order so every registration ticket reads the same way. All examples are in Jira wiki markup (see SKILL.md 7b-shared, "Authoring format"), which is what gets pushed.
+Each section header is a Jira wiki `h3.` heading with the emoji and a bold title, for example `h3. 🎯 *Registration Summary*`. Keep the sections in this order so every registration ticket reads the same way. All examples are in Jira wiki markup (see `epic-templates.md`, 7b-shared, "Authoring format"), which is what gets pushed.
 
 1. `h3. 🎯 *Registration Summary*`: **Two sentences.** First, what's being indexed and that the paired Data Loading Task will reference the GUIDs. Second, a **bold new-vs-existing study marker**: a new study's first registration, or a study update to an existing study with its version. Do **not** restate anything else (study identity, consent codes, dbGaP IDs, submission count, chronology, on-hold status): that lives on the submission epic or in Jira statuses. New-study example: *"Register the Data Hub-generated GUIDs for the NCTN-NCORP TCIA Images-Only AHEP0731 study files in CRDC IndexD, so the DCF can serve the files the paired Data Loading Task references through presigned URLs. **AHEP0731 is a new CTDC study; this is its first registration.**"* Study-update example: *"Register the Data Hub-generated GUIDs for the CMB v6 object files in CRDC IndexD, so the DCF can serve the files the paired Data Loading Task references through presigned URLs. **CMB is an existing CTDC study; this is a study update (v6), not a new study registration.**"*
 
@@ -120,13 +120,13 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 - **Parent Epic field set via `customfield_12350`** to the study's submission epic (Section DO-EPIC). CTDC-1664 stays open only for cross-study integration work no single submission owns.
 - **`Data-Concierge` label is mandatory** on this task, set at creation via `labels`. The paired Data Loading Task carries no label.
 - **Leave the ticket Unassigned at creation.** The Developer field is not required: indexing is Data Concierge coordination, not engineering.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `POST /rest/agile/1.0/sprint/<sprintId>/issue` right after creation.
 - **`Relates` link to each submission's Data Hub tracking ticket (DHDM-XXX).** DHDM tracks per submission, so a multi-submission registration links several DHDM tickets.
 - **`Relates` link to the paired Data Loading Task** when it exists (registration as inward issue, load as outward). Never `Blocks`: the two run in parallel.
-- **Native "Related To" link to each CRINTAKE ticket** once it is filed (`jira_create_issue_link`, registration as inward issue). A free-text CRINTAKE key is not sufficient, a remote link is reserved for targets outside this Jira, and `Supports` is never used.
+- **Native "Related To" link to each CRINTAKE ticket** once it is filed (`POST /rest/api/2/issueLink`, registration as inward issue). A free-text CRINTAKE key is not sufficient, a remote link is reserved for targets outside this Jira, and `Supports` is never used.
 - **No other ticket keys in the body.** The epic, DHDM trackers, CRINTAKE tickets, and paired load are all carried by the Epic Link and native links.
 - **No em dashes** in the ticket body or comments; use colons, semicolons, commas, or parentheses.
-- **Description format is Jira wiki markup, authored directly** (connector translation is off; see SKILL.md 7b-shared). Headings `h3. 🎯 *Title*`; labeled lines `* *Label*: content`; inline code `{{value}}`; numbered lists `#`; bullets `*`; links `[text|url]`; tables `||header||` and `|cell|`. Blank line after every heading, between a bold phase label and its list, and between sections. No in-cell line breaks. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
+- **Description format is Jira wiki markup, authored directly** (nothing converts Markdown; see `epic-templates.md`, 7b-shared). Headings `h3. 🎯 *Title*`; labeled lines `* *Label*: content`; inline code `{{value}}`; numbered lists `#`; bullets `*`; links `[text|url]`; tables `||header||` and `|cell|`. Blank line after every heading, between a bold phase label and its list, and between sections. No in-cell line breaks. After pushing, read the description back and confirm it starts with `h3.`, not `###`.
 - **Comment formatting**: comments are plain text with real line breaks; a leading `* ` renders as a bullet. Avoid Markdown bold, backticks, and `{{ }}` in comments.
 
 **Writing-and-publishing workflow**
@@ -134,9 +134,9 @@ Each section header is a Jira wiki `h3.` heading with the emoji and a bold title
 1. Confirm each Release Package exists in `nci-cbiit-clinicaltrialdatacommons-metadata-nonprod` and the consent codes are reconciled (DO-DBGAP). If the Release Packages don't exist yet, the ticket can still be created with PLACEHOLDER cells. Surface open questions on the submission epic, not the Task.
 2. Confirm this is IndexD registration, not data loading or modeling.
 3. Identify the submission epic, each submission's DHDM tracker, and the paired Data Loading Task.
-4. Create via `jira_create_issue` with `issue_type = "Task"`, the title from the convention above, a short placeholder description, the parent epic via `customfield_12350`, and the `Data-Concierge` label. Leave it Unassigned.
-5. Push the full description via `jira_update_issue` in Jira wiki markup; read it back to confirm it stored as wiki markup.
-6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
+4. Create via `POST /rest/api/2/issue` with `"issuetype": {"name": "Task"}`, the title from the convention above, a short placeholder description, the parent epic via `customfield_12350`, and the `Data-Concierge` label. Leave it Unassigned.
+5. Push the full description via `PUT /rest/api/2/issue/<KEY>` in Jira wiki markup; read it back to confirm it stored as wiki markup.
+6. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `POST /rest/agile/1.0/sprint/<sprintId>/issue`.
 7. Add the `Relates` links: each submission's DHDM tracker and the paired Data Loading Task.
 8. Post the study-update context comment (file counts, file-type breakdown) as plain text, then verify the rendered description with a UI screenshot.
 9. As the work progresses, add a "Related To" link to each CRINTAKE ticket once filed, and add a row for any late-arriving submission.

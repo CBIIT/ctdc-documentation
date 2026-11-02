@@ -39,6 +39,9 @@ Application pages updating when new data is loaded is the application working as
 
 | Template | File | Status | Canonical Examples |
 |---|---|---|---|
+| **User Story** | [`user-story-template.md`](./templates/user-story-template.md) | ✅ Drafted v4 (2026-10-13): one functional Acceptance Criteria list (no Performance & Quality), unit tests only, identical to ICDC; 4 sections (User Story · Acceptance Criteria · Out of Scope · Testing Requirements), no ticket keys in the body | CTDC-1691 |
+| **Epic (lean v2)** | [`epic-templates.md`](./templates/epic-templates.md) | ✅ Drafted v2 (2026-09-14): card line plus 5 sections (Epic Statement · Description · Scope · Definition of Done · Notes; v2.1, 2026-10-13, renamed section 4 from Acceptance Criteria), under 600 words, closes when delivered. Replaced the v1 per-grouping epic templates (7b-1 to 7b-7) | CTDC-1802 |
+| **Data Epic Variant** | [`epic-templates.md`](./templates/epic-templates.md) | ✅ Drafted 2026-09-25 for the two standing modeling epics only (Submission Data Modeling, Internal Data Modeling): card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words | CTDC-2217, CTDC-1801 |
 | **Design Task** | [`design-task-template.md`](./templates/design-task-template.md) | ✅ Drafted v4 (2026-10-09): 6 sections, identical shape to ICDC, Jira wiki authoring; v3 (2026-09-04): no Jira ticket keys in the body | CTDC-2044, CTDC-2045 |
 | **DevOps Task** | [`devops-task-template.md`](./templates/devops-task-template.md) | ✅ Drafted v1 (2026-10-07): 7 sections (🎯 Task Summary · 🧭 Scope · 🌐 Environments · 🔑 Environment Variables · 🎫 ServiceNow Requests · 🚦 Workflow · ✅ Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>` | CTDC-2261 (RDS MySQL engine upgrade) |
 | **General Task** | [`general-task-template.md`](./templates/general-task-template.md) | ✅ Drafted v1 (2026-10-13): 4 sections (🎯 Task Summary · 🧭 Scope · 🚦 Workflow · ✅ Definition of Done) for any task no other template covers; identical to ICDC | none yet |
@@ -100,9 +103,6 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 
 | Template | SKILL.md Section | Status | Canonical Examples |
 |---|---|---|---|
-| **User Story** | Section 7a | ✅ Drafted v4 (2026-10-13): one functional Acceptance Criteria list (no Performance & Quality), unit tests only, identical to ICDC; 4 sections (User Story · Acceptance Criteria · Out of Scope · Testing Requirements), no ticket keys in the body | CTDC-1691 |
-| **Epic (lean v2)** | Section 7b | ✅ Drafted v2 (2026-09-14): card line plus 5 sections (Epic Statement · Description · Scope · Definition of Done · Notes; v2.1, 2026-10-13, renamed section 4 from Acceptance Criteria), under 600 words, closes when delivered. Replaced the v1 per-grouping epic templates (7b-1 to 7b-7) | CTDC-1802 |
-| **Data Epic Variant** | Section 7b-D | ✅ Drafted 2026-09-25 for the two standing modeling epics only (Submission Data Modeling, Internal Data Modeling): card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words | CTDC-2217, CTDC-1801 |
 | **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
 
 ---

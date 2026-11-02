@@ -88,15 +88,15 @@ Each section header is an `h3` Markdown heading using the emoji + **bold** title
 
 - Issue type **User Story**; priority **Major**; component **Data**; labels **`Data-Concierge`** plus the WBS line (`Task-1.2.1.x`).
 - Leave **Unassigned** at creation unless directed.
-- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `jira_add_issues_to_sprint` right after creation.
+- **Sprint: always add the ticket to the standing `CTDC Data Related` sprint at creation** (board 641, sprint id 8612; a permanent future-state sprint that holds all data-operations work). Never leave it in the backlog, and do not put it in a numbered development sprint at creation; a TPM pulls it into a sprint when the work is scheduled; pass the new key to `POST /rest/agile/1.0/sprint/<sprintId>/issue` right after creation.
 
 **Writing-and-publishing workflow**
 
 1. Confirm the study-integration epic (CTDC-1664) exists for the epic link.
-2. Two-step create: `jira_create_issue` with a one-line placeholder, then `jira_update_issue` with the full Markdown body. Same pattern as every other CTDC template.
-3. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `jira_add_issues_to_sprint`.
-4. **Do not hand-edit the description in the Jira UI afterward**: re-push via `jira_update_issue`; the wiki editor eats underscores and mangles monospace.
-5. Render-verify in the Jira UI. The MCP read-tool's Markdown reconversion mangles underscores into asterisks: trust the rendered ticket, not the API echo.
+2. Two-step create: `POST /rest/api/2/issue` with a one-line placeholder, then `PUT /rest/api/2/issue/<KEY>` with the full Jira wiki body. Same pattern as every other CTDC template.
+3. Add the ticket to the `CTDC Data Related` sprint (id 8612) via `POST /rest/agile/1.0/sprint/<sprintId>/issue`.
+4. **Do not hand-edit the description in the Jira UI afterward**: re-push via `PUT /rest/api/2/issue/<KEY>`; the wiki editor eats underscores and mangles monospace.
+5. Render-verify in the Jira UI. The API echo of stored markup is not proof it renders: trust the rendered ticket.
 6. Add the native links above as the modeling/indexing/loading tasks and the DHDM ticket come into being.
 
 **Changelog**
