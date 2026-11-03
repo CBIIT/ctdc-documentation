@@ -103,7 +103,7 @@ These templates still live as sections inside `claude/SKILL.md`. They will be mi
 
 | Template | SKILL.md Section | Status | Canonical Examples |
 |---|---|---|---|
-| **Bug Format** | Section 7c | ✅ Lightweight format (always was small) | n/a |
+| **Bug** | `templates/bug-template.md` (7c) | ✅ v1 (2026-11-03): 5 sections, `h3.` emoji headings, identical to ICDC | none yet (shared canonical: ICDC-4312) |
 
 ---
 

@@ -67,4 +67,4 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 
 - **Story has fewer than 5 functional ACs** → keep all 3 sections; the structure earns its keep on small stories by giving the engineer and QA a checklist.
 - **Story is a pure documentation update or copy change with no code path** → same 3 sections; QA verifies against the Acceptance Criteria.
-- **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the Bug Format pattern adapted for spikes, or write a free-form Task description with explicit "deliverables" rather than "acceptance criteria."
+- **Story is a spike or research task with no acceptance criteria** → this template is the wrong shape. Use the General Task template (7m), which states a spike's deliverable as a written assessment.

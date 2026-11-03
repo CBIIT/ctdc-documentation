@@ -384,27 +384,9 @@ The epic templates live in `claude/templates/epic-templates.md`: one lean templa
 
 ---
 
-### 7c. Bug Format
-```
-*Environment*: [Dev / QA / Stage / Prod]
-*Severity*: [Critical / High / Medium / Low]
+### 7c. 🐞 Bug Template (v1)
 
-*Steps to Reproduce*
-# 
-# 
-# 
-
-*Expected Behavior*
-[What should happen]
-
-*Actual Behavior*
-[What actually happens]
-
-*Screenshots/Logs*
-[Attach or paste]
-```
-
-Authored in Jira wiki markup (stored exactly as sent). The epic is set through the Epic Link field (`customfield_12350`), never written in the body. ICDC and CTDC use this identical bug format.
+The bug template lives in `claude/templates/bug-template.md` (v1, 2026-11-03): 🐞 Bug Summary (with Environment, Severity, and Reported in bullets) · 🔁 Steps to Reproduce · ✅ Expected Behavior · ❌ Actual Behavior · 📋 Logs & Screenshots. Issue type `Bug`, no summary prefix, severity table in the template, Priority left for TPM triage, no fix in the body. It replaced the plain-label Bug Format that used to live here and mirrors ICDC's `bug-template.md`; the two are kept in lockstep.
 
 ---
 
@@ -526,7 +508,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 | 7a · User Story | CTDC-1691 |
 | 7b · Epic (lean v2) | CTDC-1802 |
 | 7b-D · Data epic variant | CTDC-2217 (Submission Data Modeling), CTDC-1801 (Internal Data Modeling), both written 2026-09-25 |
-| 7c · Bug Format | n/a |
+| 7c · Bug | none yet (shared canonical: ICDC-4312) |
 | 7d · Design Task | CTDC-2044 |
 | 7l · DevOps Task | CTDC-2261 |
 | 7m · General Task | CTDC-2274 (ICDC canonical: ICDC-4284) |
@@ -545,7 +527,7 @@ Tracks the status of every CTDC ticket template — software-development lane an
 |---|---|---|---|
 | User Story (7a) | `claude/templates/user-story-template.md` | ✅ Drafted v4.2 (2026-11-02): 3 sections; Testing Requirements removed (QA owns all testing). v4 (2026-10-13): Story Summary removed; Out of Scope replaces Scope; one functional Acceptance Criteria list (Performance & Quality removed) and unit tests only, identical to ICDC. v3 (2026-10-09): Jira wiki authoring. v2 (2026-09-04): slimmed from 7 to 5 sections, no ticket keys in the body | CTDC-1691 (Upload Participant Set, child of CTDC-2042: still carries the v1 7-section body; new stories use the current shape) |
 | Epic (all groupings) (7b) | `claude/templates/epic-templates.md` | ✅ Drafted v2 (2026-09-14): one five-section lean template (Epic Statement · Description · Scope · Definition of Done · Notes; the fourth section was Acceptance Criteria until 2026-10-13), under 600 words, no ticket keys, closes when delivered. Replaces v1 per-grouping templates (Application Pages 15 sections, canonical CTDC-2025; Microservices 20 sections, CTDC-1968; Features 18 sections, CTDC-2042; Products/Infrastructure/Security/Data stubs). Active epics were swept to v2 on 2026-09-24/25; the two standing data modeling epics use the 7b-D variant (card line plus 7 sections with Upstream & Downstream and a required Risks table, under 800 words), and Final Design QA epics keep their container template; data submissions use one DO-EPIC epic per submission (2026-09-25) | CTDC-1802 (Export to the Cancer Genomics Cloud) |
-| Bug Format | Section 7c | ✅ Lightweight format | n/a |
+| Bug (7c) | `claude/templates/bug-template.md` | ✅ Drafted v1 (2026-11-03): 5 sections with `h3.` emoji headings (Bug Summary · Steps to Reproduce · Expected Behavior · Actual Behavior · Logs & Screenshots), severity table, issue type `Bug` with no summary prefix; replaces the plain-label Bug Format; identical to ICDC | none yet (shared canonical: ICDC-4312) |
 | Design Task (7d) | `claude/templates/design-task-template.md` | ✅ Drafted v4 (2026-10-09): slimmed from 7 to 6 sections (🧩 Design System & Standards removed), 3 standard deliverables, 5-item Definition of Done, Jira wiki authoring; identical shape to ICDC's design task template. v3 (2026-09-04): no ticket keys in the body | CTDC-2044 |
 | DevOps Task (7l) | `claude/templates/devops-task-template.md` | ✅ Drafted v1 (2026-10-07): 7 sections (Task Summary · Scope · Environments · Environment Variables · ServiceNow Requests · Workflow · Definition of Done); every non-release DevOps change; all four tiers listed every time, STAGE and PROD routed through NCI ServiceNow to CloudOne; variables tracked by per-tier state, never values; title `DevOps: <description>`; ID 7l because 7k is a retired crosswalk letter | CTDC-2261 |
 | General Task (7m) | `claude/templates/general-task-template.md` | ✅ Drafted v1.2 (2026-10-15): location bullet is *Repo* (omitted when the work is not in a repo) instead of *System*; v1.1 (2026-10-15): handoff moves the ticket to QA instead of notifying the TPM; both identical to ICDC. v1 (2026-10-13): 4 sections (Task Summary · Scope · Workflow · Definition of Done) for any task no other template covers; identical to ICDC | CTDC-2274 (Backend: Serve Curated Properties on Overview Resolvers and Index) |
