@@ -1,6 +1,8 @@
-### 7d. 🎨 Design Task Template (Drafted v4)
+### 7d. 🎨 Design Task Template (Drafted v5)
 
 > **Use this template for every CTDC design task.** The canonical example is **CTDC-2044 (Design: Local Find single-ID autocomplete)**: drafted 2026-05-06 as the first application of this template, parented to epic CTDC-2042 and linked to user story CTDC-2043. (Its sibling CTDC-2045, the multi-ID Input Set modal design, was drafted the same day and follows the same shape, but CTDC-2044 is the single canonical reference.) Future design work should follow the same shape.
+>
+> **v5 (2026-11-13): Date Design Started and Date Design Completed removed from the 🖼️ Figma File section.** The ticket's Jira history already captures when design work started and finished, so the lines duplicated the ticket. Figma File keeps the two Figma links, both links filled in now triggers Ready for Review, and the Definition of Done item drops "and completion date".
 >
 > **v4 (2026-10-09): slimmed from 7 to 6 sections and moved to Jira wiki authoring, matching ICDC.** The 🧩 Design System & Standards section was removed: WCAG 2.1 AA, Section 508, and the design system are standing site-wide obligations, not per-ticket content, and responsive and browser targets are boilerplate. The standard deliverables dropped from 5 to 3 (accessibility annotations and responsive variants are added when the surface needs them) and the Definition of Done from 7 items to 5. ICDC's design task template (`CBIIT/icdc-documentation → claude/templates/design-task-template.md`, canonical ICDC-4242) has the identical shape; the two are kept in lockstep.
 >
@@ -38,16 +40,14 @@ Each section header is a Jira wiki `h3.` heading using the emoji + bold title fo
 5. `h3. 🖼️ *Figma File*`: Required. The designer fills this in when work begins; leave blank at ticket creation. Format:
    - `* *Figma Design*:`
    - `* *Figma Prototype*:`
-   - `* *Date Design Started*:`
-   - `* *Date Design Completed*:`
 
-   The "Date Design Completed" line is the trigger for moving the ticket to Ready for Review.
+   No start or completion date lines: the ticket's Jira history (created date, status transitions, resolution date) already records when design started and finished. Both Figma links filled in is the trigger for moving the ticket to Ready for Review.
 
 6. `h3. ✅ *Definition of Done*`: Designer's completion checklist as `* [ ]` items. **Not** the user story's acceptance criteria: those belong on the story. The CTDC standard set:
    - Figma mockup and prototype published in the shared CTDC Figma workspace
    - Prototype reviewed with the TPM and the feature's stakeholders
    - Redlines documented for engineering handoff
-   - Figma URLs and completion date recorded in this ticket
+   - Figma URLs recorded in this ticket
    - Figma URL added to the linked user story
 
 **Standing emoji set (6 entries)**
