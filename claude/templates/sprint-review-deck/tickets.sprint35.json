@@ -1,0 +1,1120 @@
+[
+ {
+  "key": "CTDC-2347",
+  "summary": "Submission Data Modeling: NCI-MATCH Arm Z1D IHC: Add Null CDE values to primary_diagnosis_disease_site",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Sub-task",
+  "assignee": "Patrick Breads",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": 0.5
+ },
+ {
+  "key": "CTDC-2346",
+  "summary": "Submission Data Modeling: CIMAC-CIDC: Add permissible Values to assay_category",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Sub-task",
+  "assignee": "Patrick Breads",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": 0
+ },
+ {
+  "key": "CTDC-2345",
+  "summary": "Submission Data Modeling: NCI-MATCH-AYA: Add permissible value to library_preparation_kit",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Sub-task",
+  "assignee": "Patrick Breads",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": 0
+ },
+ {
+  "key": "CTDC-2324",
+  "summary": "Data Loading: CMB Image Collection",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": null,
+  "points": 0.5
+ },
+ {
+  "key": "CTDC-2322",
+  "summary": "CMB Study Overview is missing image collection details",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": null,
+  "resolved": "2026-11-12T13:51:01.000-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2321",
+  "summary": "Statbar shows 0 Therapies for all Anatomical Collection Site filter values",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": "2026-11-12T13:57:25.000-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2316",
+  "summary": "Data Correction: Update NCTN Program Name in Loaded Studies",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-1664",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2315",
+  "summary": "Explore Dashboard: Add Best Response Facet and Participants Table Column",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "User Story",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": "CTDC-2216",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2314",
+  "summary": "CSV downloads ignore active filters across all Explore tabs",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2313",
+  "summary": "Update the metadata TSVs for all remaining NCTN TCIA studies (Kirby)",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Stephanie Singleton",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-2217",
+  "resolved": "2026-11-12T10:47:24.338-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2312",
+  "summary": "Internal Data Modeling: Update program_short_name",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-1801",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2310",
+  "summary": "CSV export contains only the first 10,000 records",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Bug",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2309",
+  "summary": "Pagination repeats previous page records after the first 10,000 rows",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Bug",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2308",
+  "summary": "Global Search: Participant ID autocomplete does not return suggestions for newly added studies",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": null,
+  "resolved": "2026-11-18T11:05:49.000-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2307",
+  "summary": "Backend: Split Multi-Race Values in Race Facet",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": null,
+  "resolved": "2026-11-06T13:45:37.108-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2306",
+  "summary": "End User can see Age at Enrollment in days",
+  "status": "Closed",
+  "category": "Done",
+  "type": "User Story",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": "2026-11-12T12:40:27.713-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2305",
+  "summary": "Submission Data Modeling: NCI-MATCH-DR-MATCH-0011-AYA-CS",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Patrick Breads",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-2217",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2304",
+  "summary": "Additional CRDC Nodes indicator is missing for studies with image collections",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "millerer"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2296",
+  "summary": "Internal Data Modeling: Update permissible values for specimen_type",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-1801",
+  "resolved": "2026-11-06T13:03:39.865-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2293",
+  "summary": "Backend: Return Available File Types and Total Size for Each Study",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1926",
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2283",
+  "summary": "Backend: Compare MEVAL and Legacy Loader Results",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2277",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2280",
+  "summary": "DevOps: Give MEVAL Prefect Flows Access to CTDC Memgraph and S3",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2277",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2279",
+  "summary": "DevOps: Confirm Memgraph Version",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [],
+  "epic": "CTDC-2277",
+  "resolved": "2026-11-18T11:14:10.000-0500",
+  "points": 2
+ },
+ {
+  "key": "CTDC-2278",
+  "summary": "Add Model-Key Matching to MEVAL",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2277",
+  "resolved": "2026-11-03T16:29:14.037-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2271",
+  "summary": "Backend: Set Up MEVAL for CTDC and Load Test Data in DEV",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2277",
+  "resolved": "2026-11-19T12:35:25.000-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2270",
+  "summary": "Add RAS_PASSPORT_VALIDATION_URL environment variable to File Service",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "flemingme"
+  ],
+  "epic": "CTDC-1764",
+  "resolved": "2026-10-23T14:07:10.889-0400",
+  "points": null
+ },
+ {
+  "key": "CTDC-2265",
+  "summary": "Internal Data Modeling: update primary_disease_site",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-1801",
+  "resolved": "2026-11-02T10:31:29.123-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2262",
+  "summary": "Add REACT_APP_RAS_BROWSER_LOGOUT_URL environment variable to Frontend",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "flemingme"
+  ],
+  "epic": "CTDC-1764",
+  "resolved": "2026-10-23T14:06:43.943-0400",
+  "points": null
+ },
+ {
+  "key": "CTDC-2261",
+  "summary": "DevOps: Update Amazon Aurora RDS Database",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2311",
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2254",
+  "summary": "Deploy 2026 RAS release to CTDC Production",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2295",
+  "resolved": "2026-11-06T12:57:39.302-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2253",
+  "summary": "Deploy 2026 RAS release to CTDC Stage",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2007",
+  "resolved": "2026-10-22T08:36:56.158-0400",
+  "points": null
+ },
+ {
+  "key": "CTDC-2250",
+  "summary": "CTDC Data Submission: CMB TCIA Radiology Images",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Epic",
+  "assignee": "Gina Kuffel",
+  "dev": [],
+  "epic": null,
+  "resolved": "2026-11-04T16:00:17.461-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2243",
+  "summary": "CTDC Data Submission: NCTN AREN0532",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Gina Kuffel",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2241",
+  "summary": "CTDC Data Submission: NCTN AHOD0831",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Stephanie Singleton",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2240",
+  "summary": "CTDC Data Submission: NCTN S0819",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Patrick Breads",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2239",
+  "summary": "CTDC Data Submission: NCTN RTOG-0617",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Gina Kuffel",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2213",
+  "summary": "DevOps: Add Auth Service RAS environment variables for upper tiers",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Yizhen Chen",
+  "dev": [
+   "flemingme"
+  ],
+  "epic": "CTDC-1764",
+  "resolved": "2026-10-27T08:53:46.657-0400",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2212",
+  "summary": "DevOps: Add temporary ALB routing rule for RAS callback to Frontend service for upper tiers",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-1764",
+  "resolved": "2026-10-28T11:38:23.574-0400",
+  "points": 2
+ },
+ {
+  "key": "CTDC-2211",
+  "summary": "FE: Update instances of targeted and non-targeted therapies on Participant Details page to support breaking change",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-2216",
+  "resolved": "2026-11-05T15:11:06.066-0500",
+  "points": 2
+ },
+ {
+  "key": "CTDC-2207",
+  "summary": "Create, Submit, and Index Megazip files for CMB v6",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "kuffelgr"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2206",
+  "summary": "Data Indexing: CMB v6",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "kuffelgr"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2205",
+  "summary": "Data Loading: CMB v6",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2110",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2191",
+  "summary": "Identify and delete the contents of the CTDC CMB Stage bucket",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2215",
+  "resolved": "2026-11-04T13:02:45.725-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2189",
+  "summary": "Reconcile CMB v1 bucket files against the v6 submission",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "kuffelgr"
+  ],
+  "epic": "CTDC-2215",
+  "resolved": "2026-10-27T18:30:57.447-0400",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2187",
+  "summary": "DevOps: Add permanent ALB routing rule for RAS callback to Frontend service",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-2311",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2186",
+  "summary": "Adjust Prefect approach to meet security requirements (CTDC Upper Tiers)",
+  "status": "Resolved",
+  "category": "Done",
+  "type": "User Story",
+  "assignee": "Michael Fleming",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-1900",
+  "resolved": "2026-09-10T14:37:21.544-0400",
+  "points": null
+ },
+ {
+  "key": "CTDC-2184",
+  "summary": "Update Explore page queries for Memgraph compatibility",
+  "status": "On Hold",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "BENTO-2621",
+  "resolved": null,
+  "points": 5
+ },
+ {
+  "key": "CTDC-2183",
+  "summary": "Update indices for Memgraph compatibility",
+  "status": "On Hold",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "BENTO-2621",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2164",
+  "summary": "Bugs from Design QA: Study Files tab in Study Details",
+  "status": "Resolved",
+  "category": "Done",
+  "type": "Bug",
+  "assignee": "Hannah Stogsdill",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-2130",
+  "resolved": "2026-10-21T13:01:44.657-0400",
+  "points": 2
+ },
+ {
+  "key": "CTDC-2157",
+  "summary": "Document RAS Issues and Resolutions",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [],
+  "epic": "CTDC-1764",
+  "resolved": "2026-11-04T15:21:23.086-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2152",
+  "summary": "FE: Update instances of targeted and non-targeted therapies on Explore page to support breaking change",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "tesfatsionnh"
+  ],
+  "epic": "CTDC-2216",
+  "resolved": "2026-11-05T15:01:37.453-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2151",
+  "summary": "Expose the Therapy node and values to queries",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2216",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2132",
+  "summary": "Update Active Data Submission SOP",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Stephanie Singleton",
+  "dev": [
+   "singletonss"
+  ],
+  "epic": "CTDC-1933",
+  "resolved": "2026-11-12T11:22:06.301-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-2131",
+  "summary": "Bugs from Design QA: Study Details",
+  "status": "Resolved",
+  "category": "Done",
+  "type": "Bug",
+  "assignee": "Hannah Stogsdill",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-1994",
+  "resolved": "2026-10-21T13:01:42.407-0400",
+  "points": 2
+ },
+ {
+  "key": "CTDC-2111",
+  "summary": "Submission Data Modeling: CMB v6",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Patrick Breads",
+  "dev": [],
+  "epic": "CTDC-2217",
+  "resolved": "2026-11-12T13:18:40.868-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2110",
+  "summary": "CTDC Data Submission: CMB v6",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Gina Kuffel",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2099",
+  "summary": "Terminate Jenkins AppServer instances in lower and upper tiers",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-1900",
+  "resolved": "2026-11-04T15:51:28.020-0500",
+  "points": 1
+ },
+ {
+  "key": "CTDC-2083",
+  "summary": "Data Loading: NCTN AREN0532",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2243",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2082",
+  "summary": "Data Indexing: NCTN AREN0532",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [],
+  "epic": "CTDC-2243",
+  "resolved": "2026-11-04T09:41:52.000-0500",
+  "points": null
+ },
+ {
+  "key": "CTDC-2079",
+  "summary": "Load the NCTN AHOD0831 study",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2241",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2077",
+  "summary": "Load the NCTN S0819 study",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2240",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2073",
+  "summary": "Load the NCTN RTOG-0617 study",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Eric Miller",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-2239",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-2071",
+  "summary": "Design: Program Details page",
+  "status": "Ready for Review",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "stogsdillhh"
+  ],
+  "epic": "CTDC-2040",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2070",
+  "summary": "Design: Portfolio (Program) page",
+  "status": "Ready for Review",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "stogsdillhh"
+  ],
+  "epic": "CTDC-1922",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2069",
+  "summary": "Backend API: Program Details page",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2040",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2067",
+  "summary": "Backend API: Portfolio page",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1922",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2065",
+  "summary": "End user can view Program Details page",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "User Story",
+  "assignee": "Nathaniel Huang",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-2040",
+  "resolved": null,
+  "points": 3
+ },
+ {
+  "key": "CTDC-2064",
+  "summary": "End user can view Portfolio page",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "User Story",
+  "assignee": "Nathaniel Huang",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-1922",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-2062",
+  "summary": "Data Harmonization page links navigate to incorrect pages",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Bug",
+  "assignee": "Gina Kuffel",
+  "dev": [
+   "kuffelgr"
+  ],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2051",
+  "summary": "Submission Data Modeling: NCI-MATCH Arm Z1D IHC",
+  "status": "On Hold",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Patrick Breads",
+  "dev": [],
+  "epic": "CTDC-2217",
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-2047",
+  "summary": "Submit metadata for TCIA CMB Radiology Images Megazip to DataHub and Load to the CTDC",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "kuffelgr"
+  ],
+  "epic": "CTDC-2250",
+  "resolved": "2026-11-04T16:00:03.284-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-1957",
+  "summary": "Backend: Include a File Manifest in Each Megazip",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1926",
+  "resolved": null,
+  "points": 2
+ },
+ {
+  "key": "CTDC-1955",
+  "summary": "Backend: Document the Megazip API Contract",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "millerer"
+  ],
+  "epic": "CTDC-1926",
+  "resolved": "2026-11-12T13:23:41.219-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-1947",
+  "summary": "Backend: Stream Megazip Files to the Browser as They Are Assembled",
+  "status": "Open",
+  "category": "To Do",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1926",
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-1945",
+  "summary": "Backend: Build File Service Endpoint to Generate Study Megazips by File Type",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1926",
+  "resolved": null,
+  "points": 5
+ },
+ {
+  "key": "CTDC-1926",
+  "summary": "CTDC File Service Dynamic Megazip File Generation",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Nahom Tesfatsion",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": null
+ },
+ {
+  "key": "CTDC-1879",
+  "summary": "Create guide for Prefect workpool maintenance and set up access to resources",
+  "status": "Closed",
+  "category": "Done",
+  "type": "Task",
+  "assignee": "Charles Ngu",
+  "dev": [
+   "nguca"
+  ],
+  "epic": "CTDC-1900",
+  "resolved": "2026-11-04T15:44:00.873-0500",
+  "points": 3
+ },
+ {
+  "key": "CTDC-1868",
+  "summary": "Update BE query for the biospecimenOverview",
+  "status": "Ready for QA Testing",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-1803",
+  "resolved": null,
+  "points": 1
+ },
+ {
+  "key": "CTDC-1799",
+  "summary": "Submission Data Modeling: CIMAC-CIDC",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Task",
+  "assignee": "Patrick Breads",
+  "dev": [
+   "breadsp2"
+  ],
+  "epic": "CTDC-2217",
+  "resolved": null,
+  "points": 5
+ },
+ {
+  "key": "CTDC-1691",
+  "summary": "End User can find a list of specific Participant IDs using an Input Set",
+  "status": "Testing",
+  "category": "In Progress",
+  "type": "User Story",
+  "assignee": "Valentina Epishina",
+  "dev": [
+   "huangn4"
+  ],
+  "epic": "CTDC-2042",
+  "resolved": null,
+  "points": 5
+ },
+ {
+  "key": "CTDC-1666",
+  "summary": "CTDC Data Submission: NCI-MATCH Arm Z1D IHC",
+  "status": "In Progress",
+  "category": "In Progress",
+  "type": "Epic",
+  "assignee": "Stephanie Singleton",
+  "dev": [],
+  "epic": null,
+  "resolved": null,
+  "points": 5
+ },
+ {
+  "key": "CTDC-1521",
+  "summary": "Global Search: Sort global search matches in the order they appear on a page",
+  "status": "Testing",
+  "category": "In Progress",
+  "type": "Bug",
+  "assignee": "Adam Davenport",
+  "dev": [
+   "davenportaw"
+  ],
+  "epic": "CTDC-2232",
+  "resolved": null,
+  "points": 3
+ }
+]

@@ -1,0 +1,484 @@
+{
+  "project": "CTDC",
+  "excludeTypes": [
+    "Epic"
+  ],
+  "ticketsFile": "tickets.sprint35.json",
+  "sprint": {
+    "number": 35,
+    "jiraId": 8950,
+    "goal": "Adoption of MEVAL · Close Migration to PREFECT epic · Release NCTN Studies · Load CMB v6 to Stage",
+    "dateRange": "October 22 – November 11, 2026",
+    "dateRangeShort": "Oct 22 – Nov 11",
+    "startLong": "October 22",
+    "window": {
+      "start": "2026-10-22T09:00:00-04:00",
+      "end": "2026-11-11T17:00:00-05:00"
+    }
+  },
+  "nextSprint": {
+    "number": 36,
+    "jiraId": 9099,
+    "dateRange": "November 12 to December 2, 2026",
+    "total": 74,
+    "inherited": 47
+  },
+  "meeting": {
+    "dayLong": "Friday, November 20, 2026",
+    "dateLong": "November 20, 2026",
+    "dateISO": "2026-11-20",
+    "time": "2:00 PM ET"
+  },
+  "preparedBy": {
+    "name": "Gina Kuffel",
+    "title": "Senior Technical Project Manager",
+    "org": "Frederick National Laboratory for Cancer Research (FNL)",
+    "supporting": "Supporting NCI / CBIIT"
+  },
+  "developerNames": {
+    "millerer": "Eric Miller",
+    "nguca": "Charles Ngu",
+    "kuffelgr": "Gina Kuffel",
+    "stogsdillhh": "Hannah Stogsdill",
+    "flemingme": "Michael Fleming",
+    "breadsp2": "Patrick Breads",
+    "davenportaw": "Adam Davenport",
+    "tesfatsionnh": "Nahom Tesfatsion",
+    "huangn4": "Nathan Huang",
+    "singletonss": "Steph Singleton"
+  },
+  "qaNames": [
+    "Valentina Epishina"
+  ],
+  "agenda": {
+    "subtitle": "60 minutes · review first, design walkthrough, then retro",
+    "total": "60 minutes",
+    "rows": [
+      {
+        "title": "Sprint 35 by the Numbers",
+        "detail": "Story points and tickets, plus the velocity trend",
+        "minutes": "5 min"
+      },
+      {
+        "title": "Goal Scorecard",
+        "detail": "The four Jira sprint goals, scored on what shipped",
+        "minutes": "8 min"
+      },
+      {
+        "title": "Work Type & Who Did the Work",
+        "detail": "What got closed, and by whom",
+        "minutes": "5 min"
+      },
+      {
+        "title": "Carry-Over, Announcements & Data Loading",
+        "detail": "Unfinished work in motion, team announcements, and studies coming in for ingestion",
+        "minutes": "12 min"
+      },
+      {
+        "title": "Design Walkthrough: Program and Program Details Pages",
+        "detail": "Steph Singleton walks through the approved designs",
+        "minutes": "10 min"
+      },
+      {
+        "title": "Retrospective: Liked · Lacked · Learned",
+        "detail": "10 min silent brainstorm, then group and vote",
+        "minutes": "20 min"
+      }
+    ]
+  },
+  "numbers": {
+    "speakerNote": "Status at close comes from Jira changelogs as of the Jira sprint close (Nov 12, 1:42 PM ET). Jira's Velocity Chart shows 34 completed because it does not count the 3 tickets in Resolved status (2186, 2164, 2131: 4 pts); 34 + 4 = 38."
+  },
+  "velocity": {
+    "board": 641,
+    "pulled": "Nov 20, 2026",
+    "sprints": [
+      {
+        "name": "Sprint 29",
+        "committed": 166.5,
+        "completed": 27.5
+      },
+      {
+        "name": "Sprint 30",
+        "committed": 177,
+        "completed": 46.5
+      },
+      {
+        "name": "Sprint 31",
+        "committed": 143.5,
+        "completed": 34
+      },
+      {
+        "name": "Sprint 32",
+        "committed": 127,
+        "completed": 45
+      },
+      {
+        "name": "Sprint 33",
+        "committed": 114,
+        "completed": 22
+      },
+      {
+        "name": "Sprint 34",
+        "committed": 124,
+        "completed": 36
+      },
+      {
+        "name": "Sprint 35",
+        "committed": 112,
+        "completed": 34
+      }
+    ],
+    "scopeCreep": {
+      "summary": "17 tickets added mid-sprint (21 pts) · 4 moved out (8 pts) · net +13",
+      "added": [
+        {
+          "key": "CTDC-2296",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2310",
+          "points": 2
+        },
+        {
+          "key": "CTDC-2321",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2312",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2322",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2314",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2313",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2324",
+          "points": 0.5
+        },
+        {
+          "key": "CTDC-2305",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2316",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2304",
+          "points": 2
+        },
+        {
+          "key": "CTDC-2315",
+          "points": 2
+        },
+        {
+          "key": "CTDC-2307",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2306",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2309",
+          "points": 3
+        },
+        {
+          "key": "CTDC-2308",
+          "points": 1
+        },
+        {
+          "key": "CTDC-2347",
+          "points": 0.5
+        }
+      ],
+      "reestimated": [],
+      "unpointedAdded": [
+        "CTDC-2191"
+      ],
+      "removed": [
+        {
+          "key": "CTDC-1951",
+          "points": 2
+        },
+        {
+          "key": "CTDC-1953",
+          "points": 2
+        },
+        {
+          "key": "CTDC-2048",
+          "points": 2
+        },
+        {
+          "key": "CTDC-2050",
+          "points": 2
+        }
+      ]
+    },
+    "points": [
+      {
+        "title": "Completed is steady at about 35 pts",
+        "detail": "Seven-sprint average 35; last three 22, 36, 34"
+      },
+      {
+        "title": "Commitment is down 37% since Sprint 30",
+        "detail": "177 pts then, 112 now: closer to what we finish"
+      },
+      {
+        "title": "Mid-sprint adds were mostly CMB v6 fixes",
+        "detail": "QA bugs on CMB v6 plus the 10,000-row export issues"
+      }
+    ],
+    "note": "Sprint Report: CTDC-2297 and CTDC-2325 were added and removed again (no net effect). CTDC-2347 is a sub-task, which Jira's Sprint Report does not list; it is counted as added here so start plus creep reconciles to 125."
+  },
+  "scorecard": {
+    "subtitle": "",
+    "bottomLine": "Every goal moved, none fully landed by close. Model-key matching, the Jenkins teardown and the CMB Stage bucket cleanup closed; the MEVAL DEV load, four NCTN loads and the CMB v6 load were still in flight."
+  },
+  "goals": [
+    {
+      "status": "partial",
+      "title": "Adoption of MEVAL",
+      "detail": "Model-key matching closed Nov 3. MEVAL setup and the first DEV test load were in progress at close; the legacy loader comparison and Prefect access had not started.",
+      "refs": "CTDC-2278 closed · 2271 · 2283 · 2280"
+    },
+    {
+      "status": "partial",
+      "title": "Close the Migration to Prefect epic",
+      "detail": "All remaining child work closed: Jenkins AppServers terminated in every tier and the Prefect workpool guide written (Nov 4). The epic itself is still open.",
+      "refs": "CTDC-2099 · 1879 closed"
+    },
+    {
+      "status": "partial",
+      "title": "Release NCTN Studies",
+      "detail": "Loads for RTOG-0617, S0819, AHOD0831 and AREN0532 were in progress at close. AREN0532 indexing and the TCIA metadata TSVs closed; the program-name correction was still in progress.",
+      "refs": "CTDC-2073 · 2077 · 2079 · 2083 · 2313"
+    },
+    {
+      "status": "partial",
+      "title": "Load CMB v6 to Stage",
+      "detail": "Stage bucket cleared and v1 files reconciled; therapy breaking-change frontend work closed. The CMB v6 load and image collection were on QA at close, not yet on Stage.",
+      "refs": "CTDC-2191 · 2189 · 2152 closed · 2205 · 2324"
+    }
+  ],
+  "workType": {
+    "points": [
+      {
+        "tone": "blue",
+        "title": "Tasks carried the sprint: 23 of 54 closed",
+        "detail": "RAS upper-tier variables and the Prod deploy, Jenkins teardown, CMB bucket reconciliation, therapy breaking-change frontend work and three data model updates."
+      },
+      {
+        "tone": "blue",
+        "title": "Bugs: 2 of 11 closed",
+        "detail": "Both Study Details design QA bugs closed. Most bugs arrived mid-sprint from CMB v6 QA and the 10,000-row export issue."
+      },
+      {
+        "tone": "blue",
+        "title": "User stories: 2 of 6 closed",
+        "detail": "Age at Enrollment in days shipped. Portfolio, Program Details, Input Set and Best Response stories carry into Sprint 36."
+      }
+    ]
+  },
+  "team": {
+    "awards": [
+      {
+        "dev": "nguca",
+        "emoji": "🧹",
+        "award": "Jenkins Slayer",
+        "reason": "Jenkins teardown, RAS Prod deploy"
+      },
+      {
+        "dev": "flemingme",
+        "emoji": "🔑",
+        "award": "Keymaster",
+        "reason": "RAS variables on every upper tier"
+      },
+      {
+        "dev": "breadsp2",
+        "emoji": "🧬",
+        "award": "Model Citizen",
+        "reason": "Data model updates, NCTN TSVs"
+      },
+      {
+        "dev": "huangn4",
+        "emoji": "🎯",
+        "award": "Design QA Closer",
+        "reason": "Study Details bugs, therapy FE"
+      },
+      {
+        "dev": "tesfatsionnh",
+        "emoji": "💊",
+        "award": "Therapy Whisperer",
+        "reason": "Explore therapies, Age in days"
+      },
+      {
+        "dev": "millerer",
+        "emoji": "⚙️",
+        "award": "MEVAL Pioneer",
+        "reason": "Model-key matching, megazip API"
+      },
+      {
+        "dev": "kuffelgr",
+        "emoji": "🪣",
+        "award": "Bucket Reconciler",
+        "reason": "CMB v1 to v6 file reconciliation"
+      },
+      {
+        "dev": "davenportaw",
+        "emoji": "🧩",
+        "award": "Facet Fixer",
+        "reason": "Multi-race values split in Race"
+      },
+      {
+        "dev": "singletonss",
+        "emoji": "📘",
+        "award": "SOP Author",
+        "reason": "Active Data Submission SOP"
+      },
+      {
+        "name": "Valentina Epishina",
+        "emoji": "🧪",
+        "award": "QA Gatekeeper",
+        "stat": "11 tickets closed",
+        "reason": "The QA gate on nearly every ticket"
+      }
+    ],
+    "creditNote": "Credit comes from the Jira Developer field (customfield_23650): the person who did the work. The Assignee is usually whoever moved the ticket to Closed, often QA, so it is not charted. A ticket with two developers counts for each; coordination work such as IndexD registration has no Developer by design (2157, 2111, 2082)."
+  },
+  "carry": {
+    "bigNote": "",
+    "facts": [
+      {
+        "title": "20 were in progress at close",
+        "detail": "MEVAL DEV setup, four NCTN loads, the megazip endpoint, and the Program page APIs and frontend stories."
+      },
+      {
+        "title": "10 were waiting on QA at close",
+        "detail": "CMB v6 load and image collection, therapy query exposure and the Aurora RDS update."
+      },
+      {
+        "title": "Program pages are ready to build",
+        "detail": "Both designs were in review at close; the backend APIs and frontend stories were in progress."
+      }
+    ]
+  },
+  "demos": [
+    {
+      "title": "Program and Program Details Pages",
+      "why": "A new way into CTDC: browse by program, then see a program's studies, videos and materials on one page",
+      "minutes": 10,
+      "presenters": [
+        {
+          "role": "Presenter",
+          "name": "Steph Singleton",
+          "focus": "Walks the team through the approved designs, from the new Portfolio entry in the navigation to a program's detail page."
+        },
+        {
+          "role": "Designer",
+          "name": "Hannah Stogsdill",
+          "focus": "Designed both pages and every state: loading, error, empty, and cards with no image, link or description."
+        }
+      ],
+      "see": [
+        "A Portfolio entry in the top navigation, left of Studies",
+        "One card per program, plus an Initiatives card for studies with no program, such as CMB",
+        "Program Details: description, host videos, program materials and the program's studies",
+        "Studies list rows that open Study Details, and a breadcrumb back to Portfolio",
+        "What's next: backend APIs and frontend stories for both pages are underway"
+      ],
+      "tickets": "CTDC-2070 · CTDC-2071",
+      "notes": "Initiatives is a working label until NCI defines it. Host videos stay on external platforms. Modeled on the ICDC Programs page; the CTDC design system governs where they differ."
+    }
+  ],
+  "retro": {
+    "boardUrl": "https://retrotool.io/L8TfIQXCnF94aenl52lQq",
+    "timingNote": "Sprint 36 started November 12 and runs to December 2. Action items from today either go into the sprint already in flight or wait for Sprint 37 planning. Decide which as we assign each one.",
+    "liked": "Model-key matching landed, Jenkins is gone from every tier, and the CMB Stage bucket was cleared and reconciled. Say what made those go well.",
+    "lacked": "Every goal moved but none fully landed by close, and CMB v6 bugs arrived mid-sprint. Name the real cause.",
+    "learned": "Anything about MEVAL, the CMB v6 QA loop, or moving a study from load to release."
+  },
+  "horizon": {
+    "title": "Data Loading on the Horizon",
+    "subtitle": "New study data whose release packages are coming to CTDC for loading",
+    "rows": [
+      {
+        "stage": "NEXT UP",
+        "study": "NCI-MATCH Arm Z1D IHC",
+        "coming": "MMR-deficient tumors treated with nivolumab: clinical data and files",
+        "status": "Metadata update in progress; loading and indexing tasks ready",
+        "epic": "CTDC-1666"
+      },
+      {
+        "stage": "NEXT UP",
+        "study": "NCI-MATCH DR-0029 Screening Data",
+        "coming": "Open-access, participant-level pre-screening clinical data",
+        "status": "Metadata TSVs in progress; loading task ready",
+        "epic": "CTDC-1865"
+      },
+      {
+        "stage": "FURTHER OUT",
+        "study": "CIMAC-CIDC 18-279",
+        "coming": "Melanoma vaccine trial: clinical, proteomics and imaging data",
+        "status": "Submission data modeling in progress",
+        "epic": "CTDC-1804"
+      },
+      {
+        "stage": "FURTHER OUT",
+        "study": "CIMAC-CIDC GU16-257",
+        "coming": "Bladder cancer trial, including controlled-access proteomics",
+        "status": "Submission data modeling in progress",
+        "epic": "CTDC-2251"
+      },
+      {
+        "stage": "FURTHER OUT",
+        "study": "NCI-MATCH DR-0011_AYA",
+        "coming": "Correlative study, to explore and download",
+        "status": "Kickoff materials done; data modeling started",
+        "epic": "CTDC-2030"
+      }
+    ],
+    "note": "From the open CTDC Data Submission epics in Jira as of November 20, 2026. NCTN megazips and the on-hold NCTN studies are not listed."
+  },
+  "announcements": [
+    {
+      "label": "CMB V6",
+      "title": "CMB v6 is on QA, headed to Stage",
+      "detail": "The CMB v6 data load and image collection were on QA at close, with megazip creation and indexing finishing up. CMB v6 data releases together with the therapy breaking-change code.",
+      "nextStep": "QA sign-off, then promotion to Stage."
+    },
+    {
+      "label": "THERAPY UI",
+      "title": "Best Response ships in two steps: first iteration now, final state in progress",
+      "detail": "First iteration, shipping with CMB v6: a Best Response facet and a Participants table column on the Explore Dashboard. Final state, in progress: best response shown on the therapy that produced it, in a Therapies tab with Filter by Therapies facets.",
+      "nextStep": "The first iteration goes out with the CMB v6 release; the final state replaces it in a later release."
+    },
+    {
+      "label": "BUG FIXES",
+      "title": "Fixes for exports past 10,000 rows are in progress",
+      "detail": "CSV export stopped at the first 10,000 records and pagination repeated rows after that. Both bugs came in mid-sprint and Nahom is working them in Sprint 36.",
+      "nextStep": "Nahom shares a fix date with the team."
+    },
+    {
+      "label": "MEVAL",
+      "title": "MEVAL's next steps: legacy comparison and Prefect access",
+      "detail": "The first DEV test load was in progress at close. Comparing MEVAL against the legacy loader and giving its Prefect flows access to Memgraph and S3 come next.",
+      "nextStep": "Eric owns the comparison; Charles owns Prefect access."
+    },
+    {
+      "label": "SPRINT 36",
+      "title": "Sprint 36 is 64% carry-over",
+      "detail": "47 of its 74 tickets carried from Sprint 35, including 8 pts of Memgraph compatibility work on hold, so there is limited room for new work.",
+      "nextStep": "We check what new work still fits at the Sprint 36 midpoint."
+    }
+  ]
+}
