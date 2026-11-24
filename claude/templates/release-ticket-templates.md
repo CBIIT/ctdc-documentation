@@ -82,9 +82,13 @@ One per release.
 * *Assignee*: TPM (`kuffelgr`)
 * *Labels*: the current release-line label (for example `Task-1.3`)
 
-**Body**: four sections (🎯 Design QA Summary · 🔎 Findings · 🚦 Workflow · ✅ Definition of Done), Jira wiki markup:
+**Card line first.** Line 1 of the body is the card line: one plain sentence, 140 characters or fewer, no markup, emoji, or ticket keys, followed by one blank line and then the 🎯 heading. Name the release the same way the epic Summary does. Example (CTDC-2130): *"Final design and 508 accessibility review of features built in the 2026 Q4 release cycle, before promotion to Stage."*
+
+**Body**: card line, then four sections (🎯 Design QA Summary · 🔎 Findings · 🚦 Workflow · ✅ Definition of Done), Jira wiki markup:
 
 ```
+Final design and 508 accessibility review of features built in the <YYYY> Q<N> release cycle, before promotion to Stage.
+
 h3. 🎯 *Design QA Summary*
 Conduct a thorough final design review of every new feature and page implemented during this release cycle, verifying design fidelity and Section 508 accessibility compliance before the release candidate is promoted to Stage.
 
@@ -209,6 +213,7 @@ At the start of each fiscal year, create the new standing release epic before th
 
 ## Changelog
 
+- **v8.2 (2026-11-24)**: Final Design QA epic gains the card line (line 1 of the body), the rule every CTDC epic already follows and CTDC-2130 already carries. The v8.1 change added it to the standing release epic only, so the Final Design QA body block was missing it.
 - **v8.1 (2026-11-02)**: Standing release epic gains a card line (line 1 of the body), matching ICDC. CTDC releases stay quarterly.
 - **v8 (2026-10-22)**: One standing release epic per federal fiscal year, matching ICDC: `CTDC Quarterly Releases - FY<YY>` (FY27 is CTDC-2295). The permanent epic CTDC-2007 is closed; its one open child, CTDC-2254, moved to CTDC-2295. Recorded where Release Dashboards live. Deployment verification now checks the `/#/sysinfo` page against the Release Dashboard versions, as CTDC-2254 already did, matching ICDC's version check.
 - **v7.1 (2026-10-22)**: Named the Deployment Package task's default Assignee and Developer: Tech Lead Nahom Tesfatsion (`tesfatsionnh`), matching how ICDC names its tech lead.
