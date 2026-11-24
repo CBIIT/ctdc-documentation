@@ -2,7 +2,7 @@
 
 > **Use this template for the GitHub release notes of every CTDC software release, quarterly or feature-specific (for example the RAS release).** The notes are published as the body of a GitHub release at `https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`. Companion: the Software Release Playbook (`../workflows/software-release-playbook.md`), Phase 8, step 4. Release tickets have their own spec in `release-ticket-templates.md`.
 >
-> Canonical CTDC example: **CTDC v.1.5.0** (tag `1.5.0.8`, the RAS feature release, October 2026).
+> Canonical CTDC example: **CTDC v.1.5.0** (tag `1.5.0.8`, the RAS feature release, October 2026), the last release titled by Frontend version; releases from 2027 Q1 are titled by release name.
 
 **Why this template**
 
@@ -29,9 +29,11 @@ Every line must be traceable to work that actually shipped. The scope comes from
 
 ## GitHub release fields
 
-* *Release title*: `CTDC v.<major>.<minor>.<patch>` (for example `CTDC v.1.5.0`).
-* *Tag*: the Frontend gamma version, `<major>.<minor>.<patch>.<build>` (for example `1.5.0.8`).
-* *Target*: `main`, after Engineering has merged and tagged the release candidate (Playbook Phase 8, steps 1 and 2).
+* *Release title*: the release name, the same as its Jira Fix Version: `CTDC <YYYY> Q<N>` for a scheduled release, `CTDC <YYYY> Q<N> Hotfix` for a hotfix release (`CTDC <YYYY> Q<N> Hotfix 2` for a second hotfix in the same quarter).
+* *Tag*: a new tag created with the release, from the release name: `release-<yyyy>-q<n>`, `release-<yyyy>-q<n>-hotfix`, or `release-<yyyy>-q<n>-hotfix-2`. Example: `release-2027-q1` for `CTDC 2027 Q1`.
+* *Target*: the `main` commit that went to Production (the commit carrying the Frontend's gamma tag), after Engineering has merged and tagged the release candidate (Playbook Phase 8, steps 1 and 2).
+* *Why the release name, not a version number*: the release is the whole Deployment Package, not the Frontend. A release that does not change the Frontend has no new Frontend version to use as a title or tag, so naming the release after the Frontend collides with the release before it. The release name matches the Jira Fix Version and the Release Dashboard, and every microservice version stays in Build Details.
+* *Earlier releases* keep the titles and tags they were published with.
 
 ---
 
@@ -122,5 +124,6 @@ A Bug Fix that resolves an earlier release's Known Limitation says so: "This res
 
 ## Changelog
 
+- **v2.1 (2026-11-24)**: GitHub releases are titled and tagged by release name (`CTDC <YYYY> Q<N>`, tag `release-<yyyy>-q<n>`; hotfix releases add `Hotfix` and `-hotfix`), matching the Jira Fix Version, instead of by Frontend version. Release notes stay on `CBIIT/crdc-ctdc-starter-kit`. ICDC changed in lockstep (v2.1).
 - **v2 (2026-11-24)**: Scope is one release-level Fix Version (`CTDC <YYYY> Q<N>` or `CTDC <YYYY> Q<N> Hotfix`) instead of one per microservice; Build Details come from `versions.yaml` in CTDC's deployment repository at the deployed package's tag; the hygiene cross-check compares changed microservice versions with the pull requests of tickets in the Fix Version; the version-merge check is replaced by marking the Fix Version Released. ICDC changed in lockstep (v2).
 - **v1 (2026-10-23)**: Initial template, derived from the CTDC v.1.5.0 RAS release notes. Adds the scope-derivation steps (Fix Version JQL excluding test artifacts, code verification, hygiene cross-check), GitHub release fields, body skeleton with six sections, section rules, house style, and a pre-publish check.

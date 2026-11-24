@@ -133,7 +133,7 @@ Not every component bumps every release; the dashboard **Release Info** tab reco
 
 **Release Info tab fields:** Expected Production Release Date · Build Date · Release Package Number · FE/BE/File Service/Auth/Interoperation versions · OpenSearch backup version · DMN Standalone · DMN Core · Release Blockers Identified · Regression Test Status on QA.
 
-**Where release notes live:** the release's Fix Version is the scope of the notes, published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**, written from the [Release Notes Template](../templates/release-notes-template.md).
+**Where release notes live:** the release's Fix Version is the scope of the notes, titled and tagged by release name (`CTDC <YYYY> Q<N>`, `release-<yyyy>-q<n>`), not by Frontend version, and published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**, written from the [Release Notes Template](../templates/release-notes-template.md).
 
 ---
 
@@ -316,11 +316,11 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 
 - Technical Lead designates a **`hotfix_branch`** based on **`main`** (not `develop`).
 - **Version**: each microservice the hotfix changes takes the next patch number of the version **running in Production**: `x.y.z` becomes `x.y.(z+1)`. Microservices the hotfix does not change keep their versions. Example: with a microservice at `1.3.0.31` in Production, its hotfix ships as `1.3.1.<build>`.
-- **Never ship a hotfix by bumping only the build number.** A build-only bump hides the change: the release notes title collides with the release it patched, and the version page cannot tell the hotfix apart from that release.
+- **Never ship a hotfix by bumping only the build number.** A build-only bump hides the change: the version page and the Build Details cannot tell the hotfix apart from the release it patched.
 - **Jira Fix Version**: the TPM creates one Fix Version for the hotfix release, `CTDC <YYYY> Q<N> Hotfix` (add ` 2` for a second hotfix in the same quarter), and the hotfix tickets are stamped with it, not with the next scheduled release's Fix Version.
 - On completion, merge into **both `main` and `develop`**; tag `main` with `x.y.(z+1)`. `develop` stays on its own minor line, so the merge does not change its version.
 - DevOps deploys up the ladder (fast-tracked) with QA smoke verification.
-- **Release notes**: a hotfix release gets its own GitHub release notes from the Release Notes Template (`claude/templates/release-notes-template.md`), published before the next scheduled release's notes.
+- **Release notes**: a hotfix release gets its own GitHub release notes from the Release Notes Template (`claude/templates/release-notes-template.md`), titled `CTDC <YYYY> Q<N> Hotfix` and tagged `release-<yyyy>-q<n>-hotfix`, published before the next scheduled release's notes.
 - A hotfix is **not** a rollback: it rolls the fix *forward*. Use Rollback & Recovery only when a bad deploy must be reverted.
 
 ---
@@ -420,3 +420,4 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 | v10 | Scope table updated for the RAS release (v1.5.0): Auth is now NIH RAS login (no longer Fence-brokered OAuth2), and File Service authorizes controlled-access downloads with the RAS Passport through DCF. Added the Release Notes Template (`claude/templates/release-notes-template.md`) and linked it from Scope, Artifacts, and Phase 8. | Gina Kuffel |
 | v11 (2026-11-24) | Version rules added to Semantic Versioning (kept in lockstep with ICDC playbook v2): each quarterly release opens the next minor line on `develop`; patch numbers on a released line are reserved for release-blocker fixes and hotfixes; every Production deployment changes at least the patch; unchanged microservices keep their version. Hot Fixes now covers per-microservice patch numbering, no build-only bumps, a `fix_version` per hotfix version, and release notes for every hotfix release. Gitflow gains the next-cycle step. Lesson learned from ICDC's August 2026 hotfix, which shipped as build-only bumps. | Gina Kuffel |
 | v12 (2026-11-24) | One Jira Fix Version per Production release (`CTDC <YYYY> Q<N>`, `CTDC <YYYY> Q<N> Hotfix`), created by the TPM in Phase 0 and marked Released at close-out; replaces per-component and per-build `fix_version`s and the version merge. Microservice versions live in git tags, the version page, and the deployment package's `versions.yaml`; the Deployment Package Number is not a Jira version. Jira Mechanics, Artifacts, Gitflow, Phase 0, Phase 8, T-minus, Hot Fixes, and Glossary updated. Kept in lockstep with ICDC playbook v3. | Gina Kuffel |
+| v12.1 (2026-11-24) | GitHub release notes titled and tagged by release name (`CTDC <YYYY> Q<N>`, `release-<yyyy>-q<n>`; hotfix releases `CTDC <YYYY> Q<N> Hotfix`, `release-<yyyy>-q<n>-hotfix`) instead of by Frontend version. Kept in lockstep with ICDC playbook v3.1. | Gina Kuffel |
