@@ -111,10 +111,11 @@ project = CTDC AND sprint in openSprints() AND assignee is EMPTY AND status != D
 project = CTDC AND sprint in openSprints() AND status in ("In Review", "QA", "Testing")
 ```
 
-### Release Tickets by fixVersion (multi-version releases)
+### Release Tickets by Fix Version (one per release)
 ```
-project = CTDC AND fixVersion in ("CTDC FE 1.3.0.3", "CTDC BE 1.3.0.1", "DMN Core 1.11.0", "DMN Standalone 1.2.0")
+project = CTDC AND fixVersion = "CTDC <YYYY> Q<N>" AND issuetype not in ("Test", "Test Set", "Test Execution")
 ```
+Releases through 2026 used one Fix Version per component (for example `CTDC FE 1.3.0.3`); query those with `fixVersion in (...)` when looking back.
 
 ---
 
@@ -291,7 +292,7 @@ Run these checks before each standup:
 **Also verify before building:**
 - **Sprint name**: the sprint being reviewed is NOT the active sprint (active = next one). Use `GET /rest/agile/1.0/board/641/sprint` to confirm dates match the meeting date.
 - **Ticket counts per metric** — total, done, carry-over, by status, by type, by assignee. All should sum correctly.
-- **Release scope** — cross-reference GitHub release notes against Jira `fixVersion` query. Gaps reveal tagging hygiene issues.
+- **Release scope**: one Fix Version per Production release (`CTDC <YYYY> Q<N>`, `CTDC <YYYY> Q<N> Hotfix`). Cross-reference the release notes against that Fix Version and the microservice versions against the package's `versions.yaml`. Gaps reveal tagging hygiene issues.
 
 ---
 
@@ -325,8 +326,8 @@ Credit the builder from the Developer field (`customfield_23650`, first listed),
 
 ### 🚀 Release Scope (if a release shipped in this sprint)
 - Versions shipped (FE, BE, File Service, Auth, Interoperation, DMN Core, DMN Standalone)
-- Tickets by fixVersion
-- Data gaps worth naming (versions without Jira tickets; tickets shipped without fixVersion tags)
+- Tickets in the release's Fix Version
+- Data gaps worth naming (a changed microservice version with no ticket pull request in that repository; tickets shipped without the release Fix Version)
 
 ### ✅ Completed Work
 [table: key | summary | type | assignee]
@@ -879,25 +880,25 @@ Before declaring a release "ready to announce," verify these Jira/GitHub hygiene
 
 ### 13a. Pre-Release Checklist
 
-- [ ] **Every shipped ticket has a `fixVersion` tag.** Cross-reference: tickets in the release branch but missing `fixVersion` tags get surfaced in JQL gap queries (see 13b below).
+- [ ] **Every shipped ticket carries the release's Fix Version, and only that release's.** Tickets in the release branch but missing it get surfaced in JQL gap queries (see 13b below); a slipped ticket is moved to the next release's Fix Version, not left on both.
 - [ ] **Every shipped ticket has the Developer field populated** (`customfield_23650`). Empty Developer fields on shipped work are a signal something slipped past the workflow gate.
-- [ ] **Every versioned component has its own Jira fixVersion.** If FE / BE / File Service / Auth / Interoperation / DMN Core / DMN Standalone all shipped new versions, each one should exist as a fixVersion in Jira with tickets tagged.
-- [ ] **Cross-reference GitHub release notes against fixVersion queries.** If GitHub says "File Service 1.1.0.109 shipped" but the Jira query for `fixVersion = "File Service 1.1.0.109"` returns zero tickets, surface the gap — either the version bump was pure infra (document as such) or tagging is slipping.
+- [ ] **Every changed component traces to tickets.** For each microservice whose version changed in `versions.yaml` since the last Production package, at least one ticket in the release's Fix Version has a pull request in that repository. If File Service moved to a new version but no ticket's pull request is in the File Service repository, surface the gap: either the bump was infrastructure-only (document it as such) or tagging is slipping.
+- [ ] **Cross-reference the GitHub release notes against the Fix Version query** and the Build Details against `versions.yaml` at the deployed package's tag.
 - [ ] **Verify all release tickets resolve to confirmed developers via the Developer field (not just the Assignee).** The Assignee on a shipped ticket is often the QA who closed it, not the dev who built it. Use the Developer field for demo attribution.
 
 ### 13b. Gap-Finder JQL Queries
 
-**Tickets in the release-associated epic that are closed but have no fixVersion:**
+**Tickets in the release-associated epic that are closed but have no Fix Version:**
 ```
 project = CTDC AND "Epic Link" = CTDC-XXXX AND status = Closed AND fixVersion is EMPTY
 ```
 
-**Tickets with a release fixVersion but no Developer field set:**
+**Tickets with the release Fix Version but no Developer field set:**
 ```
-project = CTDC AND fixVersion = "CTDC FE 1.3.0.3" AND "Developer" is EMPTY
+project = CTDC AND fixVersion = "CTDC <YYYY> Q<N>" AND "Developer" is EMPTY
 ```
 
-**Tickets tied to the user story of a shipped feature but not tagged with the release fixVersion (catches the CTDC-1670 class of miss):**
+**Tickets tied to the user story of a shipped feature but not tagged with the release Fix Version (catches the CTDC-1670 class of miss):**
 ```
 project = CTDC AND "Epic Link" = CTDC-1650 AND status = Closed AND fixVersion is EMPTY
 ```

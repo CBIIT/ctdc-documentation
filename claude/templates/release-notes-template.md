@@ -8,21 +8,21 @@
 
 Release notes are the public record of what a release changed for CTDC users and for the other Bento-based data commons. They are read by researchers, federal leadership, and the CRDC communications team, so they describe outcomes in plain language rather than tickets or code.
 
-Every line must be traceable to work that actually shipped. The scope comes from the release's Jira Fix Versions, and each claim is checked against the merged code, not only the ticket title: ticket summaries are often thin, and a claim nobody can trace back is a claim that may be wrong.
+Every line must be traceable to work that actually shipped. The scope comes from the release's Jira Fix Version (one per release), and each claim is checked against the merged code, not only the ticket title: ticket summaries are often thin, and a claim nobody can trace back is a claim that may be wrong.
 
 ---
 
 ## Deriving the scope
 
-1. Confirm the Deployment Package on the Release Dashboard: the version of every microservice in the release. These versions fill the Build Details table.
-2. Pull every shipped ticket with one JQL query across the release's Fix Versions, excluding test artifacts:
+1. Confirm the Deployment Package on the Release Dashboard. The version of every microservice comes from `versions.yaml` in CTDC's deployment repository at the deployed package's tag; these versions fill the Build Details table.
+2. Pull every shipped ticket with one JQL query on the release's Fix Version, excluding test artifacts:
 
    ```
-   project = CTDC AND fixVersion in ("CTDC FE <x.y.z.b>", "CTDC Auth Service <x.y.z.b>", "CTDC File Service <x.y.z.b>", ...) AND issuetype not in ("Test", "Test Set", "Test Execution") ORDER BY key ASC
+   project = CTDC AND fixVersion = "CTDC <YYYY> Q<N>" AND issuetype not in ("Test", "Test Set", "Test Execution") ORDER BY key ASC
    ```
 
 3. For each ticket, confirm what shipped against the merged pull requests on the release branch. When a ticket's description is empty or a pull request changed the scope, the code wins.
-4. Run the Release Tagging Hygiene Checklist (SKILL.md §13): a microservice version in Build Details with no tagged tickets is either an infrastructure-only bump (fine, no bullet) or a tagging gap to fix before publishing.
+4. Run the Release Tagging Hygiene Checklist (SKILL.md §13): a microservice whose version changed since the last Production package, but whose repository has no pull request from a ticket in the Fix Version, is either an infrastructure-only bump (fine, no bullet) or a tagging gap to fix before publishing.
 5. List open bugs against features in this release; they become Known Limitations.
 
 ---
@@ -115,10 +115,12 @@ A Bug Fix that resolves an earlier release's Known Limitation says so: "This res
 * Every Build Details version matches the Release Dashboard and the `/#/sysinfo` page on Production.
 * Every bullet traces to a ticket in the Fix Version query and to merged code.
 * No empty sections, no placeholders, no Jira keys.
-* The TPM has merged the internal-release Fix Versions in Jira into the final release version (Playbook Phase 8, step 4).
+* Every Build Details version matches `versions.yaml` at the deployed package's tag.
+* The TPM has marked the release's Fix Version Released in Jira (Playbook Phase 8, step 4).
 
 ---
 
 ## Changelog
 
+- **v2 (2026-11-24)**: Scope is one release-level Fix Version (`CTDC <YYYY> Q<N>` or `CTDC <YYYY> Q<N> Hotfix`) instead of one per microservice; Build Details come from `versions.yaml` in CTDC's deployment repository at the deployed package's tag; the hygiene cross-check compares changed microservice versions with the pull requests of tickets in the Fix Version; the version-merge check is replaced by marking the Fix Version Released. ICDC changed in lockstep (v2).
 - **v1 (2026-10-23)**: Initial template, derived from the CTDC v.1.5.0 RAS release notes. Adds the scope-derivation steps (Fix Version JQL excluding test artifacts, code verification, hygiene cross-check), GitHub release fields, body skeleton with six sections, section rules, house style, and a pre-publish check.

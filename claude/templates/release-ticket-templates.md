@@ -27,7 +27,7 @@ The release tickets are created by the TPM with their structure and links in pla
 | Item | Owner | Where it lives |
 |---|---|---|
 | Ticket structure, Release Dashboard link, issue links | TPM | Each release ticket (at creation) |
-| Fix Versions | Developers | Their own story, bug, and finding tickets, never the release tickets |
+| Release Fix Version (`CTDC <YYYY> Q<N>`, `CTDC <YYYY> Q<N> Hotfix`) | TPM creates it; developers apply it | Their own story, bug, and finding tickets, never the release tickets |
 | Microservice versions and Deployment Package Number | Tech lead, through the Deployment Package task | The Release Dashboard, never the tickets |
 | Service Now Cloud One Ticket Link | DevOps engineer | Each deployment task's Tracking table |
 | Deployment dates | TPM | The Release Dashboard, never the tickets |
@@ -58,7 +58,7 @@ h3. 📅 *Cadence*
 * *Hotfix release*: an out-of-band release with its own Deployment Package and deployment tasks when a fix cannot wait for the next scheduled release.
 
 h3. 📦 *Release Scope*
-Each release's contents are its Jira Fix Versions, applied by developers on their own tickets. This epic holds only the release tasks.
+Each release's contents are its one Jira Fix Version (CTDC <YYYY> Q<N> or CTDC <YYYY> Q<N> Hotfix), applied by developers on their own tickets. This epic holds only the release tasks.
 
 h3. 🗂️ *Release Dashboards*
 * *Location*: {{CTDC Software Development / CTDC Software Releases / CTDC Release Dashboards}} on the NCI-CBIIT-FNL-CTDC SharePoint site, one dashboard per release.
@@ -136,13 +136,13 @@ Identify the version of every microservice shipping in the <YYYY> Q<N> software 
 * *Release Dashboard*: [CTDC <YYYY> Q<N> Release Dashboard|<Release Dashboard URL>]
 
 h3. 🚦 *Workflow*
-# Confirm the release's Fix Versions are complete for every microservice in the release.
-# Record the version of every microservice in the release on the Release Dashboard.
+# Confirm every ticket in the release's Fix Version is closed or has been moved to the next release's Fix Version.
+# Record the version of every microservice in the release on the Release Dashboard, as pinned in the package's versions.yaml.
 # Record the Deployment Package Number on the Release Dashboard.
 
 h3. ✅ *Definition of Done*
 * *Versions*: the version of every microservice in the release is recorded on the Release Dashboard.
-* *Fix Versions*: each recorded version matches that microservice's Fix Version for the release.
+* *Fix Version*: every ticket in the release's Fix Version is closed or moved to the next release.
 * *Deployment Package*: the Deployment Package Number is recorded on the Release Dashboard.
 ```
 
@@ -201,11 +201,12 @@ h3. ✅ *Definition of Done*
 
 ## Creating each release's tickets
 
-1. Create the Final Design QA epic, the Deployment Package task, and the Stage and Production tasks, each with a placeholder body; then `PUT /rest/api/2/issue/<KEY>` each with the body above and labels. Leave Due Date empty.
-2. On the three tasks, set the epic link (`customfield_12350` to the fiscal year's release epic) and Developer (`customfield_23650`), and confirm both with `GET /rest/api/2/issue/<KEY>`.
-3. Swap `<YYYY> Q<N>` and `<Stage | Production>` in the summaries and bodies, resolve the two `[Production only: ...]` phrases (keep the words on Production, delete them on Stage), and paste the release's Release Dashboard link. The Release Dashboard must always be linked; a release task without one is incomplete.
-4. Link the Deployment Package task "Blocks" the Stage task and "Blocks" the Production task, and the Stage task "Blocks" the Production task.
-5. Open all four tickets in the Jira UI and confirm they render.
+1. Create the release's Jira Fix Version (`CTDC <YYYY> Q<N>`, or `CTDC <YYYY> Q<N> Hotfix` for a hotfix release) with no dates, if it does not exist yet.
+2. Create the Final Design QA epic, the Deployment Package task, and the Stage and Production tasks, each with a placeholder body; then `PUT /rest/api/2/issue/<KEY>` each with the body above and labels. Leave Due Date empty.
+3. On the three tasks, set the epic link (`customfield_12350` to the fiscal year's release epic) and Developer (`customfield_23650`), and confirm both with `GET /rest/api/2/issue/<KEY>`.
+4. Swap `<YYYY> Q<N>` and `<Stage | Production>` in the summaries and bodies, resolve the two `[Production only: ...]` phrases (keep the words on Production, delete them on Stage), and paste the release's Release Dashboard link. The Release Dashboard must always be linked; a release task without one is incomplete.
+5. Link the Deployment Package task "Blocks" the Stage task and "Blocks" the Production task, and the Stage task "Blocks" the Production task.
+6. Open all four tickets in the Jira UI and confirm they render.
 
 At the start of each fiscal year, create the new standing release epic before that year's first release tickets.
 
@@ -213,6 +214,7 @@ At the start of each fiscal year, create the new standing release epic before th
 
 ## Changelog
 
+- **v8.3 (2026-11-24)**: One release-level Fix Version per release (`CTDC <YYYY> Q<N>`, `CTDC <YYYY> Q<N> Hotfix`) replaces per-microservice Fix Versions: ownership table, epic Release Scope, Deployment Package Workflow and Definition of Done, and a new first creation step (create the Fix Version, no dates). Microservice versions are recorded from the package's `versions.yaml`. Matches ICDC v1.7.
 - **v8.2 (2026-11-24)**: Final Design QA epic gains the card line (line 1 of the body), the rule every CTDC epic already follows and CTDC-2130 already carries. The v8.1 change added it to the standing release epic only, so the Final Design QA body block was missing it.
 - **v8.1 (2026-11-02)**: Standing release epic gains a card line (line 1 of the body), matching ICDC. CTDC releases stay quarterly.
 - **v8 (2026-10-22)**: One standing release epic per federal fiscal year, matching ICDC: `CTDC Quarterly Releases - FY<YY>` (FY27 is CTDC-2295). The permanent epic CTDC-2007 is closed; its one open child, CTDC-2254, moved to CTDC-2295. Recorded where Release Dashboards live. Deployment verification now checks the `/#/sysinfo` page against the Release Dashboard versions, as CTDC-2254 already did, matching ICDC's version check.

@@ -6,7 +6,7 @@
 
 The Team Charter defines the *rules* (versioning, Gitflow, Jira workflow, freezes, Definition of Done). The Release Dashboard is the *checklist* for one release. The Roadmap is the *schedule*. None of them, alone, walks a release manager phase-by-phase from kickoff to close with the gates, RACI, and rollback spelled out. This playbook is that connective runbook, written down so the process is durable, diffable in git, and legible to a new team member on day one.
 
-**Operating context.** Part of the CTDC operational skill (`CBIIT/ctdc-documentation → claude/SKILL.md`). Jira project key **CTDC**, board **641** (the Charter's older `rapidView=1137` link is a retired board). The development team is the **Essential Software Inc (ESI)** subcontractor under FNL/BACS (NCI prime); **federal leadership sits in NCI/CBIIT**. Jira-driven steps (scope pull, fix_version hygiene, the Final Design QA epic, the version-merge) require the **Docker/Atlassian MCP container running**; if it is down, release data work stops until restored.
+**Operating context.** Part of the CTDC operational skill (`CBIIT/ctdc-documentation → claude/SKILL.md`). Jira project key **CTDC**, board **641** (the Charter's older `rapidView=1137` link is a retired board). The development team is the **Essential Software Inc (ESI)** subcontractor under FNL/BACS (NCI prime); **federal leadership sits in NCI/CBIIT**. Jira-driven steps (Fix Version setup, scope pull, Fix Version hygiene, the Final Design QA epic) run through Jira in the TPM's signed-in browser session; if Jira cannot be reached, release data work stops until access is restored.
 
 **Software releases vs. data releases.** Strictly separate; never conflated. This playbook covers *software* (versioned application components). Study loads, data-model versions, and OpenSearch index rebuilds are *data* releases with their own tasks. Data-team work may run in parallel on the roadmap but does not gate a software release.
 
@@ -33,11 +33,15 @@ How work becomes a release *inside Jira*. This is the backbone the Charter defin
 
 Issue types: **Epic · User Story · Task · Bug.** The lifecycle: a feature branches off `develop`, a PR moves its issue to *Ready for Review* (Tech Lead), and on merge + QA deploy it becomes *Ready for QA Testing* (QA Lead). Test pass → *Closed*; test fail → *Reopened* → back to the developer.
 
-### Internal releases, `fix_version`, and release notes
+### Internal releases, Fix Versions, and release notes
 
-- **Weekly builds are "internal releases"** — perpetual-beta Docker builds handed to QA, named `major.minor.patch.jenkins-build-number` (e.g., **1.0.0.285**).
-- Every Jira issue in a build is stamped with that build's **`fix_version`**, creating a durable map between completed issues and the build that carried them. *(Field: `fixVersion`; per component.)*
-- Approaching the quarterly release, the latest beta (post feature + code freeze) is designated the **Release Candidate**. At that point **all the prior internal-release versions are merged in Jira** into the single finalized quarterly production version — which is what **generates the official release notes** for the Gamma build.
+- **Weekly builds are internal releases**: perpetual-beta Docker builds handed to QA, named `major.minor.patch.jenkins-build-number` (for example `1.0.0.285`). Builds are not Jira versions.
+- **One Jira Fix Version per Production release**, named for the release, never for a microservice or a package: `CTDC <YYYY> Q<N>` for a quarterly release, `CTDC <YYYY> Q<N> Hotfix` for an out-of-band release. The TPM creates it in Phase 0, leaves its dates empty (dates live on the Release Dashboard), and marks it *Released* when the Production deployment closes.
+- **Stamping**: every story, bug, and finding ticket whose code ships in the release gets that release's Fix Version when it enters a QA build. After the Release Candidate is cut, new `develop` work gets the *next* release's Fix Version; release-blocker fixes on the RC keep the current one. A ticket that slips is moved to the next release's Fix Version, never left on both.
+- **The Fix Version is the scope of the release notes.** There is no version merge: the scope is one Fix Version from the start.
+- **Microservice versions are not Jira versions.** Each service's version lives in its git tag, its Docker image, and `/version`; the deployment package's `versions.yaml` in CTDC's deployment repository pins the exact version of every service, and the Deployment Package task records it on the Release Dashboard. Which service a ticket changed is shown by its pull request (one ticket, one pull request).
+- **The Deployment Package Number is not a Jira version either.** It is the Frontend version plus a package build counter, and it changes whenever DevOps rebuilds the package, even with no code change, so it identifies a deployment, not a release.
+- *Why one release-level Fix Version*: per-microservice Fix Versions meant four or five versions per release plus internal versions to merge, and tickets were regularly tagged to the wrong service or the wrong release. One release-level Fix Version can be created before work starts and gives the release notes a single query. Per-microservice Fix Versions already in Jira stay as history.
 
 ### Beta → Release Candidate → Gamma (release maturity)
 
@@ -129,7 +133,7 @@ Not every component bumps every release; the dashboard **Release Info** tab reco
 
 **Release Info tab fields:** Expected Production Release Date · Build Date · Release Package Number · FE/BE/File Service/Auth/Interoperation versions · OpenSearch backup version · DMN Standalone · DMN Core · Release Blockers Identified · Regression Test Status on QA.
 
-**Where release notes live:** the merged quarterly `fix_version` generates notes published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**, written from the [Release Notes Template](../templates/release-notes-template.md).
+**Where release notes live:** the release's Fix Version is the scope of the notes, published to GitHub at **`https://github.com/CBIIT/crdc-ctdc-starter-kit/releases`**, written from the [Release Notes Template](../templates/release-notes-template.md).
 
 ---
 
@@ -168,8 +172,9 @@ The TPM is the single authorization pivot; no untested build jumps a tier.
 | **Bug intake channel** | `#ctdc-test-questions` | **Default channel for all bug reporting and triage** (except during RC preparation) |
 | **Final Design QA epic** | Jira, one per RC (example: **CTDC-2130**) | Design + 508 findings; discrepancies filed as linked bugs |
 | **CTDC operational skill** | `SKILL.md` | Umbrella SOP: JQL, deck standards, roster, Slack |
-| **Release Tagging Hygiene Checklist** | `SKILL.md` §13 | Pre-announce fix_version/Developer-field verification + JQL |
-| **fixVersion release query** | `SKILL.md` §4 | Pull full multi-component scope |
+| **Release Tagging Hygiene Checklist** | `SKILL.md` §13 | Pre-announce Fix Version and Developer-field verification, with JQL |
+| **Release scope query** | `SKILL.md` §4 | One Fix Version per release: the full scope |
+| **`versions.yaml`** | CTDC's deployment repository, at the deployed package's tag | The exact version of every microservice in a Deployment Package |
 | **Demo deck / Slack announce** | `SKILL.md` §11–12 / §14 | Demo Day deck + prod announcement format |
 
 ---
@@ -190,7 +195,7 @@ One linear ladder, no skips: `dev → qa → stage → prod`.
 ## 🌿 Versioning & Branching (Gitflow)
 
 - **Feature work:** each feature in its own branch off `develop`; PR merges it back → Jira issue to *Ready for Review* (Tech Lead) → merge on approval.
-- **Weekly build:** Tech Lead reviews all *Ready for Review* issues, stamps `fix_version`, forks `develop` into a dockerized build, deploys to QA, moves issues to *Ready for QA Testing* (QA Lead).
+- **Weekly build:** Tech Lead reviews all *Ready for Review* issues, stamps the release's Fix Version, forks `develop` into a dockerized build, deploys to QA, moves issues to *Ready for QA Testing* (QA Lead).
 - **Release Candidate:** cut from `develop` after Feature Freeze; stabilized on the RC branch.
 - **Blocker fixes:** new branch from the most recent released-version branch, named `x.y.(z+1)`; PR → new build → QA. **Resets the QA clock.**
 - **Close-out merge:** RC merged into **`main`** and tagged with the version; also merged back into **`develop`**; the release branch is deleted.
@@ -217,7 +222,8 @@ One linear ladder, no skips: `dev → qa → stage → prod`.
 2. Create `#ctdc-<year>-q<N>-release`.
 3. Clone a fresh Release Dashboard from the master; fill **Release Info**.
 4. Create the **Final Design QA epic** (model CTDC-2130) with the 508 column.
-5. Confirm scope via the `fixVersion in (...)` query (SKILL.md §4). *(MCP required.)*
+5. Create the release's Jira Fix Version, `CTDC <YYYY> Q<N>`, with no dates.
+6. Confirm scope via the release Fix Version query (SKILL.md §4).
 
 **Gate → Phase 1: FEATURE FREEZE** — all user stories complete; no new feature work.
 
@@ -275,7 +281,7 @@ One linear ladder, no skips: `dev → qa → stage → prod`.
 1. **Engineering:** create the **GitHub tag** for the Release Notes.
 2. **Engineering:** merge the RC into **`main`** (tagged) **and `develop`**; **delete the release branch**.
 3. **Engineering:** OpenSearch restore **only if required**; verify data alignment.
-4. **TPM:** **merge the internal-release `fix_version`s in Jira** into the finalized quarterly version; generate + publish **release notes** to GitHub from the [Release Notes Template](../templates/release-notes-template.md).
+4. **TPM:** mark the release's **Fix Version Released** in Jira; generate + publish **release notes** to GitHub from the [Release Notes Template](../templates/release-notes-template.md).
 5. **TPM:** run the **Release Tagging Hygiene Checklist** (SKILL.md §13). **Verify before you count** — script tallies over raw Jira JSON, `resolutiondate` as the authoritative completion signal.
 6. **TPM:** courtesy email to the full leadership list — **FNL:** Todd Pihl, John Otridge, Mark Jensen; **CBIIT:** Erika Kim, Tanja Davidsen, Esmeralda Casas-Silva (Emi, CTDC Federal Lead).
 7. **TPM:** production announcement in the NCI CRDC `#tech_channel` (SKILL.md §14).
@@ -310,8 +316,8 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 
 - Technical Lead designates a **`hotfix_branch`** based on **`main`** (not `develop`).
 - **Version**: each microservice the hotfix changes takes the next patch number of the version **running in Production**: `x.y.z` becomes `x.y.(z+1)`. Microservices the hotfix does not change keep their versions. Example: with a microservice at `1.3.0.31` in Production, its hotfix ships as `1.3.1.<build>`.
-- **Never ship a hotfix by bumping only the build number.** A build-only bump hides the change: the release notes title collides with the release it patched, and Jira cannot tell the hotfix apart from that release.
-- **Jira `fix_version`**: create one for each new hotfix version and stamp the hotfix tickets with it, not with the next scheduled release's version.
+- **Never ship a hotfix by bumping only the build number.** A build-only bump hides the change: the release notes title collides with the release it patched, and the version page cannot tell the hotfix apart from that release.
+- **Jira Fix Version**: the TPM creates one Fix Version for the hotfix release, `CTDC <YYYY> Q<N> Hotfix` (add ` 2` for a second hotfix in the same quarter), and the hotfix tickets are stamped with it, not with the next scheduled release's Fix Version.
 - On completion, merge into **both `main` and `develop`**; tag `main` with `x.y.(z+1)`. `develop` stays on its own minor line, so the merge does not change its version.
 - DevOps deploys up the ladder (fast-tracked) with QA smoke verification.
 - **Release notes**: a hotfix release gets its own GitHub release notes from the Release Notes Template (`claude/templates/release-notes-template.md`), published before the next scheduled release's notes.
@@ -353,7 +359,7 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 | **T-3 → T-2 wks** | RC branch; ~10-day bug-fix window; OpenSearch snapshot; RC to QA. | Engineering |
 | **T-2 wks** | **Code Freeze.** RC to QA; Katalon + manual regression begins (≥3–5 days). Final Design QA in parallel. | Eng / QA / UI-UX |
 | **T-1 wk** | **Stage Deployment.** QA regression on Stage (≥2 days); go/no-go rehearsal. | DevOps / QA |
-| **T-0** | **Release (Gamma).** Prod deploy; regression; tag; merge; version-merge in Jira; release notes; comms. | All |
+| **T-0** | **Release (Gamma).** Prod deploy; regression; tag; merge; Fix Version marked Released in Jira; release notes; comms. | All |
 | **T+** | Retro (Liked·Lacked·Learned); lessons-learned; tagging back-fill. | Whole team |
 
 > **+3–5-day blocker reset:** any release-blocker fix restarts the QA regression clock and pushes T-0.
@@ -390,7 +396,7 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 - **Bugs Parking Lot:** the unprioritized Jira holding area for new bugs, triaged by TPM + co-TPM.
 - **Hot Fix:** a post-release production patch off `main` via `hotfix_branch`, tagged `x.y.(z+1)`.
 - **Katalon:** the automated regression test suite; results archived in SharePoint.
-- **fix_version:** the Jira field mapping issues to the build/release that carried them.
+- **Fix Version:** the Jira field mapping issues to the Production release that carried them; one per release (`CTDC <YYYY> Q<N>` or `CTDC <YYYY> Q<N> Hotfix`), never per microservice or per build.
 - **508 Compliance:** U.S. Section 508 federal accessibility law; checked in Final Design QA every release.
 - **CloudOne:** the deploy team engaged via ServiceNow ticket + scheduled window for Stage/Prod.
 - **SemVer (`x.y.z`):** major (breaking) · minor (compatible feature) · patch (compatible fix).
@@ -413,3 +419,4 @@ A hotfix bypasses the normal cycle to patch **production** fast.
 | v9 | Release tickets now sit under one standing release epic per federal fiscal year (FY27: CTDC-2295), matching ICDC; the permanent epic CTDC-2007 is closed. | Gina Kuffel |
 | v10 | Scope table updated for the RAS release (v1.5.0): Auth is now NIH RAS login (no longer Fence-brokered OAuth2), and File Service authorizes controlled-access downloads with the RAS Passport through DCF. Added the Release Notes Template (`claude/templates/release-notes-template.md`) and linked it from Scope, Artifacts, and Phase 8. | Gina Kuffel |
 | v11 (2026-11-24) | Version rules added to Semantic Versioning (kept in lockstep with ICDC playbook v2): each quarterly release opens the next minor line on `develop`; patch numbers on a released line are reserved for release-blocker fixes and hotfixes; every Production deployment changes at least the patch; unchanged microservices keep their version. Hot Fixes now covers per-microservice patch numbering, no build-only bumps, a `fix_version` per hotfix version, and release notes for every hotfix release. Gitflow gains the next-cycle step. Lesson learned from ICDC's August 2026 hotfix, which shipped as build-only bumps. | Gina Kuffel |
+| v12 (2026-11-24) | One Jira Fix Version per Production release (`CTDC <YYYY> Q<N>`, `CTDC <YYYY> Q<N> Hotfix`), created by the TPM in Phase 0 and marked Released at close-out; replaces per-component and per-build `fix_version`s and the version merge. Microservice versions live in git tags, the version page, and the deployment package's `versions.yaml`; the Deployment Package Number is not a Jira version. Jira Mechanics, Artifacts, Gitflow, Phase 0, Phase 8, T-minus, Hot Fixes, and Glossary updated. Kept in lockstep with ICDC playbook v3. | Gina Kuffel |
